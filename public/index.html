@@ -1,3 +1,313 @@
-<h1>Hello</h1>
-<p>World</p>
-<img src="espinete.jpg">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <!-- La meta viewport es esencial para la responsividad -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>BUZZ - BLITZ</title>
+    <!-- jQuery desde CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Regla para agrandar la vista en IntelliJ (puedes quitarla en producción) */
+        html, body {
+            zoom: 1.3;
+        }
+
+        /* Estilos generales */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            font-size: 18px; /* Fuente base */
+            background: #fff5cc; /* Fondo color miel claro */
+            color: #333;
+        }
+        /* Usamos el header como contenedor semántico principal */
+        header {
+            background: #ffcc00; /* Amarillo abeja */
+            color: #000;
+            padding: 30px;
+            text-align: center;
+            font-size: 3rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            border-bottom: 4px solid #e6b800;
+        }
+        /* Nota: No se usa un <h1> dentro de header porque el propio header actúa como contenedor introductorio;
+           si lo deseas, podrías incluir un <h1> dentro del header, pero en este ejemplo el texto "La Abeja Perdida" ya cumple esa función. */
+        nav {
+            background: #e6b800;
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        nav a {
+            color: #000;
+            text-decoration: none;
+            padding: 15px 25px;
+            display: block;
+            font-size: 1.2rem;
+            transition: background 0.3s;
+            font-weight: bold;
+        }
+        nav a:hover, nav a.active {
+            background: #ffd633;
+            color: #000;
+        }
+        /* Container principal para centrar y agrandar contenido */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 30px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+        /* Secciones: Por defecto se ocultan login y sign up, se muestra "Quiénes somos" */
+        #about, #login, #signup {
+            display: none;
+        }
+        #about {
+            display: block;
+        }
+        /* Títulos de la sección "Quiénes somos" */
+        #about h2 {
+            font-size: 2.2rem;
+            margin-top: 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            color: #444;
+        }
+        /* Caja de formulario para login y sign up */
+        .form-box {
+            max-width: 600px;
+            background: #fff8e1;
+            overflow: hidden;
+            border-radius: 16px;
+            color: #010101;
+            margin: 0 auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .form {
+            display: flex;
+            flex-direction: column;
+            padding: 40px 30px 30px;
+            gap: 20px;
+            text-align: center;
+        }
+        /* Títulos y subtítulos en formularios */
+        .title {
+            font-weight: bold;
+            font-size: 2rem;
+            color: #333;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        /* Contenedor de inputs */
+        .form-container {
+            overflow: hidden;
+            border-radius: 8px;
+            background-color: #ffffff;
+            margin: 1.5rem 0 .5rem;
+            width: 100%;
+        }
+        .input {
+            background: none;
+            border: 0;
+            outline: 0;
+            height: 50px;
+            width: 100%;
+            border-bottom: 1px solid #eee;
+            font-size: 1rem;
+            padding: 8px 15px;
+        }
+        .form-section {
+            padding: 16px;
+            font-size: 1rem;
+            background-color: #ffe680;
+            box-shadow: rgb(0 0 0 / 8%) 0 -1px;
+        }
+        .form-section a {
+            font-weight: bold;
+            color: #000;
+            transition: color .3s ease;
+        }
+        .form-section a:hover {
+            color: #333;
+            text-decoration: underline;
+        }
+        /* Botón de formularios */
+        .form button {
+            background-color: #ffcc00;
+            color: #000;
+            border: 0;
+            border-radius: 24px;
+            padding: 12px 20px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color .3s ease;
+        }
+        .form button:hover {
+            background-color: #e6b800;
+        }
+    </style>
+</head>
+<body>
+<!-- Header actúa como título principal -->
+<header>
+    <h1>
+        BUZZ BLITZ
+    </h1>
+
+</header>
+
+<!-- Menú de navegación -->
+<nav>
+    <a href="#" id="nav-about" class="active">Quiénes somos</a>
+    <a href="#" id="nav-login">Log in</a>
+    <a href="#" id="nav-signup">Sign up</a>
+</nav>
+
+<!-- Sección "Quiénes somos" -->
+<div id="about" class="container">
+    <h2>Quiénes Somos</h2>
+    <p>
+        En <strong>"La Abeja Perdida"</strong> te sumerges en la aventura de una abeja que se ha extraviado y debe encontrar el camino de regreso a su colmena, amenazada por una astuta araña.
+    </p>
+    <p>
+        Nuestro equipo se ha comprometido a ofrecerte una experiencia única, combinando la nostalgia de los clásicos <em>crossyroad</em> con una temática fresca y original.
+    </p>
+    <p>
+        ¡Únete a la aventura y ayuda a salvar la colmena! Disfruta de este mundo lleno de flores, miel y desafíos que pondrán a prueba tus reflejos.
+    </p>
+</div>
+
+<!-- Sección de Log in -->
+<div id="login" class="container">
+    <div class="form-box">
+        <form class="form" id="form-login">
+            <span class="title">Log in</span>
+            <span class="subtitle">Access your account.</span>
+            <div class="form-container">
+                <input type="text" class="input" id="login-user" placeholder="Usuario o Email" required>
+                <input type="password" class="input" id="login-password" placeholder="Password" required>
+            </div>
+            <button type="submit">Log in</button>
+        </form>
+        <div class="form-section">
+            <p>¿No tienes cuenta? <a href="#" id="link-to-signup">Crea una cuenta</a></p>
+        </div>
+    </div>
+</div>
+
+<!-- Sección de Sign up -->
+<div id="signup" class="container">
+    <div class="form-box">
+        <form class="form" id="form-signup">
+            <span class="title">Sign up</span>
+            <span class="subtitle">Create a free account with your email.</span>
+            <div class="form-container">
+                <input type="text" class="input" id="signup-fullname" placeholder="Full Name" required>
+                <input type="email" class="input" id="signup-email" placeholder="Email" required>
+                <input type="text" class="input" id="signup-user" placeholder="Usuario" required>
+                <input type="password" class="input" id="signup-password" placeholder="Password" required>
+            </div>
+            <button type="submit">Sign up</button>
+        </form>
+        <div class="form-section">
+            <p>¿Ya tienes cuenta? <a href="#" id="link-to-login">Log in</a></p>
+        </div>
+    </div>
+</div>
+
+<!-- Script con jQuery para gestionar navegación y AJAX -->
+<script>
+    $(document).ready(function() {
+        // Función para ocultar todas las secciones y luego mostrar la indicada
+        function showSection(sectionId) {
+            $("#about, #login, #signup").hide();
+            $("nav a").removeClass("active");
+            $(sectionId).show();
+        }
+
+        // Eventos de navegación
+        $("#nav-about").click(function(e) {
+            e.preventDefault();
+            showSection("#about");
+            $(this).addClass("active");
+        });
+        $("#nav-login").click(function(e) {
+            e.preventDefault();
+            showSection("#login");
+            $(this).addClass("active");
+        });
+        $("#nav-signup").click(function(e) {
+            e.preventDefault();
+            showSection("#signup");
+            $(this).addClass("active");
+        });
+
+        // Enlaces internos de formularios
+        $("#link-to-signup").click(function(e) {
+            e.preventDefault();
+            $("#nav-signup").click();
+        });
+        $("#link-to-login").click(function(e) {
+            e.preventDefault();
+            $("#nav-login").click();
+        });
+
+        // Manejo del formulario de Log in
+        $("#form-login").submit(function(e) {
+            e.preventDefault();
+            const loginData = {
+                mailOId: $("#login-user").val(),
+                pswd: $("#login-password").val()
+            };
+
+            $.ajax({
+                url: "http://localhost:8080/dsaApp/usuarios/login",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(loginData),
+                success: function(response) {
+                    alert("Login exitoso! Bienvenido, " + response.name);
+                },
+                error: function(xhr) {
+                    alert("Error en el login: " + xhr.responseText);
+                }
+            });
+        });
+
+        // Manejo del formulario de Sign up
+        $("#form-signup").submit(function(e) {
+            e.preventDefault();
+            const signupData = {
+                id: $("#signup-user").val(),
+                name: $("#signup-fullname").val(),
+                pswd: $("#signup-password").val(),
+                mail: $("#signup-email").val()
+            };
+
+            $.ajax({
+                url: "http://localhost:8080/dsaApp/usuarios/register",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(signupData),
+                success: function(response) {
+                    alert("Registro exitoso! Ahora puedes iniciar sesión.");
+                    $("#nav-login").click();
+                },
+                error: function(xhr) {
+                    alert("Error en el registro: " + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

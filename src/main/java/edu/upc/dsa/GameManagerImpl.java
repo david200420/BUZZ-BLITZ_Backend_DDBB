@@ -30,11 +30,11 @@ public class GameManagerImpl implements GameManager {
         logger.info("Registrando nuevo usuario: " + id + " / " + mail);
 
         if (usuarios.containsKey(id)) {
-            throw new UsuarioYaRegistradoException("El ID ya está registrado");
+            throw new UsuarioYaRegistradoException("El USER ya está registrado");
         }
 
         if (usuariosm.containsKey(mail)) {
-            throw new UsuarioYaRegistradoException("El mail ya está registrado");
+            throw new UsuarioYaRegistradoException("El MAIL ya está registrado");
         }
 
         Usuario nuevo = new Usuario(id, name, contra, mail);
