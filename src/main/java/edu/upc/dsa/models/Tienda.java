@@ -16,6 +16,8 @@ public class Tienda {
         this.converserGold = 100;
     }
 
+
+
     // --- Getters y Setters ---
 
     public Map<String, Objeto> getArmas() {

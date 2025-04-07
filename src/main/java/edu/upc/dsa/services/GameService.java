@@ -59,6 +59,18 @@ public class GameService {
             return Response.status(500).entity("Error interno del servidor").build(); // Error general
         }
     }
+
+//    @GET
+//    @Path("/Tienda")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response Tienda() {
+//
+//        gm.FindAll
+//
+//
+//    }
+
 }
 
 

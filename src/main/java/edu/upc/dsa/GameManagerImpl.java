@@ -2,10 +2,13 @@ package edu.upc.dsa;
 import edu.upc.dsa.exceptions.CredencialesIncorrectasException;
 import edu.upc.dsa.exceptions.UsuarioYaRegistradoException;
 import edu.upc.dsa.models.Objeto;
+import edu.upc.dsa.models.Tienda;
 import edu.upc.dsa.models.Usuario;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class GameManagerImpl implements GameManager {
@@ -13,12 +16,14 @@ public class GameManagerImpl implements GameManager {
     private Map<String, Objeto> objetos;
     private Map<String, Usuario> usuarios;
     private Map<String, Usuario> usuariosm;
+    private Tienda tienda;
     final static Logger logger = Logger.getLogger(GameManagerImpl.class);
 
     public GameManagerImpl() {
         this.usuarios = new HashMap<>();
         this.usuariosm = new HashMap<>();
         this.objetos = new HashMap<>();
+        this.tienda = new Tienda();
     }
 
     public static GameManager getInstance() {
@@ -62,13 +67,32 @@ public class GameManagerImpl implements GameManager {
 
         return u;
     }
+
+    public void addObjeto(Objeto objeto) {
+        this.objetos.put(objeto.getId(), objeto);
+    }
+
+    public Objeto findObjeto(String id) {
+        return this.objetos.get(id);
+    }
+
     public void initTestUsers() throws UsuarioYaRegistradoException {
         try {
             this.addUsuario("Carlos2004", "Carlos", "123", "carlos@gmail.com");
             this.addUsuario("MSC78", "Marc", "321", "marc@gmail.com");
             this.addUsuario("Inad", "Dani", "147", "dani@gmail.com");
+            this.addObjeto(new Objeto("1", "MotoSierra",20500, 1));
+            this.addObjeto(new Objeto("2", "Camionero", 10000, 2));
+            this.addObjeto(new Objeto("3", "Espada",11500 ,1));
         } catch (UsuarioYaRegistradoException e) {
             logger.warn("Usuario de prueba ya estaba registrado");
         }
     }
+
+    @Override
+    public List<Objeto> findAll() {
+        List<Objeto> valores = new ArrayList<>(objetos.values());
+        return valores;
+    }
+
 }
