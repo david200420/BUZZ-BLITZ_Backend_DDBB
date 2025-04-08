@@ -3,6 +3,7 @@ import edu.upc.dsa.exceptions.CredencialesIncorrectasException;
 import edu.upc.dsa.exceptions.NoSuficientesTarrosException;
 import edu.upc.dsa.exceptions.UsuarioNoAutenticadoException;
 import edu.upc.dsa.exceptions.UsuarioYaRegistradoException;
+import edu.upc.dsa.models.Compra;
 import edu.upc.dsa.models.Objeto;
 import edu.upc.dsa.models.Tienda;
 import edu.upc.dsa.models.Usuario;
@@ -33,6 +34,7 @@ public class GameManagerImpl implements GameManager {
         return instance;
     }
 
+    @Override
     public Usuario addUsuario(String id, String name, String contra, String mail) throws UsuarioYaRegistradoException {
         logger.info("Registrando nuevo usuario: " + id + " / " + mail);
 
@@ -50,6 +52,8 @@ public class GameManagerImpl implements GameManager {
         logger.info("Usuario registrado exitosamente");
         return nuevo;
     }
+
+    @Override
     public Usuario login(String mailOId, String pswd) throws CredencialesIncorrectasException {
         Usuario u = null;
 
@@ -79,27 +83,27 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public Usuario Comprar (String idUsuari, Objeto objeto) throws UsuarioNoAutenticadoException, NoSuficientesTarrosException { // va a ser un @PUT
+    public Usuario Comprar (Compra compra) throws UsuarioNoAutenticadoException, NoSuficientesTarrosException { // va a ser un @PUT
         //Algo de que si idUsuari, mande una excepcion de que falta iniciar session, de quiero saber si
         // se ha registrado, mi idea esq en la web arriba a la derecha tengas un parametro con tu
         //id para almacenar la variable y poderla mandar en cada JSON
-        Usuario u = this.usuarios.get(idUsuari);
+        Usuario u = this.usuarios.get(compra.getUsuarioId());
         if(u == null) {
             throw new UsuarioNoAutenticadoException("Usuario no autenticado o no encontrado. Debe iniciar sesión.");
         }
-        if(objeto.getPrecio() > u.getTarrosMiel()){
+        if(compra.getObjeto().getPrecio() > u.getTarrosMiel()){
             throw new NoSuficientesTarrosException("No tienes suficiente Miel");
         }
-            u.setTarrosMiel(u.getTarrosMiel() - objeto.getPrecio());
-            if(objeto.getTipo() == 1){ //arma
-                u.UpdateArmas(objeto);
+            u.setTarrosMiel(u.getTarrosMiel() - compra.getObjeto().getPrecio());
+            if(compra.getObjeto().getTipo() == 1){ //arma
+                u.UpdateArmas(compra.getObjeto());
             }
-            else if(objeto.getTipo() == 2){ //skin
-                u.UpdateSkin(objeto);
+            else if(compra.getObjeto().getTipo() == 2){ //skin
+                u.UpdateSkin(compra.getObjeto());
             }
             return u;
     }
-
+    @Override
     public void initTestUsers() throws UsuarioYaRegistradoException {
         try {
             this.addUsuario("Carlos2004", "Carlos", "123", "carlos@gmail.com");
@@ -114,9 +118,23 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public List<Objeto> findAll() {
-        List<Objeto> valores = new ArrayList<>(objetos.values());
-        return valores;
+    public Tienda findAll() {
+
+        Map<String, Objeto> armas = new HashMap<>();
+        Map<String, Objeto> skins = new HashMap<>();
+
+        for (Objeto obj : this.objetos.values()) {
+            if (obj.getTipo() == 1) { // tipo 1 = arma
+                armas.put(obj.getId(), obj);
+            } else if (obj.getTipo() == 2) { // tipo 2 = skin
+                skins.put(obj.getId(), obj);
+            }
+        }
+        tienda.setArmas(armas);
+        tienda.setSkins(skins);
+
+        return tienda;
     }
+
 
 }

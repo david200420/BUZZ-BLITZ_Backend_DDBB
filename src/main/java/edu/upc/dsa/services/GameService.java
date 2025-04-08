@@ -7,10 +7,7 @@ import edu.upc.dsa.exceptions.CredencialesIncorrectasException;
 import edu.upc.dsa.exceptions.UsuarioYaRegistradoException;
 import edu.upc.dsa.exceptions.UsuarioNoAutenticadoException;
 import edu.upc.dsa.exceptions.NoSuficientesTarrosException;
-import edu.upc.dsa.models.Objeto;
-import edu.upc.dsa.models.UsuReg;
-import edu.upc.dsa.models.Usuario;
-import edu.upc.dsa.models.Usulogin;
+import edu.upc.dsa.models.*;
 import io.swagger.annotations.Api;
 
 import javax.ws.rs.*;
@@ -64,12 +61,12 @@ public class GameService {
         }
     }
     @PUT
-    @Path("/Tienda/Comprar")
+    @Path("/comprar")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response comprarObjeto(String id, Objeto objeto) {
+    public Response comprarObjeto(Compra compra) {
         try {
-            Usuario usuarioActualizado = gm.Comprar(id,objeto);
+            Usuario usuarioActualizado = gm.Comprar(compra);
             return Response.status(200).entity(usuarioActualizado).build();
         } catch (UsuarioNoAutenticadoException e) {
             return Response.status(401).entity(e.getMessage()).build();
@@ -80,13 +77,12 @@ public class GameService {
         }
     }
 
-   @GET
-    @Path("/Tienda")
-    @Consumes(MediaType.APPLICATION_JSON)
+    @GET
+    @Path("/tienda")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response Tienda() {
-        List<Objeto> l = gm.findAll();
-        return Response.status(200).entity(l).build();
+    public Response getTienda() {
+        Tienda t = gm.findAll();
+        return Response.status(200).entity(t).build();
     }
 
 }
