@@ -5,6 +5,9 @@ import edu.upc.dsa.GameManager;
 import edu.upc.dsa.GameManagerImpl;
 import edu.upc.dsa.exceptions.CredencialesIncorrectasException;
 import edu.upc.dsa.exceptions.UsuarioYaRegistradoException;
+import edu.upc.dsa.exceptions.UsuarioNoAutenticadoException;
+import edu.upc.dsa.exceptions.NoSuficientesTarrosException;
+import edu.upc.dsa.models.Objeto;
 import edu.upc.dsa.models.UsuReg;
 import edu.upc.dsa.models.Usuario;
 import edu.upc.dsa.models.Usulogin;
@@ -13,6 +16,7 @@ import io.swagger.annotations.Api;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Api(value = "/usuarios", description = "Endpoint to Usuario Service")
@@ -59,17 +63,31 @@ public class GameService {
             return Response.status(500).entity("Error interno del servidor").build(); // Error general
         }
     }
+    @PUT
+    @Path("/Tienda/Comprar")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response comprarObjeto(String id, Objeto objeto) {
+        try {
+            Usuario usuarioActualizado = gm.Comprar(id,objeto);
+            return Response.status(200).entity(usuarioActualizado).build();
+        } catch (UsuarioNoAutenticadoException e) {
+            return Response.status(401).entity(e.getMessage()).build();
+        } catch (NoSuficientesTarrosException e) {
+            return Response.status(400).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error interno del servidor: " + e.getMessage()).build();
+        }
+    }
 
-//    @GET
-//    @Path("/Tienda")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response Tienda() {
-//
-//        gm.FindAll
-//
-//
-//    }
+   @GET
+    @Path("/Tienda")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response Tienda() {
+        List<Objeto> l = gm.findAll();
+        return Response.status(200).entity(l).build();
+    }
 
 }
 

@@ -1,5 +1,7 @@
 package edu.upc.dsa;
 import edu.upc.dsa.exceptions.CredencialesIncorrectasException;
+import edu.upc.dsa.exceptions.NoSuficientesTarrosException;
+import edu.upc.dsa.exceptions.UsuarioNoAutenticadoException;
 import edu.upc.dsa.exceptions.UsuarioYaRegistradoException;
 import edu.upc.dsa.models.Objeto;
 import edu.upc.dsa.models.Tienda;
@@ -64,16 +66,38 @@ public class GameManagerImpl implements GameManager {
         if (!u.getPswd().equals(pswd)) {
             throw new CredencialesIncorrectasException("Contraseña incorrecta");
         }
-
         return u;
     }
-
+    @Override
     public void addObjeto(Objeto objeto) {
         this.objetos.put(objeto.getId(), objeto);
     }
 
+    @Override
     public Objeto findObjeto(String id) {
         return this.objetos.get(id);
+    }
+
+    @Override
+    public Usuario Comprar (String idUsuari, Objeto objeto) throws UsuarioNoAutenticadoException, NoSuficientesTarrosException { // va a ser un @PUT
+        //Algo de que si idUsuari, mande una excepcion de que falta iniciar session, de quiero saber si
+        // se ha registrado, mi idea esq en la web arriba a la derecha tengas un parametro con tu
+        //id para almacenar la variable y poderla mandar en cada JSON
+        Usuario u = this.usuarios.get(idUsuari);
+        if(u == null) {
+            throw new UsuarioNoAutenticadoException("Usuario no autenticado o no encontrado. Debe iniciar sesión.");
+        }
+        if(objeto.getPrecio() > u.getTarrosMiel()){
+            throw new NoSuficientesTarrosException("No tienes suficiente Miel");
+        }
+            u.setTarrosMiel(u.getTarrosMiel() - objeto.getPrecio());
+            if(objeto.getTipo() == 1){ //arma
+                u.UpdateArmas(objeto);
+            }
+            else if(objeto.getTipo() == 2){ //skin
+                u.UpdateSkin(objeto);
+            }
+            return u;
     }
 
     public void initTestUsers() throws UsuarioYaRegistradoException {

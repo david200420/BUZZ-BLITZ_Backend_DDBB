@@ -33,7 +33,12 @@ public class Usuario {
         this.armas = new HashMap<>();
         this.skins = new HashMap<>();
     }
-
+    public void UpdateArmas(Objeto objeto){
+        armas.put(objeto.getId(), objeto);
+    }
+    public void UpdateSkin(Objeto objeto){
+        skins.put(objeto.getId(), objeto);
+    }
     // --- Getters y Setters básicos ---
     public String getId() {
         return id;
