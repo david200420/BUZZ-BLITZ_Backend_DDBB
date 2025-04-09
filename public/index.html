@@ -2,28 +2,24 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <!-- La meta viewport es esencial para la responsividad -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>BUZZ - BLITZ</title>
-    <!-- jQuery desde CDN -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        /* Regla para agrandar la vista en IntelliJ (puedes quitarla en producción) */
         html, body {
-            zoom: 1.3;
+            zoom: 1.1;
         }
 
-        /* Estilos generales */
         body {
             margin: 0;
             font-family: Arial, sans-serif;
-            font-size: 18px; /* Fuente base */
-            background: #fff5cc; /* Fondo color miel claro */
+            font-size: 18px;
+            background: #fff5cc;
             color: #333;
         }
-        /* Usamos el header como contenedor semántico principal */
+
         header {
-            background: #ffcc00; /* Amarillo abeja */
+            background: #ffcc00;
             color: #000;
             padding: 30px;
             text-align: center;
@@ -32,8 +28,7 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
             border-bottom: 4px solid #e6b800;
         }
-        /* Nota: No se usa un <h1> dentro de header porque el propio header actúa como contenedor introductorio;
-           si lo deseas, podrías incluir un <h1> dentro del header, pero en este ejemplo el texto "La Abeja Perdida" ya cumple esa función. */
+
         nav {
             background: #e6b800;
             display: flex;
@@ -41,6 +36,7 @@
             gap: 30px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
+
         nav a {
             color: #000;
             text-decoration: none;
@@ -50,11 +46,12 @@
             transition: background 0.3s;
             font-weight: bold;
         }
+
         nav a:hover, nav a.active {
             background: #ffd633;
             color: #000;
         }
-        /* Container principal para centrar y agrandar contenido */
+
         .container {
             max-width: 1200px;
             margin: 30px auto;
@@ -63,21 +60,22 @@
             border-radius: 8px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.2);
         }
-        /* Secciones: Por defecto se ocultan login y sign up, se muestra "Quiénes somos" */
-        #about, #login, #signup {
+
+        #about, #login, #signup, #shop {
             display: none;
         }
+
         #about {
             display: block;
         }
-        /* Títulos de la sección "Quiénes somos" */
+
         #about h2 {
             font-size: 2.2rem;
             margin-top: 0;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
             color: #444;
         }
-        /* Caja de formulario para login y sign up */
+
         .form-box {
             max-width: 600px;
             background: #fff8e1;
@@ -87,6 +85,7 @@
             margin: 0 auto;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
+
         .form {
             display: flex;
             flex-direction: column;
@@ -94,19 +93,20 @@
             gap: 20px;
             text-align: center;
         }
-        /* Títulos y subtítulos en formularios */
+
         .title {
             font-weight: bold;
             font-size: 2rem;
             color: #333;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }
+
         .subtitle {
             font-size: 1.2rem;
             color: #666;
             margin-bottom: 10px;
         }
-        /* Contenedor de inputs */
+
         .form-container {
             overflow: hidden;
             border-radius: 8px;
@@ -114,6 +114,7 @@
             margin: 1.5rem 0 .5rem;
             width: 100%;
         }
+
         .input {
             background: none;
             border: 0;
@@ -124,22 +125,25 @@
             font-size: 1rem;
             padding: 8px 15px;
         }
+
         .form-section {
             padding: 16px;
             font-size: 1rem;
             background-color: #ffe680;
             box-shadow: rgb(0 0 0 / 8%) 0 -1px;
         }
+
         .form-section a {
             font-weight: bold;
             color: #000;
             transition: color .3s ease;
         }
+
         .form-section a:hover {
             color: #333;
             text-decoration: underline;
         }
-        /* Botón de formularios */
+
         .form button {
             background-color: #ffcc00;
             color: #000;
@@ -151,29 +155,91 @@
             cursor: pointer;
             transition: background-color .3s ease;
         }
+
         .form button:hover {
             background-color: #e6b800;
+        }
+
+        #shop h2 {
+            font-size: 2.2rem;
+            color: #444;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .categoria-tienda {
+            margin-bottom: 40px;
+            background: #fff8e1;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .categoria-tienda h3 {
+            font-size: 1.5rem;
+            color: #e6b800;
+            margin-top: 0;
+            border-bottom: 2px solid #ffcc00;
+            padding-bottom: 10px;
+        }
+
+        .items-tienda {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 15px;
+        }
+
+        .item-tienda {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .item-tienda h4 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+
+        .item-precio {
+            color: #e6b800;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .btn-comprar {
+            background: #ffcc00;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .btn-comprar:hover {
+            background: #e6b800;
         }
     </style>
 </head>
 <body>
-<!-- Header actúa como título principal -->
 <header>
-        BUZZ BLITZ
+    BUZZ BLITZ
 </header>
 
-<!-- Menú de navegación -->
 <nav>
     <a href="#" id="nav-about" class="active">Quiénes somos</a>
     <a href="#" id="nav-login">Log in</a>
     <a href="#" id="nav-signup">Sign up</a>
+    <a href="#" id="nav-shop" style="display: none;">Tienda</a>
 </nav>
 
-<!-- Sección "Quiénes somos" -->
 <div id="about" class="container">
     <h2>Quiénes Somos</h2>
     <p>
-        En <strong>"La Abeja Perdida"</strong> te sumerges en la aventura de una abeja que se ha extraviado y debe encontrar el camino de regreso a su colmena, amenazada por una astuta araña.
+        En <strong>"Buzz Blitz"</strong> te sumerges en la aventura de una abeja que se ha extraviado y debe encontrar el camino de regreso a su colmena, amenazada por una astuta araña.
     </p>
     <p>
         Nuestro equipo se ha comprometido a ofrecerte una experiencia única, combinando la nostalgia de los clásicos <em>crossyroad</em> con una temática fresca y original.
@@ -183,7 +249,6 @@
     </p>
 </div>
 
-<!-- Sección de Log in -->
 <div id="login" class="container">
     <div class="form-box">
         <form class="form" id="form-login">
@@ -201,7 +266,6 @@
     </div>
 </div>
 
-<!-- Sección de Sign up -->
 <div id="signup" class="container">
     <div class="form-box">
         <form class="form" id="form-signup">
@@ -221,48 +285,92 @@
     </div>
 </div>
 
-<!-- Script con jQuery para gestionar navegación y AJAX -->
+<div id="shop" class="container">
+    <h2>Tienda</h2>
+    <div id="tienda-content">
+        <div class="categoria-tienda">
+            <h3>Armas</h3>
+            <div id="armas-container" class="items-tienda"></div>
+        </div>
+        <div class="categoria-tienda">
+            <h3>Skins</h3>
+            <div id="skins-container" class="items-tienda"></div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(document).ready(function() {
-        // Función para ocultar todas las secciones y luego mostrar la indicada
+        let usuarioActual = null;
+
+        function updateNav() {
+            if (usuarioActual) {
+                $("#nav-signup").hide();
+                $("#nav-shop").show();
+                $("#nav-login").text("Cerrar sesión");
+            } else {
+                $("#nav-signup").show();
+                $("#nav-shop").hide();
+                $("#nav-login").text("Log in");
+            }
+        }
+
         function showSection(sectionId) {
-            $("#about, #login, #signup").hide();
+            $("#about, #login, #signup, #shop").hide();
             $("nav a").removeClass("active");
             $(sectionId).show();
         }
 
-        // Eventos de navegación
         $("#nav-about").click(function(e) {
             e.preventDefault();
             showSection("#about");
             $(this).addClass("active");
         });
+
         $("#nav-login").click(function(e) {
             e.preventDefault();
-            showSection("#login");
-            $(this).addClass("active");
+            if (usuarioActual) {
+                // Confirmación de cierre de sesión
+                if (confirm("¿Estás seguro que quieres cerrar sesión?")) {
+                    usuarioActual = null;
+                    updateNav();
+                    showSection("#about");
+                    $("#nav-about").addClass("active");
+                    alert("Sesión cerrada correctamente");
+                }
+            } else {
+                showSection("#login");
+                $(this).addClass("active");
+            }
         });
+
         $("#nav-signup").click(function(e) {
             e.preventDefault();
             showSection("#signup");
             $(this).addClass("active");
         });
 
-        // Enlaces internos de formularios
+        $("#nav-shop").click(function(e) {
+            e.preventDefault();
+            showSection("#shop");
+            $(this).addClass("active");
+            if (usuarioActual) cargarTienda();
+        });
+
         $("#link-to-signup").click(function(e) {
             e.preventDefault();
             $("#nav-signup").click();
         });
+
         $("#link-to-login").click(function(e) {
             e.preventDefault();
             $("#nav-login").click();
         });
 
-        // Manejo del formulario de Log in
         $("#form-login").submit(function(e) {
             e.preventDefault();
             const loginData = {
-                mailOId: $("#login-user").val(),
+                idoname: $("#login-user").val(),
                 pswd: $("#login-password").val()
             };
 
@@ -272,7 +380,11 @@
                 contentType: "application/json",
                 data: JSON.stringify(loginData),
                 success: function(response) {
+                    usuarioActual = response;
                     alert("Login exitoso! Bienvenido, " + response.name);
+                    updateNav();
+                    showSection("#about");
+                    $("#nav-about").addClass("active");
                 },
                 error: function(xhr) {
                     alert("Error en el login: " + xhr.responseText);
@@ -280,7 +392,6 @@
             });
         });
 
-        // Manejo del formulario de Sign up
         $("#form-signup").submit(function(e) {
             e.preventDefault();
             const signupData = {
@@ -304,6 +415,68 @@
                 }
             });
         });
+
+        function cargarTienda() {
+            $.ajax({
+                url: "http://localhost:8080/dsaApp/usuarios/tienda",
+                type: "GET",
+                success: function(tienda) {
+                    mostrarItems(tienda.armas, "#armas-container");
+                    mostrarItems(tienda.skins, "#skins-container");
+                },
+                error: function(xhr) {
+                    alert("Error cargando tienda: " + xhr.responseText);
+                }
+            });
+        }
+
+        function mostrarItems(items, contenedor) {
+            const container = $(contenedor);
+            container.empty();
+
+            Object.values(items).forEach(item => {
+                const htmlItem = `
+                    <div class="item-tienda">
+                        <h4>${item.nombre}</h4>
+                        <div class="item-precio">Precio: ${item.precio} 🍯</div>
+                        <button class="btn-comprar" data-id="${item.id}">COMPRAR</button>
+                    </div>
+                `;
+                container.append(htmlItem);
+            });
+
+            $(contenedor + " .btn-comprar").click(function() {
+                if (!usuarioActual) {
+                    alert("Debes iniciar sesión para comprar");
+                    return;
+                }
+
+                const objetoId = $(this).data('id');
+                realizarCompra(objetoId);
+            });
+        }
+
+        function realizarCompra(objetoId) {
+            const compraData = {
+                usuarioId: usuarioActual.id,
+                objeto: { id: objetoId }
+            };
+
+            $.ajax({
+                url: "http://localhost:8080/dsaApp/usuarios/comprar",
+                type: "PUT",
+                contentType: "application/json",
+                data: JSON.stringify(compraData),
+                success: function(usuarioActualizado) {
+                    usuarioActual = usuarioActualizado;
+                    alert("Compra realizada con éxito!");
+                    cargarTienda();
+                },
+                error: function(xhr) {
+                    alert("Error en la compra: " + xhr.responseText);
+                }
+            });
+        }
     });
 </script>
 </body>
