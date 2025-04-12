@@ -2,11 +2,11 @@ package edu.upc.dsa.models;
 
 public class Compra {
     private String usuarioId;
-    private Objeto objeto;
+    private Item objeto;
 
     public Compra() { }
 
-    public Compra(String usuarioId, Objeto objeto) {
+    public Compra(String usuarioId, Item objeto) {
         this.usuarioId = usuarioId;
         this.objeto = objeto;
     }
@@ -19,11 +19,11 @@ public class Compra {
         this.usuarioId = usuarioId;
     }
 
-    public Objeto getObjeto() {
+    public Item getObjeto() {
         return objeto;
     }
 
-    public void setObjeto(Objeto objeto) {
+    public void setObjeto(Item objeto) {
         this.objeto = objeto;
     }
 }

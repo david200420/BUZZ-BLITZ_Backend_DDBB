@@ -78,10 +78,18 @@ public class GameService {
     }
 
     @GET
-    @Path("/tienda")
+    @Path("/tienda/armas")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getTienda() {
-        Tienda t = gm.findAll();
+    public Response getArmas() {
+        List<Object> t = gm.findArmas();
+        return Response.status(200).entity(t).build();
+    }
+
+    @GET
+    @Path("/tienda/skins")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSkin() {
+        List<Object> t = gm.findSkins();
         return Response.status(200).entity(t).build();
     }
 
