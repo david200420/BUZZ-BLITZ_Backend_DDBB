@@ -1,5 +1,6 @@
 $(document).ready(function() { // espera a que todo este cargado ( el html)
     let usuarioActual = null;
+
     const mainHeader = $("#main-header");
     const userInfo = $("#user-info");
 
@@ -19,8 +20,8 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
     <!--const ObjetoContainer = $("#armas-container");-->
 
     function setUpWeb(){
-        landing.show();          // Se muestra la landing
-        mainContent.hide();      // Se oculta el contenido principal
+        landing.show();      // Se muestra la landing
+        mainContent.hide(); // Se oculta el contenido principal
     }
 
     function updateNav() {
@@ -36,7 +37,7 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
     }
 
     function showSection(sectionId) { //Como hacemos una SPA cada vez que cliquemos a uno del nav
-        $("#about, #login, #signup, #shop, #olvidadoContra").hide();//Vamos a tener que hacer hide de los <div>
+        $("#about, #login, #signup, #shop, #olvidadoContra,#terminos-condiciones").hide();//Vamos a tener que hacer hide de los <div>
         $("nav a").removeClass("active");
         $(sectionId).show();
     }
@@ -167,6 +168,23 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
         $("#nav-login").click();
     });
 
+    $("#Terminos-enlace").click(function(e){
+        e.preventDefault();
+        $("#terminos-condiciones").show();
+    });
+
+    $("#aceptarTerminos").click(function(e){
+        e.preventDefault();
+        var checkbox = $('#checkboxx');
+        checkbox.prop('checked', !checkbox.prop('checked'));
+        $("#terminos-condiciones").hide();
+    });
+
+    $("#rechazarTerminos").click(function(e){
+        e.preventDefault();
+        $("#terminos-condiciones").hide();
+    });
+
     $("#form-login").submit(function (e) { //Si le da al boton submit del <div>
         e.preventDefault();
 
@@ -195,36 +213,57 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
     });
 
     $("#form-signup").submit(function (e) {
-        e.preventDefault();
-        const signupData = {
-            id: $("#signup-user").val(),
+        e.preventDefault();//Para que no se actualice la web
+        const signupData = { //definimos variables necesarias para la funcion ya que no son globales
+            id: $("#signup-user").val(), // y las metemos en un objeto que lo transformaremos a JSON
             name: $("#signup-fullname").val(),
             pswd: $("#signup-password").val(),
             mail: $("#signup-email").val(),
-            pswd2: $("#resignup-password").val()
+            pregunta:$("#security-question").val(),
+            respuesta: $("#answer-securityquestion").val()
         };
 
-        if(pswd === pswd2){
-            $.ajax({
-                url: "http://localhost:8080/dsaApp/usuarios/register",
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify(signupData),
-                success: function (response) {
-                    alert("Registro exitoso! Ahora puedes iniciar sesión.");
-                    $("#nav-login").click();
-                },
-                error: function (xhr) {
-                    alert("Error en el registro: " + xhr.responseText);
-                }
-            });
+        const p = $("#resignup-password").val();//miramos si las contraseñas coinciden
+        if(signupData.pswd !== p){
+            alert("Las contraseñas no coinciden");
+            return;
         }
-        else{
+        const checkbox = $("#checkboxx");//miramos is ha aceptado los terminos o no
+        if (!checkbox.prop("checked")) {
+            $("#terminos-label").addClass("shake-border"); // Añadimos la classe para que el usuario vea
+                                                                //en lo que se esta equivocando
+            setTimeout(() => {
+                $("#terminos-label").removeClass("shake-border");
+            }, 1000);
+
+            alert("Debes aceptar los términos y condiciones para registrarte");
+            return;
+        }
+
+        $.ajax({
+            url: "http://localhost:8080/dsaApp/usuarios/register",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(signupData),
+            success: function (response) {
+                alert("Registro exitoso! Ahora puedes iniciar sesión.");
+                $("#nav-login").click(); // hacemos que se clique el boton del navegador del login
+
+                //Rellenamos los campos del login con los daos que acaba de usar para el signup
+                $("#login-user").val(signupData.id);
+                $("#login-password").val(signupData.pswd);
+                $("#login-boton-submit").focus(); //esto esta muy bien ya que deja el raton en el boton
+            },
             error: function (xhr) {
-                alert("Las contraseñas no coinciden: " + xhr.responseText);
+                alert("Error en el registro: " + xhr.responseText);
             }
-        }
-
-
+        });
     });
+    $("#Olv-Contra").click(function(e){
+        e.preventDefault();
+        $("#olvidadoContra").show();
+    })
+    $("#enviar-usuario").click(function (e){
+
+    })
 });

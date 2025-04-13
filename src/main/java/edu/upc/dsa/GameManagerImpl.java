@@ -5,6 +5,7 @@ import edu.upc.dsa.exceptions.UsuarioNoAutenticadoException;
 import edu.upc.dsa.exceptions.UsuarioYaRegistradoException;
 import edu.upc.dsa.models.Compra;
 import edu.upc.dsa.models.Item;
+import edu.upc.dsa.models.OlvContra;
 import edu.upc.dsa.models.Usuario;
 import org.apache.log4j.Logger;
 
@@ -31,8 +32,18 @@ public class GameManagerImpl implements GameManager {
         return instance;
     }
 
+    public Usuario obtenerUsuario(String id) throws CredencialesIncorrectasException {
+        Usuario u = null;
+        if (usuarios.containsKey(id)) {
+            u = usuarios.get(id);
+        } else if (usuariosm.containsKey(id)) {
+            u = usuariosm.get(id);
+        }
+        return u;
+    }
+
     @Override
-    public Usuario addUsuario(String id, String name, String contra, String mail) throws UsuarioYaRegistradoException {
+    public Usuario addUsuario(String id, String name, String contra, String mail, String q, String a) throws UsuarioYaRegistradoException {
         logger.info("Registrando nuevo usuario: " + id + " / " + mail);
 
         if (usuarios.containsKey(id)) {
@@ -43,7 +54,7 @@ public class GameManagerImpl implements GameManager {
             throw new UsuarioYaRegistradoException("El MAIL ya está registrado");
         }
 
-        Usuario nuevo = new Usuario(id, name, contra, mail);
+        Usuario nuevo = new Usuario(id, name, contra, mail,q,a);
         this.usuarios.put(id, nuevo);
         this.usuariosm.put(mail, nuevo);
         logger.info("Usuario registrado exitosamente");
@@ -52,13 +63,7 @@ public class GameManagerImpl implements GameManager {
 
     @Override
     public Usuario login(String mailOId, String pswd) throws CredencialesIncorrectasException {
-        Usuario u = null;
-
-        if (usuarios.containsKey(mailOId)) {
-            u = usuarios.get(mailOId);
-        } else if (usuariosm.containsKey(mailOId)) {
-            u = usuariosm.get(mailOId);
-        }
+        Usuario u = obtenerUsuario(mailOId);
 
         if (u == null) {
             throw new CredencialesIncorrectasException("Usuario no encontrado");
@@ -103,9 +108,9 @@ public class GameManagerImpl implements GameManager {
     @Override
     public void initTestUsers() throws UsuarioYaRegistradoException {
         try {
-            this.addUsuario("Carlos2004", "Carlos", "123", "carlos@gmail.com");
-            this.addUsuario("MSC78", "Marc", "321", "marc@gmail.com");
-            this.addUsuario("Inad", "Dani", "147", "dani@gmail.com");
+            this.addUsuario("Carlos2004", "Carlos", "123", "carlos@gmail.com","Tu comida favorita?","Arroz" );
+            this.addUsuario("MSC78", "Marc", "321", "marc@gmail.com","Como se llamaba tu escuela de Primaria?" ,"Dali" );
+            this.addUsuario("Inad", "Dani", "147", "dani@gmail.com","El nombre de tu familiar mas mayor?" ,"Teresa" );
             this.addObjeto(new Item("1", "MotoSierra",20500, 1));
             this.addObjeto(new Item("2", "Camionero", 10000, 2));
             this.addObjeto(new Item("3", "Espada",11500 ,1));
@@ -141,5 +146,40 @@ public class GameManagerImpl implements GameManager {
         return listaItems;
     }
 
+    @Override
+    public String obtenerContra(String usuario) throws CredencialesIncorrectasException {
+        Usuario u = obtenerUsuario(usuario);
+        if (u == null) {
+            throw new CredencialesIncorrectasException("Usuario no encontrado");
+        }
 
+        return u.getPregunta();
+    }
+
+    @Override
+    public Usuario relogin(String id, String respuesta) throws CredencialesIncorrectasException {
+        Usuario u = obtenerUsuario(id);
+
+        if (u == null) {
+            throw new CredencialesIncorrectasException("Usuario no encontrado");
+        }
+
+        if (!u.getRespuesta().equals(respuesta)) {
+            throw new CredencialesIncorrectasException("Respuesta incorrecta");
+        }
+        return u;
+
+
+    }
+
+    @Override
+    public void CambiarContra(String usuario, String contra) throws CredencialesIncorrectasException {
+        Usuario u = obtenerUsuario(usuario);
+        if (u == null) {
+            throw new CredencialesIncorrectasException("Usuario no encontrado");
+        }
+
+        u.setRespuesta(contra);
+
+    }
 }

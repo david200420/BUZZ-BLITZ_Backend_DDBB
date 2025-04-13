@@ -18,9 +18,12 @@ public class Usuario {
     private Map<String, Item> armas;
     private Map<String, Item> skins;
 
+    private String pregunta;
+    private String respuesta;
+
     public Usuario() {}
 
-    public Usuario(String id, String name, String pswd, String mail) { // Primera vez que entras
+    public Usuario(String id, String name, String pswd, String mail, String q, String a) { // Primera vez que entras
         this.id = id;
         this.name = name;
         this.pswd = pswd;
@@ -30,6 +33,8 @@ public class Usuario {
         this.mejorPuntuacion = 0;
         this.numPartidas = 0;
         this.floreGold = 0;
+        this.pregunta = q;
+        this.respuesta = a;
         this.armas = new HashMap<>();
         this.skins = new HashMap<>();
     }
@@ -126,5 +131,21 @@ public class Usuario {
 
     public void setSkins(Map<String, Item> skins) {
         this.skins = skins;
+    }
+
+    public String getRespuesta() {
+        return respuesta;
+    }
+
+    public String getPregunta() {
+        return pregunta;
+    }
+
+    public void setPregunta(String pregunta) {
+        this.pregunta = pregunta;
+    }
+
+    public void setRespuesta(String respuesta) {
+        this.respuesta = respuesta;
     }
 }

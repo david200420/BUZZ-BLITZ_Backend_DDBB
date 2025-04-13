@@ -33,7 +33,7 @@ public class GameService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerUsuario(UsuReg usuReg) {
         try {
-            Usuario u = gm.addUsuario(usuReg.getId(), usuReg.getName(), usuReg.getPswd(), usuReg.getMail());
+            Usuario u = gm.addUsuario(usuReg.getId(), usuReg.getName(), usuReg.getPswd(), usuReg.getMail(), usuReg.getPregunta(), usuReg.getRespuesta());
             return Response.status(201).entity(u).build(); // Registrado con éxito
         } catch (UsuarioYaRegistradoException e) {
 
@@ -60,6 +60,7 @@ public class GameService {
             return Response.status(500).entity("Error interno del servidor").build(); // Error general
         }
     }
+
     @PUT
     @Path("/comprar")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -92,6 +93,46 @@ public class GameService {
         List<Object> t = gm.findSkins();
         return Response.status(200).entity(t).build();
     }
+
+    @GET
+    @Path("/login/recordarContraseña")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getlogin(String u) {
+        try {
+            String pregunta = gm.obtenerContra(u);
+            return Response.status(200).entity(pregunta).build();
+        } catch (CredencialesIncorrectasException e) {
+            return Response.status(401).entity(e.getMessage()).build();
+        }
+
+    }
+    @POST
+    @Path("/login/recuperarCuenta")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response loginUsuario(OlvContra usu) {
+        try {
+            Usuario u = gm.relogin(usu.getId(), usu.getRespuesta());
+            return Response.status(200).entity(u).build(); // Login OK
+        } catch (CredencialesIncorrectasException e) {
+            return Response.status(401).entity(e.getMessage()).build(); // No autorizado
+        } catch (Exception e) {
+            return Response.status(500).entity("Error interno del servidor").build(); // Error general
+        }
+    }
+    @PUT
+    @Path("/login/cambiarContraseña")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response cambiarContra(Usulogin u) {
+        try {
+            gm.CambiarContra(u.getIdoname(), u.getPswd());
+            return Response.status(200).entity("Contraseña cambiada con éxito").build();
+        } catch (CredencialesIncorrectasException e) {
+            return Response.status(401).entity(e.getMessage()).build();
+        }
+    }
+
 
 }
 
