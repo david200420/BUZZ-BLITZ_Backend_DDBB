@@ -108,7 +108,7 @@ public class GameManagerImpl implements GameManager {
     @Override
     public void initTestUsers() throws UsuarioYaRegistradoException {
         try {
-            this.addUsuario("Carlos2004", "Carlos", "123", "carlos@gmail.com","Tu comida favorita?","Arroz" );
+            this.addUsuario("carlos2004", "Carlos", "123", "carlos@gmail.com","Tu comida favorita?","Arroz" );
             this.addUsuario("MSC78", "Marc", "321", "marc@gmail.com","Como se llamaba tu escuela de Primaria?" ,"Dali" );
             this.addUsuario("Inad", "Dani", "147", "dani@gmail.com","El nombre de tu familiar mas mayor?" ,"Teresa" );
             this.addObjeto(new Item("1", "MotoSierra",20500, 1));

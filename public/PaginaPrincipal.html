@@ -6,20 +6,23 @@
     <title>BUZZ - BLITZ</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="CSS.css"> <!-- Hace el link con el html y los estilos-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <!-- Nos conectamos con el google.fonts-->
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
 <header id="main-header" class="header-portada">
-   <h1>BUZZ BLITZ</h1>
+    <div class="header-logo">BUZZ BLITZ</div>
     <div id="user-info"></div>
 </header>
 
 <!-- LANDING PAGE, lo cual sera lo primero ue cargue y cuando le des click se abrira el nav -->
-<div id="landing">
-    <video id="video-fondo" autoplay muted loop alt="gameplay del juego">
+<div id="landing" class="landing">
+    <video id="video-fondo" autoplay muted loop alt="gameplay del juego" class="video-fondo">
         <source src="videos/videoplayback.mp4" type="video/mp4">
     </video>
     <div class="overlay">
-        <h1 class="titulo">BUZZ - BLITZ</h1>
+        <h1 class="landing-title">BUZZ BLITZ</h1>
     </div>
 </div>
 
@@ -48,8 +51,8 @@
 <div id="login" class="container">
     <div class="form-box">
         <form class="form" id="form-login">
-            <h2 class="title"></h2>
-            <h3 class="subtitle">Access your account.</h3>
+            <h2 class="title">Inicio de Sessión</h2>
+            <h3 class="subtitle">No te preocupes si no te acuerdas jejej...</h3>
             <div class="form-container">
                 <input type="text" class="input" id="login-user" placeholder="Usuario o Email" required>
                 <input type="password" class="input" id="login-password" placeholder="Password" required>
@@ -62,7 +65,7 @@
         </div>
     </div>
 </div>
-    <div id="terminos-condiciones" class = terms>
+    <div id="terminos-condiciones" class = terms style="display: none;">
         <article>
             <header>
             <h2>Terminos y Condiciones</h2>
@@ -132,9 +135,9 @@
         <button id="aceptarTerminos">Aceptar</button>
     </div>
 
-<div id="olvidadoContra" class="form-box"><!-- Esto va a ser el he olvidado mi contraseña que va a pedir-->
+<div id="olvidadoContra" class="form-box" style="display: none;"><!-- Esto va a ser el he olvidado mi contraseña que va a pedir-->
     <h3 class="title">Te has olvidado la Contraseña?</h3> <!--Una respuesta de una pregunta que ya haya respondido en el signup-->
-    <h4 class="subtitle">No pasa nada, rellena el formulario</h4>
+    <h4 class="subtitle">No pasa nada, escribe tu Correo o Usuario</h4>
     <div id="enviar-resp"  class="form-container">
         <input type="text" class="input" id="olv-usuario" placeholder="Usuario o Email" required>
         <button id="enviar-usuario">Hecho</button>
@@ -145,6 +148,7 @@
 
     <div id="update-password" class="form-container" style="display: none;">
         <h3 class="title">Restablece la Contraseña</h3>
+        <label id="usuario-a-cambiar" style="display:none;"></label>
         <input type="password" id="primera-contra" placeholder="Password" required>
         <input type="password" id="segunda-contra" placeholder="Repite Password" required>
         <button id="olv-a-login">Acceder</button>
@@ -155,8 +159,8 @@
 <div id="signup" class="container">
     <div class="form-box">
         <form class="form" id="form-signup">
-            <h2 class="title">Sign up</h2>
-            <h3 class="subtitle">Create a free account with your email.</h3>
+            <h2 class="title">Regístrate</h2>
+            <h3 class="subtitle">Unete a la mejor comunidad</h3>
             <div class="form-container">
                 <input type="text" class="input" id="signup-fullname" placeholder="Full Name" required>
                 <input type="email" class="input" id="signup-email" placeholder="Email" required>
@@ -191,11 +195,11 @@
 <div id="shop" class="container"><!-- habra que usar ol o ul-->
     <h2>Tienda</h2>
     <div id="tienda-content">
-        <div class="categoria-tienda">
+        <div id="armas" class="categoria-tienda">
             <h3>Armas</h3>
             <div id="armas-container" class="items-tienda"></div>
         </div>
-        <div class="categoria-tienda">
+        <div id="skins" class="categoria-tienda">
             <h3>Skins</h3>
             <div id="skins-container" class="items-tienda"></div>
         </div>

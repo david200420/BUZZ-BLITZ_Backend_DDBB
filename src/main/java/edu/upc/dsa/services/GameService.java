@@ -97,7 +97,7 @@ public class GameService {
     @GET
     @Path("/login/recordarContraseña")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getlogin(String u) {
+    public Response getlogin(@QueryParam("id")String u) {
         try {
             String pregunta = gm.obtenerContra(u);
             return Response.status(200).entity(pregunta).build();
@@ -120,7 +120,7 @@ public class GameService {
             return Response.status(500).entity("Error interno del servidor").build(); // Error general
         }
     }
-    @PUT
+    @POST
     @Path("/login/cambiarContraseña")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)

@@ -1,8 +1,5 @@
 html, body {
     zoom: 1.1;
-}
-
-body {
     margin: 0;
     font-family: Arial, sans-serif;
     font-size: 18px;
@@ -10,6 +7,7 @@ body {
     color: #333;
 }
 
+/* Header principal */
 header {
     background: #ffcc00;
     color: #000;
@@ -21,6 +19,7 @@ header {
     border-bottom: 4px solid #e6b800;
 }
 
+/* Navegación */
 nav {
     background: #e6b800;
     display: flex;
@@ -35,16 +34,17 @@ nav a {
     padding: 15px 25px;
     display: block;
     font-size: 1.2rem;
-    transition: background 0.3s;
     font-weight: bold;
+    transition: background 0.3s;
 }
 
-nav a:hover, /*Para cuando pases por encima cambie*/
-nav a.active {/*Paraque cuando cliques se quede pintado de amarillo mas fuerte y sepas dnd estas en el navegador */
+nav a:hover,
+nav a.active {
     background: #ffd633;
     color: #000;
 }
 
+/* Contenedor principal */
 .container {
     max-width: 1200px;
     margin: 30px auto;
@@ -54,6 +54,7 @@ nav a.active {/*Paraque cuando cliques se quede pintado de amarillo mas fuerte y
     box-shadow: 0 3px 10px rgba(0,0,0,0.2);
 }
 
+/* Secciones */
 #about, #login, #signup, #shop {
     display: none;
 }
@@ -62,21 +63,24 @@ nav a.active {/*Paraque cuando cliques se quede pintado de amarillo mas fuerte y
     display: block;
 }
 
-#about h2 {
+#about h2,
+#shop h2 {
     font-size: 2.2rem;
-    margin-top: 0;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
     color: #444;
+    text-align: center;
+    margin-bottom: 30px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
+/* Formulario */
 .form-box {
     max-width: 600px;
     background: #fff8e1;
-    overflow: hidden;
+    margin: 0 auto;
     border-radius: 16px;
     color: #010101;
-    margin: 0 auto;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    overflow: hidden;
 }
 
 .form {
@@ -88,8 +92,8 @@ nav a.active {/*Paraque cuando cliques se quede pintado de amarillo mas fuerte y
 }
 
 .title {
-    font-weight: bold;
     font-size: 2rem;
+    font-weight: bold;
     color: #333;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
@@ -101,29 +105,40 @@ nav a.active {/*Paraque cuando cliques se quede pintado de amarillo mas fuerte y
 }
 
 .form-container {
-    overflow: hidden;
-    border-radius: 8px;
-    background-color: #ffffff;
-    margin: 1.5rem 0 .5rem;
     width: 100%;
+    margin: 1.5rem 0 .5rem;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .input {
-    background: none;
-    border: 0;
-    outline: 0;
-    height: 50px;
     width: 100%;
-    border-bottom: 1px solid #eee;
-    font-size: 1rem;
+    height: 50px;
     padding: 8px 15px;
+    font-size: 1rem;
+    border: none;
+    border-bottom: 1px solid #eee;
+    outline: 0;
+    background: none;
 }
 
 .form-section {
     padding: 16px;
     font-size: 1rem;
     background-color: #ffe680;
-    box-shadow: rgb(0 0 0 / 8%) 0 -1px;
+    box-shadow: 0 -1px 0 rgba(0,0,0,0.08);
+}
+
+#Terminos-enlace {
+    font-weight: bold;
+    color: #000;
+    transition: color 0.3s ease;
+}
+
+#Terminos-enlace:hover {
+    color: #333;
+    text-decoration: underline;
 }
 
 .form-section a {
@@ -140,7 +155,7 @@ nav a.active {/*Paraque cuando cliques se quede pintado de amarillo mas fuerte y
 .form button {
     background-color: #ffcc00;
     color: #000;
-    border: 0;
+    border: none;
     border-radius: 24px;
     padding: 12px 20px;
     font-size: 1.1rem;
@@ -153,13 +168,7 @@ nav a.active {/*Paraque cuando cliques se quede pintado de amarillo mas fuerte y
     background-color: #e6b800;
 }
 
-#shop h2 {
-    font-size: 2.2rem;
-    color: #444;
-    text-align: center;
-    margin-bottom: 30px;
-}
-
+/* Tienda */
 .categoria-tienda {
     margin-bottom: 40px;
     background: #fff8e1;
@@ -171,9 +180,9 @@ nav a.active {/*Paraque cuando cliques se quede pintado de amarillo mas fuerte y
 .categoria-tienda h3 {
     font-size: 1.5rem;
     color: #e6b800;
-    margin-top: 0;
     border-bottom: 2px solid #ffcc00;
     padding-bottom: 10px;
+    margin-top: 0;
 }
 
 .items-tienda {
@@ -184,14 +193,14 @@ nav a.active {/*Paraque cuando cliques se quede pintado de amarillo mas fuerte y
 }
 
 .item-tienda {
-    background: white;
-    border-radius: 8px;
+    background: #fff;
     padding: 15px;
+    border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .item-tienda h4 {
-    margin: 0 0 10px 0;
+    margin: 0 0 10px;
     color: #333;
 }
 
@@ -216,6 +225,7 @@ nav a.active {/*Paraque cuando cliques se quede pintado de amarillo mas fuerte y
     background: #e6b800;
 }
 
+/* Info usuario */
 #user-info {
     position: absolute;
     top: 20px;
@@ -224,16 +234,18 @@ nav a.active {/*Paraque cuando cliques se quede pintado de amarillo mas fuerte y
     color: #000;
     padding: 10px 20px;
     border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     font-weight: bold;
     font-size: 1rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     display: none;
 }
-material-checkbox {
+
+/* Checkbox personalizado */
+.material-checkbox {
     display: flex;
     align-items: center;
     font-size: 16px;
-    color: #777777;
+    color: #777;
     cursor: pointer;
 }
 
@@ -288,6 +300,8 @@ material-checkbox {
 .material-checkbox input[type="checkbox"]:disabled ~ .checkmark:hover {
     border-color: #4d4d4d;
 }
+
+/* Animación vibración */
 .shake-border {
     animation: shake 0.5s;
     border: 2px solid red;
@@ -302,19 +316,113 @@ material-checkbox {
     100% { transform: translateX(0); }
 }
 
+/* Dropdown de seguridad */
 .security-dropdown {
-    background-color: #f3f4f6; /* bg-gray-100 */
-    color: #111827; /* text-gray-900 */
+    background-color: #f3f4f6;
+    color: #111827;
     border: none;
-    border-radius: 0.375rem; /* rounded-md */
-    padding: 0.5rem; /* p-2 */
-    margin-bottom: 1rem; /* mb-4 */
+    border-radius: 0.375rem;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
     width: 100%;
     transition: all 0.15s ease-in-out;
 }
 
 .security-dropdown:focus {
-    background-color: #e5e7eb; /* focus:bg-gray-200 */
+    background-color: #e5e7eb;
     outline: none;
-    box-shadow: 0 0 0 1px #3b82f6; /* focus:ring-1 focus:ring-blue-500 */
+    box-shadow: 0 0 0 1px #3b82f6;
+}
+
+/* Landing page */
+.landing {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.video-fondo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    transform: translate(-50%, -50%);
+}
+
+.overlay {
+    position: absolute;       /* Ya lo tenías, pero nos aseguramos de que sea absolute */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(128,128,128,0.3);
+    display: flex;
+    flex-direction: column;   /* Importante para alinear el texto en columna */
+    align-items: center;      /* Centra horizontalmente */
+    /* justify-content: center;
+       Lo quitamos para que no se centre verticalmente. Lo sustituimos por un padding-top: */
+    padding-top: 25vh;        /* Ajusta este valor según cuán arriba lo quieras.
+                                 ~25vh equivale aprox a un 7.5 en una escala 1-10,
+                                 si 10 significa “muy arriba”. Modifícalo a tu gusto */
+    z-index: 1010;
+}
+
+/* Ajuste para quitar fondo/borde y poner fuente pixel */
+.landing-title {
+    font-size: 6rem;             /* Tamaño de la fuente, ajusta a tu gusto */
+    font-family: 'Press Start 2P', monospace; /* Fuente estilo 90s */
+    font-weight: bold;         /* O “bold” si quieres darle más grosor, revisa si te gusta */
+    color: #fff;
+    /* Quitar fondo y “borde” */
+    background-color: transparent;
+    border: none;
+    border-radius: 0;
+    /* Opcional: si quieres mantener la sombra, déjala; si no, quítala */
+    text-shadow: 2px 2px 5px rgba(0,0,0,0.7);
+    /* Como el padre (overlay) hace flex y has ajustado el padding-top, no es necesario transform-translate
+       para centrarlo. Así que lo removemos si estuviera. */
+}
+
+/* Header reutilizable */
+.main-header {
+    width: 100%;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f0f0f0;
+}
+
+.header-logo {
+    font-family: 'Press Start 2P', monospace; /* Fuente retro */
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    /* Opcional: puedes agregar un text-shadow similar si buscas un efecto parecido */
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Contenido principal */
+.main-content {
+    margin-top: 60px;
+}
+
+/* Navegación principal */
+.main-nav a {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #333;
+    transition: background-color 0.3s;
+}
+
+.main-nav a.active,
+.main-nav a:hover {
+    background-color: #ffd633;
+    color: #000;
 }

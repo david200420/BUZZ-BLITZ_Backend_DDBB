@@ -141,7 +141,7 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
             }
         } else {
             showSection("#login");
-            $(this).addClass("active");
+            $(this).addClass("active"); //pinta de amarillo oscuro el nav-login en ele navegador
         }
     });
 
@@ -170,19 +170,19 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
 
     $("#Terminos-enlace").click(function(e){
         e.preventDefault();
-        $("#terminos-condiciones").show();
+        showSection("#terminos-condiciones");
     });
 
     $("#aceptarTerminos").click(function(e){
         e.preventDefault();
         var checkbox = $('#checkboxx');
         checkbox.prop('checked', !checkbox.prop('checked'));
-        $("#terminos-condiciones").hide();
+        showSection("#signup");
     });
 
     $("#rechazarTerminos").click(function(e){
         e.preventDefault();
-        $("#terminos-condiciones").hide();
+        showSection("#signup");
     });
 
     $("#form-login").submit(function (e) { //Si le da al boton submit del <div>
@@ -259,11 +259,88 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
             }
         });
     });
+
     $("#Olv-Contra").click(function(e){
         e.preventDefault();
-        $("#olvidadoContra").show();
-    })
-    $("#enviar-usuario").click(function (e){
+        showSection("#olvidadoContra")
+    });
 
-    })
+    $("#enviar-usuario").click(function (e){
+        e.preventDefault();
+        const usuarioData = $("#olv-usuario").val();
+
+        $.ajax({
+            url: "http://localhost:8080/dsaApp/login/recordarContraseña",
+            type: "GET",
+            contentType: "application/json",
+            data: { id: usuarioData },
+            success: function (response) {
+                $("#nav-login").click();
+                $("#enviar-usuario").hide();
+                $("#pregunta-conseguida").text(response);
+                $("#pregunta-conseguida").show();
+                $("#respuesta-olv").show();
+                $("#relogin").show();
+            },
+            error: function (xhr) {
+                alert("Usuario no encontrado: " + xhr.responseText);
+            }
+        });
+
+    });
+
+    $("#relogin").click(function(e){
+        e.preventDefault();
+        const usuarioData = {
+            id: $("#olv-usuario").val(),
+            respuesta: $("#respuesta-olv").val(),
+        };
+        $.ajax({
+            url: "http://localhost:8080/dsaApp/login/recuperarCuenta",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(usuarioData),
+            success: function (response) {
+            $("#usuario-a-cambiar").text(id);
+            $("#olvidadoContra").hide();
+            $("#update-password").show();
+            },
+            error: function (xhr) {
+                alert("Respuesta Incorrecta - Vigilia con las Mayúsuclas " + xhr.responseText);
+            }
+        });
+    });
+
+    $("#olv-a-login").click(function(e){
+        e.preventDefault();
+        const usuarioData = {
+            idoname: $("#usuario-a-cambiar").val(),
+            pswd: $("#primera-contra").val(),
+        };
+        const pswd2 = $("#segunda-contra").val();
+        if(pswd !== pswd2 ){
+            alert("Las contraseñas no son iguales");
+            return;
+        }
+        $.ajax({
+            url: "http://localhost:8080/dsaApp/login/cambiarContraseña",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(usuarioData),
+            success: function (response) {
+                $("#nav-login").click();
+
+                $("#login-user").val(usuarioData.id);
+                $("#login-password").val(signupData.pswd);
+                $("#login-boton-submit").focus();
+
+
+            },
+            error: function (xhr) {
+                alert(xhr.responseText);
+            }
+        });
+    });
+
+
 });
