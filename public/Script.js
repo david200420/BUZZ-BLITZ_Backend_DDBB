@@ -268,12 +268,18 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
     $("#enviar-usuario").click(function (e){
         e.preventDefault();
         const usuarioData = $("#olv-usuario").val();
+        console.log(usuarioData);
+        if (!usuarioData) {
+            console.warn("El valor de usuarioData es nulo o vacío. Revisa el campo #olv-usuario.");
+        } else {
+            console.log("Se capturó correctamente el valor:", usuarioData);
+        }
 
         $.ajax({
-            url: "http://localhost:8080/dsaApp/login/recordarContraseña",
+            url: "http://localhost:8080/dsaApp/usuarios/login/recordarContraseña",
             type: "GET",
             contentType: "application/json",
-            data: { id: usuarioData },
+            data: { id: usuarioData }, // como solo tiene un valor lo enviamos de este formato
             success: function (response) {
                 $("#nav-login").click();
                 $("#enviar-usuario").hide();
@@ -296,7 +302,7 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
             respuesta: $("#respuesta-olv").val(),
         };
         $.ajax({
-            url: "http://localhost:8080/dsaApp/login/recuperarCuenta",
+            url: "http://localhost:8080/dsaApp/usuarios/login/recuperarCuenta",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(usuarioData),
@@ -323,7 +329,7 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
             return;
         }
         $.ajax({
-            url: "http://localhost:8080/dsaApp/login/cambiarContraseña",
+            url: "http://localhost:8080/dsaApp/usuarios/login/cambiarContraseña",
             type: "POST",
             contentType: "application/json",
             data: JSON.stringify(usuarioData),

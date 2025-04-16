@@ -110,7 +110,7 @@ public class GameManagerImpl implements GameManager {
         try {
             this.addUsuario("carlos2004", "Carlos", "123", "carlos@gmail.com","Tu comida favorita?","Arroz" );
             this.addUsuario("MSC78", "Marc", "321", "marc@gmail.com","Como se llamaba tu escuela de Primaria?" ,"Dali" );
-            this.addUsuario("Inad", "Dani", "147", "dani@gmail.com","El nombre de tu familiar mas mayor?" ,"Teresa" );
+            this.addUsuario("Test", "Dani", "147", "dani@gmail.com","El nombre de tu familiar mas mayor?" ,"Teresa" );
             this.addObjeto(new Item("1", "MotoSierra",20500, 1));
             this.addObjeto(new Item("2", "Camionero", 10000, 2));
             this.addObjeto(new Item("3", "Espada",11500 ,1));
@@ -148,11 +148,13 @@ public class GameManagerImpl implements GameManager {
 
     @Override
     public String obtenerContra(String usuario) throws CredencialesIncorrectasException {
+
+        logger.info("Obteniendo pregunta");
         Usuario u = obtenerUsuario(usuario);
         if (u == null) {
             throw new CredencialesIncorrectasException("Usuario no encontrado");
         }
-
+        logger.info(u.getPregunta());
         return u.getPregunta();
     }
 

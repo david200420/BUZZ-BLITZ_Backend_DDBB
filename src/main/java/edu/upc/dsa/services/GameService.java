@@ -100,11 +100,11 @@ public class GameService {
     public Response getlogin(@QueryParam("id")String u) {
         try {
             String pregunta = gm.obtenerContra(u);
-            return Response.status(200).entity(pregunta).build();
+            return Response.ok(pregunta).build();
         } catch (CredencialesIncorrectasException e) {
+            System.out.println("Error interno del servidor");
             return Response.status(401).entity(e.getMessage()).build();
         }
-
     }
     @POST
     @Path("/login/recuperarCuenta")
