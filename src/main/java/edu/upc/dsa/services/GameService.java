@@ -21,10 +21,17 @@ import java.util.logging.Logger;
 public class GameService {
 
     private GameManager gm;
+    private static boolean initialized = false; // Bandera estática
 
     public GameService() throws UsuarioYaRegistradoException {
         this.gm = GameManagerImpl.getInstance();
-        this.gm.initTestUsers();
+        if (!initialized) {
+            try {
+                this.gm.initTestUsers();
+                initialized = true;
+            } catch (UsuarioYaRegistradoException e) {
+            }
+        }
     }
 
     @POST

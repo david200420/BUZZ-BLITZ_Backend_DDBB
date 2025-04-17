@@ -98,10 +98,10 @@ public class GameManagerImpl implements GameManager {
         }
             u.setTarrosMiel(u.getTarrosMiel() - compra.getObjeto().getPrecio());
             if(compra.getObjeto().getTipo() == 1){ //arma
-                u.UpdateArmas(compra.getObjeto());
+//                u.UpdateArmas(compra.getObjeto());
             }
             else if(compra.getObjeto().getTipo() == 2){ //skin
-                u.UpdateSkin(compra.getObjeto());
+//                u.UpdateSkin(compra.getObjeto());
             }
             return u;
     }
