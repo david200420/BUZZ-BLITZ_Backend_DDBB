@@ -40,13 +40,11 @@ public class GameService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerUsuario(UsuReg usuReg) {
         try {
-            Usuario u = gm.addUsuario(usuReg.getId(), usuReg.getName(), usuReg.getPswd(), usuReg.getMail(), usuReg.getPregunta(), usuReg.getRespuesta());
-            return Response.status(201).entity(u).build(); // Registrado con éxito
+            gm.addUsuario(usuReg.getId(), usuReg.getName(), usuReg.getPswd(), usuReg.getMail(), usuReg.getPregunta(), usuReg.getRespuesta());
+            return Response.status(201).build(); // Registrado con éxito
         } catch (UsuarioYaRegistradoException e) {
-
             return Response.status(409).entity(e.getMessage()).build(); // Conflicto
         } catch (Exception e) {
-
             return Response.status(500).entity("Error interno del servidor").build(); // Error general
         }
     }
@@ -57,7 +55,7 @@ public class GameService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response loginUsuario(Usulogin loginData) {
         try {
-            Usuario u = gm.login(loginData.getIdoname(), loginData.getPswd());
+            UsuarioEnviar u = gm.login(loginData.getIdoname(), loginData.getPswd());
             return Response.status(200).entity(u).build(); // Login OK
         } catch (CredencialesIncorrectasException e) {
 

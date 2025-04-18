@@ -1,9 +1,8 @@
 package edu.upc.dsa.models;
 
-import java.util.HashMap;
-import java.util.Map;
+public class UsuarioEnviar {
 
-public class Usuario {
+
     private String id;
     private String name;
     private String pswd;
@@ -15,15 +14,12 @@ public class Usuario {
     private int numPartidas;
     private int floreGold;
 
-    private Map<String, Item> armas;
-    private Map<String, Item> skins;
-
     private String pregunta;
     private String respuesta;
 
-    public Usuario() {}
+    public UsuarioEnviar() {}
 
-    public Usuario(String id, String name, String pswd, String mail, String q, String a) { // Primera vez que entras
+    public UsuarioEnviar(String id, String name, String pswd, String mail, String q, String a) { // Primera vez que entras
         this.id = id;
         this.name = name;
         this.pswd = pswd;
@@ -35,14 +31,6 @@ public class Usuario {
         this.floreGold = 0;
         this.pregunta = q;
         this.respuesta = a;
-        this.armas = new HashMap<>();
-        this.skins = new HashMap<>();
-    }
-    public void UpdateArmas(Item objeto){
-        armas.put(objeto.getId(), objeto);
-    }
-    public void UpdateSkin(Item objeto){
-        skins.put(objeto.getId(), objeto);
     }
     // --- Getters y Setters básicos ---
     public String getId() {
@@ -115,22 +103,6 @@ public class Usuario {
 
     public void setFloreGold(int floreGold) {
         this.floreGold = floreGold;
-    }
-
-    public Map<String, Item> getArmas() {
-        return armas;
-    }
-
-    public void setArmas(Map<String, Item> armas) {
-        this.armas = armas;
-    }
-
-    public Map<String, Item> getSkins() {
-        return skins;
-    }
-
-    public void setSkins(Map<String, Item> skins) {
-        this.skins = skins;
     }
 
     public String getRespuesta() {

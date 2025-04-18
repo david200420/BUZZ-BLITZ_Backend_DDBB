@@ -281,6 +281,7 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
             contentType: "application/json",
             data: { id: usuarioData }, // como solo tiene un valor lo enviamos de este formato
             success: function (response) {
+                console.log("Respuesta recibida:", response);
                 $("#nav-login").click();
                 $("#enviar-usuario").hide();
                 $("#pregunta-conseguida").text(response);
@@ -289,10 +290,18 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
                 $("#relogin").show();
             },
             error: function (xhr) {
-                alert("Usuario no encontrado: " + xhr.responseText);
+                console.error("Entró en error del AJAX", xhr);
+                console.log("Status:", xhr.status); // útil para depurar
+                console.log("Respuesta texto:", xhr.responseText);
+
+                // solo alerta si hay razón:
+                if (xhr.status === 401) {
+                    alert("Usuario no encontrado: " + xhr.responseText);
+                } else {
+                    alert("Error inesperado: " + xhr.status);
+                }
             }
         });
-
     });
 
     $("#relogin").click(function(e){

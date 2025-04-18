@@ -3,10 +3,7 @@ import edu.upc.dsa.exceptions.CredencialesIncorrectasException;
 import edu.upc.dsa.exceptions.NoSuficientesTarrosException;
 import edu.upc.dsa.exceptions.UsuarioNoAutenticadoException;
 import edu.upc.dsa.exceptions.UsuarioYaRegistradoException;
-import edu.upc.dsa.models.Compra;
-import edu.upc.dsa.models.Item;
-import edu.upc.dsa.models.OlvContra;
-import edu.upc.dsa.models.Usuario;
+import edu.upc.dsa.models.*;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -43,7 +40,7 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public Usuario addUsuario(String id, String name, String contra, String mail, String q, String a) throws UsuarioYaRegistradoException {
+    public void addUsuario(String id, String name, String contra, String mail, String q, String a) throws UsuarioYaRegistradoException {
         logger.info("Registrando nuevo usuario: " + id + " / " + mail);
 
         if (usuarios.containsKey(id)) {
@@ -58,11 +55,10 @@ public class GameManagerImpl implements GameManager {
         this.usuarios.put(id, nuevo);
         this.usuariosm.put(mail, nuevo);
         logger.info("Usuario registrado exitosamente");
-        return nuevo;
     }
 
     @Override
-    public Usuario login(String mailOId, String pswd) throws CredencialesIncorrectasException {
+    public UsuarioEnviar login(String mailOId, String pswd) throws CredencialesIncorrectasException {
         Usuario u = obtenerUsuario(mailOId);
 
         if (u == null) {
@@ -72,7 +68,9 @@ public class GameManagerImpl implements GameManager {
         if (!u.getPswd().equals(pswd)) {
             throw new CredencialesIncorrectasException("Contraseña incorrecta");
         }
-        return u;
+
+        UsuarioEnviar usu = new UsuarioEnviar(u.getId(), u.getName(), u.getPswd(), u.getMail(), u.getPregunta(), u.getRespuesta());
+        return usu;
     }
     @Override
     public void addObjeto(Item objeto) {
