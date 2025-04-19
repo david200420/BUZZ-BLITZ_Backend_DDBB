@@ -84,15 +84,16 @@ public class GameService {
     @Path("/tienda/armas")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getArmas() {
-        List<Object> t = gm.findArmas();
-        return Response.status(200).entity(t).build();
+            System.out.println("va el getArmas():");
+            ConsultaTienda armas = gm.findArmas();
+            return Response.status(200).entity(armas).build();
     }
 
     @GET
     @Path("/tienda/skins")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSkin() {
-        List<Object> t = gm.findSkins();
+        ConsultaTienda t = gm.findSkins();
         return Response.status(200).entity(t).build();
     }
 

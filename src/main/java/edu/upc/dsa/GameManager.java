@@ -9,8 +9,8 @@ public interface GameManager {
 
     public void addUsuario(String id, String name, String contra, String mail, String a, String q) throws UsuarioYaRegistradoException;
     public UsuarioEnviar login(String mail_nombre, String pswd) throws CredencialesIncorrectasException;
-    public List<Object> findSkins();
-    public List<Object> findArmas();
+    public ConsultaTienda findSkins();
+    public ConsultaTienda findArmas();
     public Usuario Comprar (Compra compra) throws UsuarioNoAutenticadoException, NoSuficientesTarrosException;
     public void addObjeto(Objeto objeto);
     public Objeto findObjeto(String idObjeto);

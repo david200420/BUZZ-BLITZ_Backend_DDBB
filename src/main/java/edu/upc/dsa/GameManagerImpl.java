@@ -70,6 +70,7 @@ public class GameManagerImpl implements GameManager {
     }
     @Override
     public void addObjeto(Objeto objeto) {
+        logger.info("Iniciando objeto");
         this.objetos.put(objeto.getId(), objeto);
     }
 
@@ -114,30 +115,30 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public List<Object> findArmas() {
+    public ConsultaTienda findArmas() {
 
-        HashMap<String, Object> armas = new HashMap<>();
+        HashMap<String, Objeto> armas = new HashMap<>();
         for (Objeto obj : this.objetos.values()) {
             if (obj.getTipo() == 1) { // tipo 1 = arma
                 armas.put(obj.getId(), obj);
             }
         }
-        List<Object> listaItems = new ArrayList<>(armas.values());
-
-        return listaItems;
+        List<Objeto> listaItems = new ArrayList<Objeto>(armas.values());
+        ConsultaTienda items = new ConsultaTienda(listaItems);
+        return items;
     }
     @Override
-    public List<Object> findSkins() {
+    public ConsultaTienda findSkins() {
 
-        HashMap<String, Object> skins = new HashMap<>();
+        HashMap<String, Objeto> skins = new HashMap<>();
         for (Objeto obj : this.objetos.values()) {
             if (obj.getTipo() == 2) { // tipo 2 = arma
                 skins.put(obj.getId(), obj);
             }
         }
-        List<Object> listaItems = new ArrayList<>(skins.values());
-
-        return listaItems;
+        List<Objeto> listaItems = new ArrayList<Objeto>(skins.values());
+        ConsultaTienda items = new ConsultaTienda(listaItems);
+        return items;
     }
 
     @Override

@@ -3,16 +3,17 @@ package edu.upc.dsa.models;
 import java.util.List;
 
 public class ConsultaTienda {
-    private List<Object> consulta;
+    private List<Objeto> consulta;
 
-    public ConsultaTienda(List<Object> consulta) {
+    public ConsultaTienda() {}
+    public ConsultaTienda(List<Objeto> consulta) {
         this.consulta = consulta;
     }
 
-    public List<Object> getConsulta() {
+    public List<Objeto> getConsulta() {
         return consulta;
     }
-    public void setConsulta(List<Object> consulta) {
+    public void setConsulta(List<Objeto> consulta) {
         this.consulta = consulta;
     }
 }
