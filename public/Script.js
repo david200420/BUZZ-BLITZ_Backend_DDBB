@@ -42,75 +42,6 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
         $(sectionId).show();
     }
 
-    function getTienda() {
-        $.ajax({
-            url: "http://localhost:8080/dsaApp/usuarios/tienda/armas",
-            type: "GET",
-            success: function (tienda) {
-                console.log("Respuesta de la tienda:", tienda);
-                mostrarItems(tienda.armas, "#objetos-container");
-            },
-            error: function (xhr) {
-                alert("Error cargando tienda: " + xhr.responseText);
-            }
-        });
-        $.ajax({
-            url: "http://localhost:8080/dsaApp/usuarios/tienda/skins",
-            type: "GET",
-            success: function (tienda) {
-                console.log("Respuesta de la tienda:", tienda);
-                mostrarItems(tienda.skins, "#objetos-container");
-            },
-            error: function (xhr) {
-                alert("Error cargando tienda: " + xhr.responseText);
-            }
-        });
-    }
-    function mostrarItems(items, contenedor) {
-        const container = $(contenedor);
-        container.empty();
-
-        Object.values(items).forEach(item => {
-            const htmlItem = `
-                    <div class="item-tienda">
-                        <h4>${item.nombre}</h4>
-                        <div class="item-precio">Precio: ${item.precio} 🍯</div>
-                        <button class="btn-comprar" data-id="${item.id}">COMPRAR</button>
-                    </div>
-                `;
-            container.append(htmlItem);
-        });
-
-        $(contenedor + " .btn-comprar").click(function () {
-            if (!usuarioActual) {
-                alert("Debes iniciar sesión para comprar");
-                return;
-            }
-
-            const objetoId = $(this).data('id');
-            realizarCompra(objetoId);
-        });
-    }
-
-    function realizarCompra(objetoId) {
-        const compraData = {
-            usuarioId: usuarioActual.id,
-            objeto: {id: objetoId}
-        };
-
-        $.ajax({
-            url: "http://localhost:8080/dsaApp/usuarios/comprar",
-            type: "PUT",
-            contentType: "application/json",
-            data: JSON.stringify(compraData),
-            success: function (usuarioActualizado) {
-                usuarioActual = usuarioActualizado;
-                alert("Compra realizada con éxito!");
-                getTienda();
-            }
-
-        });
-    }
     function mostrarWeb (){
         mainContent.fadeIn(500);
         mainHeader.removeClass("header-portada").addClass("header-principal");
@@ -151,12 +82,6 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
         $(this).addClass("active");
     });
 
-    $("#nav-shop").click(function (e) {
-        e.preventDefault();
-        showSection("#shop");
-        $(this).addClass("active");
-        getTienda();
-    });
 
     $("#link-to-signup").click(function (e) {
         e.preventDefault();
@@ -356,6 +281,70 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
             }
         });
     });
+
+    $("#nav-shop").click(function (e) {
+        e.preventDefault();
+        showSection("#shop"); // Ocultara y mostrara la section de interes
+        $(this).addClass("active");
+        getTienda(); // En esta funcion tendra que hacer las peticiones de la listas de Tienda
+    });
+
+    function getTienda (){
+        $.ajax({
+            url: "http://localhost:8080/dsaApp/usuarios/tienda/armas",
+            type: "GET",
+            contentType: "application/json",
+            success: function (response) {
+                const listaArmas = $("#listas-armas");
+                listaArmas.empty();
+
+                response.forEach(objeto => {
+                    const li = $(`
+                    <li>
+                        <article>
+                            <h4>${objeto.nombre}</h4>
+                            <h5>${objeto.precio} monedas</h5>
+                            <p>${objeto.descripcion}</p>
+                            <button class="btn-compra">Compra</button>
+                        </article>
+                    </li>
+                `);
+                    listaArmas.append(li);
+                });
+            },
+            error: function (xhr) {
+                alert("Error al cargar armas: " + xhr.responseText);
+            }
+        });
+
+        // SKINS
+        $.ajax({
+            url: "http://localhost:8080/dsaApp/usuarios/tienda/skins",
+            type: "GET",
+            contentType: "application/json",
+            success: function (response) {
+                const listaSkins = $("#listas-skins");
+                listaSkins.empty();
+
+                response.forEach(objeto => { // asi se crean tantos <li> como objetos haya en la lista
+                    const li = $(`
+                    <li>
+                        <article>
+                            <h4>${objeto.nombre}</h4>
+                            <h5>${objeto.precio} monedas</h5>
+                            <p>${objeto.descripcion}</p>
+                            <button class="btn-compra">Compra</button>
+                        </article>
+                    </li>
+                `);
+                    listaSkins.append(li);
+                });
+            },
+            error: function (xhr) {
+                alert("Error al cargar skins: " + xhr.responseText);
+            }
+        });
+    }
 
 
 

@@ -19,6 +19,26 @@ public class Objeto {
         this.imagenResId = imagenResId;
     }
 
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public String getImagenResId() {
+        return imagenResId;
+    }
+
+    public void setPrecio(Integer precio) {
+        this.precio = precio;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public void setImagenResId(String imagenResId) {
+        this.imagenResId = imagenResId;
+    }
+
     public int getPrecio() {
         return this.precio;
     }
