@@ -13,6 +13,8 @@ public class Objeto {
         this.nombre = nombre;
         this.tipo = tipo;
     }
+
+    //Borrar comentario, solo es para hacer el push bueno
     public int getPrecio() {
         return this.precio;
     }
