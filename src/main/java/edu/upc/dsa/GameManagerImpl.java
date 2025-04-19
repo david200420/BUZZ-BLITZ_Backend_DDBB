@@ -105,9 +105,9 @@ public class GameManagerImpl implements GameManager {
             this.addUsuario("carlos2004", "Carlos", "123", "carlos@gmail.com","Tu comida favorita?","Arroz" );
             this.addUsuario("MSC78", "Marc", "321", "marc@gmail.com","Como se llamaba tu escuela de Primaria?" ,"Dali" );
             this.addUsuario("Test", "Dani", "147", "dani@gmail.com","El nombre de tu familiar mas mayor?" ,"Teresa" );
-            this.addObjeto(new Objeto("1", "MotoSierra",20500, 1, "bee"));
-            this.addObjeto(new Objeto("2", "Camionero", 10000, 2, "bee"));
-            this.addObjeto(new Objeto("3", "Espada",11500 ,1, "bee2"));
+            this.addObjeto(new Objeto("1", "MotoSierra",20500, 1,"El arma perfecta para cortar y no preguntar" ,"bee"));
+            this.addObjeto(new Objeto("2", "Camionero", 10000, 2, "Para dar mas vueltas al mundo que nadie","bee"));
+            this.addObjeto(new Objeto("3", "Espada",11500 ,1, "Corta como un diamante la tiza","bee2"));
         } catch (UsuarioYaRegistradoException e) {
             logger.warn("Usuario de prueba ya estaba registrado");
         }
