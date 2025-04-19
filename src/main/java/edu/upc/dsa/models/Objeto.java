@@ -4,9 +4,9 @@ public class Objeto {
     private String id;
     private String nombre;
     private Integer precio;
-    private int tipo;
+    private int tipo;// "arma" o "skin"
     private String descripcion;
-    private String imagenResId;// "arma" o "skin"
+    private String imagenResId;
 
     public Objeto() {}
 
@@ -25,10 +25,6 @@ public class Objeto {
 
     public String getImagenResId() {
         return imagenResId;
-    }
-
-    public void setPrecio(Integer precio) {
-        this.precio = precio;
     }
 
     public void setDescripcion(String descripcion) {
