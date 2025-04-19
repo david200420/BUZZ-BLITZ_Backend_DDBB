@@ -1,14 +1,14 @@
 package edu.upc.dsa.models;
 
-public class Item {
+public class Objeto {
     private String id;
     private String nombre;
     private Integer precio;
     private int tipo; // "arma" o "skin"
 
-    public Item() {}
+    public Objeto() {}
 
-    public Item(String id, String nombre, int precio , int tipo) {
+    public Objeto(String id, String nombre, int precio , int tipo) {
         this.id = id;
         this.nombre = nombre;
         this.tipo = tipo;

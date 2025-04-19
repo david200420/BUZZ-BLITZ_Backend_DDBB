@@ -15,8 +15,8 @@ public class Usuario {
     private int numPartidas;
     private int floreGold;
 
-    private Map<String, Item> armas;
-    private Map<String, Item> skins;
+    private Map<String, Objeto> armas;
+    private Map<String, Objeto> skins;
 
     private String pregunta;
     private String respuesta;
@@ -38,10 +38,10 @@ public class Usuario {
         this.armas = new HashMap<>();
         this.skins = new HashMap<>();
     }
-    public void UpdateArmas(Item objeto){
+    public void UpdateArmas(Objeto objeto){
         armas.put(objeto.getId(), objeto);
     }
-    public void UpdateSkin(Item objeto){
+    public void UpdateSkin(Objeto objeto){
         skins.put(objeto.getId(), objeto);
     }
     // --- Getters y Setters básicos ---
@@ -117,19 +117,19 @@ public class Usuario {
         this.floreGold = floreGold;
     }
 
-    public Map<String, Item> getArmas() {
+    public Map<String, Objeto> getArmas() {
         return armas;
     }
 
-    public void setArmas(Map<String, Item> armas) {
+    public void setArmas(Map<String, Objeto> armas) {
         this.armas = armas;
     }
 
-    public Map<String, Item> getSkins() {
+    public Map<String, Objeto> getSkins() {
         return skins;
     }
 
-    public void setSkins(Map<String, Item> skins) {
+    public void setSkins(Map<String, Objeto> skins) {
         this.skins = skins;
     }
 

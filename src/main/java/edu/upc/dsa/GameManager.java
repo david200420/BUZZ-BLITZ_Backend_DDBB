@@ -15,8 +15,8 @@ public interface GameManager {
     public List<Object> findSkins();
     public List<Object> findArmas();
     public Usuario Comprar (Compra compra) throws UsuarioNoAutenticadoException, NoSuficientesTarrosException;
-    public void addObjeto(Item objeto);
-    public Item findObjeto(String idObjeto);
+    public void addObjeto(Objeto objeto);
+    public Objeto findObjeto(String idObjeto);
     public void initTestUsers() throws UsuarioYaRegistradoException;
     public String obtenerContra(String usuario) throws CredencialesIncorrectasException;
     public Usuario relogin(String id, String respuesta) throws CredencialesIncorrectasException;
