@@ -3,10 +3,7 @@ package edu.upc.dsa.services;
 
 import edu.upc.dsa.GameManager;
 import edu.upc.dsa.GameManagerImpl;
-import edu.upc.dsa.exceptions.CredencialesIncorrectasException;
-import edu.upc.dsa.exceptions.UsuarioYaRegistradoException;
-import edu.upc.dsa.exceptions.UsuarioNoAutenticadoException;
-import edu.upc.dsa.exceptions.NoSuficientesTarrosException;
+import edu.upc.dsa.exceptions.*;
 import edu.upc.dsa.models.*;
 import io.swagger.annotations.Api;
 
@@ -138,7 +135,35 @@ public class GameService {
         }
     }
 
+    @GET
+    @Path("/tienda/{id}/armas")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getArmasUsuario(@PathParam("id")String u) {
+        try {
+            List <Objeto> armas = gm.armasUsuario(u);
+            return Response.ok(armas).build();
+        } catch (CredencialesIncorrectasException e) {
+            System.out.println("Error interno del servidor");
+            return Response.status(401).entity(e.getMessage()).build();
+        } catch (NoHayObjetos e) {
+            return Response.status(400).entity(e.getMessage()).build();
+        }
+    }
 
+    @GET
+    @Path("/tienda/{id}/skins")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSkinUsuario(@PathParam("id")String u) {
+        try {
+            List<Objeto> skins = gm.skinsUsuario(u);
+            return Response.ok(skins).build();
+        } catch (CredencialesIncorrectasException e) {
+            System.out.println("Error interno del servidor");
+            return Response.status(401).entity(e.getMessage()).build();
+        } catch (NoHayObjetos e) {
+            return Response.status(400).entity(e.getMessage()).build();
+        }
+    }
 }
 
 

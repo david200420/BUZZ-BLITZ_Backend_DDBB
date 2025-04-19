@@ -15,16 +15,20 @@
     <div class="header-logo">BUZZ BLITZ</div>
     <div id="user-info"></div>
 </header>
+<!-- Se tienen que usar sections en todos esos contenedores que signifiquen algo independiente por si mismos,
+por ejemplo la landing page es una section de la web, al igual que la tienda, login,etc. En cambio el main content,
+al ser una cosa con tantas cosas, se puede hacer como div y dentro del main content ahi hacer section independientes sbs
+Esto es pq claro no es una section en si, dentro de el estan las sectiones-->
 
 <!-- LANDING PAGE, lo cual sera lo primero ue cargue y cuando le des click se abrira el nav -->
-<div id="landing" class="landing">
+<section id="landing" class="landing">
     <video id="video-fondo" autoplay muted loop alt="gameplay del juego" class="video-fondo">
         <source src="videos/videoplayback.mp4" type="video/mp4">
     </video>
     <div class="overlay">
         <h1 class="landing-title">BUZZ BLITZ</h1>
     </div>
-</div>
+</section>
 
 <div id ="mainContent" style="display:none;"><!-- Estara ocultada de primeras-->
 <nav> <!-- Esto seria la barra de guia de la web y se definen las pesatñas que tendran-->
@@ -35,7 +39,7 @@
     <a href="#" id="nav-shop" style="display: none;">Tienda</a><!-- esta oculta-->
 </nav>
 
-<div id="about" class="container">
+<section id="about" class="container">
     <h2>Quiénes Somos</h2>
     <p>
         En <strong>"Buzz Blitz"</strong> te sumerges en la aventura de una abeja que se ha extraviado y debe encontrar el camino de regreso a su colmena, amenazada por una astuta araña.
@@ -46,9 +50,9 @@
     <p>
         ¡Únete a la aventura y ayuda a salvar la colmena! Disfruta de este mundo lleno de flores, miel y desafíos que pondrán a prueba tus reflejos.
     </p>
-</div>
+</section>
 
-<div id="login" class="container">
+<section id="login" class="container">
     <div class="form-box">
         <form class="form" id="form-login">
             <h2 class="title">Inicio de Sessión</h2>
@@ -64,8 +68,16 @@
             <p><a href="#" id="Olv-Contra">He olvidado mi Contraseña</a></p>
         </div>
     </div>
-</div>
-    <div id="terminos-condiciones" class = terms style="display: none;">
+</section>
+    <!-- La principal diferencia entre section y article esq section es una parte de la web y article
+    seria algo que se puede publicar de manera sola, por ejemplo un juego que tiene un mapa
+    pues las zonas serian section o las misiones obligatorias para seguir la historia que no acaban
+    ni tienen un inicio con sentido si no has hecho la anterior serian section.
+    En cambio las secundarias que podrias sacar a parte con otro juego serian los articulos. Y en este caso
+    los terminos y condiciones son una section de la web pero a la vez tambien se pueden publicar por si mismos, tienen
+    sentido solos, por lo cual se ha hecho un mega articulo con mini sections. Se ha hecho la section separando el
+    Header de el articulo de los terminos en si mismo.-->
+    <section id="terminos-condiciones" class = terms style="display: none;">
         <article>
             <header>
             <h2>Terminos y Condiciones</h2>
@@ -133,9 +145,9 @@
         </article>
         <button id="rechazarTerminos">Rechazar</button>
         <button id="aceptarTerminos">Aceptar</button>
-    </div>
+    </section>
 
-<div id="olvidadoContra" class="form-box" style="display: none;"><!-- Esto va a ser el he olvidado mi contraseña que va a pedir-->
+<section id="olvidadoContra" class="form-box" style="display: none;"><!-- Esto va a ser el he olvidado mi contraseña que va a pedir-->
     <h3 class="title">Te has olvidado la Contraseña?</h3> <!--Una respuesta de una pregunta que ya haya respondido en el signup-->
     <h4 class="subtitle">No pasa nada, escribe tu Correo o Usuario</h4>
     <div id="enviar-resp"  class="form-container">
@@ -154,9 +166,9 @@
         <button id="olv-a-login">Acceder</button>
     </div>
 
-</div>
+</section>
 
-<div id="signup" class="container">
+<section id="signup" class="container">
     <div class="form-box">
         <form class="form" id="form-signup">
             <h2 class="title">Regístrate</h2>
@@ -190,24 +202,42 @@
             <p>¿Ya tienes cuenta? <a href="#" id="link-to-login">Log in</a></p>
         </div>
     </div>
-</div>
+</section>
 
-<div id="shop" class="container"><!-- habra que usar ol o ul-->
+<section id="shop" class="container"><!-- habra que usar ul-->
     <h2>Tienda</h2>
-    <div id="tienda-content">
-        <div id="armas" class="categoria-tienda">
+    <div id="tienda-content"><!--mirar si se necesita para css o no-->
+        <section id="armas" class="categoria-tienda">
             <h3>Armas</h3>
-            <div id="armas-container" class="items-tienda"></div>
-        </div>
-        <div id="skins" class="categoria-tienda">
+            <ul id="listas-armas">
+                <li>
+                    <article class="item-arma">
+                        <h4 class="titulo-arma"></h4>
+                        <h5 class="precio-arma"></h5>
+                        <p class="descripcion-arma"></p>
+                        <button class="comprar-arma">Compra</button><!--Mirar de como cambiar el texto si ya lo tiene-->
+                    </article>
+                </li>
+
+            </ul>
+        </section>
+
+        <section id="skins" class="categoria-tienda">
             <h3>Skins</h3>
-            <div id="skins-container" class="items-tienda"></div>
-        </div>
+            <ul id="listas-skins">
+                <li>
+                    <article class="item-skin">
+                        <h4 class="titulo-skin">Nombre Skin</h4>
+                        <h5 class="precio-skin">Precio</h5>
+                        <p class="descripcion-skin">Descripción</p>
+                        <button class="comprar-skin">Compra</button>
+                    </article>
+                </li>
+            </ul>
+        </section>
     </div>
-</div>
-
+</section>
     <script src="Script.js"></script>
-
 </div>
 </body>
 </html>

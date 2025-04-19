@@ -4,14 +4,16 @@ public class Objeto {
     private String id;
     private String nombre;
     private Integer precio;
-    private int tipo; // "arma" o "skin"
+    private int tipo;
+    private String imagenResId;// "arma" o "skin"
 
     public Objeto() {}
 
-    public Objeto(String id, String nombre, int precio , int tipo) {
+    public Objeto(String id, String nombre, int precio , int tipo, String imagenResId) {
         this.id = id;
         this.nombre = nombre;
         this.tipo = tipo;
+        this.precio = precio;
     }
 
     public int getPrecio() {

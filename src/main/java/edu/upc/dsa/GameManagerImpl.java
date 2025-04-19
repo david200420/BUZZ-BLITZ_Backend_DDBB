@@ -1,8 +1,5 @@
 package edu.upc.dsa;
-import edu.upc.dsa.exceptions.CredencialesIncorrectasException;
-import edu.upc.dsa.exceptions.NoSuficientesTarrosException;
-import edu.upc.dsa.exceptions.UsuarioNoAutenticadoException;
-import edu.upc.dsa.exceptions.UsuarioYaRegistradoException;
+import edu.upc.dsa.exceptions.*;
 import edu.upc.dsa.models.*;
 import org.apache.log4j.Logger;
 
@@ -59,8 +56,8 @@ public class GameManagerImpl implements GameManager {
 
     @Override
     public UsuarioEnviar login(String mailOId, String pswd) throws CredencialesIncorrectasException {
+       logger.info("Iniciando login");
         Usuario u = obtenerUsuario(mailOId);
-
         if (u == null) {
             throw new CredencialesIncorrectasException("Usuario no encontrado");
         }
@@ -68,7 +65,6 @@ public class GameManagerImpl implements GameManager {
         if (!u.getPswd().equals(pswd)) {
             throw new CredencialesIncorrectasException("Contraseña incorrecta");
         }
-
         UsuarioEnviar usu = new UsuarioEnviar(u.getId(), u.getName(), u.getPswd(), u.getMail(), u.getPregunta(), u.getRespuesta());
         return usu;
     }
@@ -96,10 +92,10 @@ public class GameManagerImpl implements GameManager {
         }
             u.setTarrosMiel(u.getTarrosMiel() - compra.getObjeto().getPrecio());
             if(compra.getObjeto().getTipo() == 1){ //arma
-//                u.UpdateArmas(compra.getObjeto());
+                u.UpdateArmas(compra.getObjeto());
             }
             else if(compra.getObjeto().getTipo() == 2){ //skin
-//                u.UpdateSkin(compra.getObjeto());
+                u.UpdateSkin(compra.getObjeto());
             }
             return u;
     }
@@ -109,9 +105,9 @@ public class GameManagerImpl implements GameManager {
             this.addUsuario("carlos2004", "Carlos", "123", "carlos@gmail.com","Tu comida favorita?","Arroz" );
             this.addUsuario("MSC78", "Marc", "321", "marc@gmail.com","Como se llamaba tu escuela de Primaria?" ,"Dali" );
             this.addUsuario("Test", "Dani", "147", "dani@gmail.com","El nombre de tu familiar mas mayor?" ,"Teresa" );
-            this.addObjeto(new Objeto("1", "MotoSierra",20500, 1));
-            this.addObjeto(new Objeto("2", "Camionero", 10000, 2));
-            this.addObjeto(new Objeto("3", "Espada",11500 ,1));
+            this.addObjeto(new Objeto("1", "MotoSierra",20500, 1, "bee"));
+            this.addObjeto(new Objeto("2", "Camionero", 10000, 2, "bee"));
+            this.addObjeto(new Objeto("3", "Espada",11500 ,1, "bee2"));
         } catch (UsuarioYaRegistradoException e) {
             logger.warn("Usuario de prueba ya estaba registrado");
         }
@@ -181,5 +177,34 @@ public class GameManagerImpl implements GameManager {
 
         u.setRespuesta(contra);
 
+    }
+
+    @Override
+    public List<Objeto> skinsUsuario(String usuario) throws CredencialesIncorrectasException, NoHayObjetos {
+        Usuario u = obtenerUsuario(usuario);
+        if (u == null) {
+            throw new CredencialesIncorrectasException("Usuario no encontrado");
+        }
+        List<Objeto> listaItems = new ArrayList<>(u.getSkins().values());
+
+        if (listaItems.isEmpty()) {
+            throw new NoHayObjetos("No tienes skins");
+        }
+
+        return listaItems;
+    }
+
+    public List<Objeto> armasUsuario(String usuario) throws CredencialesIncorrectasException, NoHayObjetos {
+        Usuario u = obtenerUsuario(usuario);
+        if (u == null) {
+            throw new CredencialesIncorrectasException("Usuario no encontrado");
+        }
+        List<Objeto> listaItems = new ArrayList<>(u.getArmas().values());
+
+        if (listaItems.isEmpty()) {
+            throw new NoHayObjetos("No tienes armas");
+        }
+
+        return listaItems;
     }
 }

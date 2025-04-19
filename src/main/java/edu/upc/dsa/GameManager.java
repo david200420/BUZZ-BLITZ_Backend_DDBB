@@ -1,9 +1,6 @@
 package edu.upc.dsa;
 
-import edu.upc.dsa.exceptions.CredencialesIncorrectasException;
-import edu.upc.dsa.exceptions.NoSuficientesTarrosException;
-import edu.upc.dsa.exceptions.UsuarioNoAutenticadoException;
-import edu.upc.dsa.exceptions.UsuarioYaRegistradoException;
+import edu.upc.dsa.exceptions.*;
 import edu.upc.dsa.models.*;
 
 import java.util.List;
@@ -21,5 +18,7 @@ public interface GameManager {
     public String obtenerContra(String usuario) throws CredencialesIncorrectasException;
     public Usuario relogin(String id, String respuesta) throws CredencialesIncorrectasException;
     public void CambiarContra(String usuario, String contra) throws CredencialesIncorrectasException;
+    public List<Objeto> skinsUsuario(String usuario) throws CredencialesIncorrectasException, NoHayObjetos;
+    public List<Objeto> armasUsuario(String usuario) throws CredencialesIncorrectasException, NoHayObjetos;
 
 }
