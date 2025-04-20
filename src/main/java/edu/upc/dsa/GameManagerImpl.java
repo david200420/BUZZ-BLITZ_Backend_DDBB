@@ -181,7 +181,7 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public List<Objeto> skinsUsuario(String usuario) throws CredencialesIncorrectasException, NoHayObjetos {
+    public ConsultaTienda skinsUsuario(String usuario) throws CredencialesIncorrectasException, NoHayObjetos {
         Usuario u = obtenerUsuario(usuario);
         if (u == null) {
             throw new CredencialesIncorrectasException("Usuario no encontrado");
@@ -192,10 +192,12 @@ public class GameManagerImpl implements GameManager {
             throw new NoHayObjetos("No tienes skins");
         }
 
-        return listaItems;
+        ConsultaTienda items = new ConsultaTienda(listaItems);
+        return items;
     }
 
-    public List<Objeto> armasUsuario(String usuario) throws CredencialesIncorrectasException, NoHayObjetos {
+    @Override
+    public ConsultaTienda armasUsuario(String usuario) throws CredencialesIncorrectasException, NoHayObjetos {
         Usuario u = obtenerUsuario(usuario);
         if (u == null) {
             throw new CredencialesIncorrectasException("Usuario no encontrado");
@@ -205,7 +207,7 @@ public class GameManagerImpl implements GameManager {
         if (listaItems.isEmpty()) {
             throw new NoHayObjetos("No tienes armas");
         }
-
-        return listaItems;
+        ConsultaTienda items = new ConsultaTienda(listaItems);
+        return items;
     }
 }

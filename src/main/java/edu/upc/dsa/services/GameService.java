@@ -141,7 +141,7 @@ public class GameService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getArmasUsuario(@PathParam("id")String u) {
         try {
-            List <Objeto> armas = gm.armasUsuario(u);
+            ConsultaTienda armas = gm.armasUsuario(u);
             return Response.ok(armas).build();
         } catch (CredencialesIncorrectasException e) {
             System.out.println("Error interno del servidor");
@@ -156,7 +156,7 @@ public class GameService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSkinUsuario(@PathParam("id")String u) {
         try {
-            List<Objeto> skins = gm.skinsUsuario(u);
+            ConsultaTienda skins = gm.skinsUsuario(u);
             return Response.ok(skins).build();
         } catch (CredencialesIncorrectasException e) {
             System.out.println("Error interno del servidor");

@@ -18,7 +18,7 @@ public interface GameManager {
     public String obtenerContra(String usuario) throws CredencialesIncorrectasException;
     public Usuario relogin(String id, String respuesta) throws CredencialesIncorrectasException;
     public void CambiarContra(String usuario, String contra) throws CredencialesIncorrectasException;
-    public List<Objeto> skinsUsuario(String usuario) throws CredencialesIncorrectasException, NoHayObjetos;
-    public List<Objeto> armasUsuario(String usuario) throws CredencialesIncorrectasException, NoHayObjetos;
+    public ConsultaTienda skinsUsuario(String usuario) throws CredencialesIncorrectasException, NoHayObjetos;
+    public ConsultaTienda armasUsuario(String usuario) throws CredencialesIncorrectasException, NoHayObjetos;
 
 }

@@ -288,31 +288,85 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
         $(this).addClass("active");
         getTienda(); // En esta funcion tendra que hacer las peticiones de la listas de Tienda
     });
-
+// El objetivo de esta funcion es hacer 4 petciones, las 2 primeras para tener los objetos que tiene YA comprados
+// el usuario y poder en las 2 siguientes peticiones que seria para coger todos los datos de cada objeto, hacer que no
+// Pueda comprarlo y cambie la class CSS y el texto del boton.
     function getTienda (){
+        let listaArmasss = []
+        let listaSkinsss = []
+
         $.ajax({
+            url: "http://localhost:8080/dsaApp/usuarios/tienda/"+usuarioActual+"/armas",
+            type: "GET",
+            contentType: "application/json",
+            success: function (response){
+                listaArmasss = response.consulta.map(objeto => objeto.id);
+                //En el foreach va en minuusculas ya que aqui lo que hacemos es crear una variable,
+                //por cada objeto Json no le hacemos caso a que consulta sea de classe Objeto sbs,
+                //esto se llama objeto JSON o literal."consulta": [
+                //     {
+                //       "id": 1,
+                //       "nombre": "Espada",
+                //       "precio": 100
+                //     },
+                //     {
+                //       "id": 2,
+                //       "nombre": "Arco",
+                //       "precio": 150
+                //     }
+                //   ] Este seria el JSON y cada objeto esta entre un claudator (objeto JSON)
+            }
+        })
+        error: function(xhr) {
+            alert("No hay Usuario o hay algun problema en armas " + xhr.responseText);
+        }
+
+        $.ajax({
+            url: "http://localhost:8080/dsaApp/usuarios/tienda/"+usuarioActual+"/skins",
+            type: "GET",
+            contentType: "application/json",
+            success: function (response){
+                response.consulta.forEach(objeto => {
+                    listaSkinsss = response.consulta.map(objeto => objeto.id);
+                    //el .map sirve para recorrer toda la lista y seleccionar el valor que estas seleccionando
+                    //Basicamente aqui estamos recorriendo toda la lista JSON y poniendo el listaSkinsss los
+                    //objetos.id SOLO. Selecionas los atributos que quieres sbs.
+                })
+
+            }
+        },
+        error: function(xhr) {
+            alert("No hay Usuario o hay algun problema en skins " + xhr.responseText);
+        }
+            $.ajax({
             url: "http://localhost:8080/dsaApp/usuarios/tienda/armas",
             type: "GET",
             contentType: "application/json",
             success: function (response) {
                 const listaArmas = $("#listas-armas");
                 listaArmas.empty();
-
-                response.forEach(objeto => {
+                response.consulta.forEach(objeto => {
                     const li = $(`
-                    <li>
-                        <article>
-                            <h4>${objeto.nombre}</h4>
-                            <h5>${objeto.precio} monedas</h5>
-                            <p>${objeto.descripcion}</p>
-                            <button class="btn-compra">Compra</button>
-                        </article>
-                    </li>
+            <li>
+              <article>
+                <h4>${objeto.nombre}</h4>
+                <h5>${objeto.precio} Tarros de Miel</h5>
+                <p>${objeto.descripcion}</p>
+                if(lista){
+                  <button class="btn-compra" data-id="${objeto.id}">
+                  Compra
+                </button>
+                }
+                <button class="btn-compra" data-id="${objeto.id}">
+                  Compra
+                </button>
+              </article>
+            </li>
                 `);
                     listaArmas.append(li);
                 });
             },
-            error: function (xhr) {
+            error: function(xhr) {
                 alert("Error al cargar armas: " + xhr.responseText);
             }
         });
@@ -322,25 +376,32 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
             url: "http://localhost:8080/dsaApp/usuarios/tienda/skins",
             type: "GET",
             contentType: "application/json",
-            success: function (response) {
+            success: function(response) {
                 const listaSkins = $("#listas-skins");
                 listaSkins.empty();
 
-                response.forEach(objeto => { // asi se crean tantos <li> como objetos haya en la lista
-                    const li = $(`
-                    <li>
-                        <article>
-                            <h4>${objeto.nombre}</h4>
-                            <h5>${objeto.precio} monedas</h5>
-                            <p>${objeto.descripcion}</p>
-                            <button class="btn-compra">Compra</button>
-                        </article>
-                    </li>
-                `);
-                    listaSkins.append(li);
-                });
+                // Igual: iteramos response.consulta
+                if (Array.isArray(response.consulta)) {
+                    response.consulta.forEach(objeto => {
+                        const li = $(`
+            <li>
+              <article>
+                <h4>${objeto.nombre}</h4>
+                <h5>${objeto.precio} monedas</h5>
+                <p>${objeto.descripcion}</p>
+                <button class="btn-compra" data-id="${objeto.id}">
+                  Compra
+                </button>
+              </article>
+            </li>
+          `);
+                        listaSkins.append(li);
+                    });
+                } else {
+                    console.warn("getSkins: esperábamos un array en response.consulta", response);
+                }
             },
-            error: function (xhr) {
+            error: function(xhr) {
                 alert("Error al cargar skins: " + xhr.responseText);
             }
         });
