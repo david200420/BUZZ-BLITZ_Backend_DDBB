@@ -20,5 +20,6 @@ public interface GameManager {
     public void CambiarContra(String usuario, String contra) throws CredencialesIncorrectasException;
     public ConsultaTienda skinsUsuario(String usuario) throws CredencialesIncorrectasException, NoHayObjetos;
     public ConsultaTienda armasUsuario(String usuario) throws CredencialesIncorrectasException, NoHayObjetos;
+    void deleteUsuario(String id) throws UsuarioNoEncontradoException;
 
 }

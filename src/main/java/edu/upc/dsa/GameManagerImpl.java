@@ -214,4 +214,16 @@ public class GameManagerImpl implements GameManager {
         ConsultaTienda items = new ConsultaTienda(listaItems);
         return items;
     }
+
+    @Override
+    public void deleteUsuario(String id) throws UsuarioNoEncontradoException {
+        Usuario usuario = usuarios.get(id);
+        if (usuario == null) {
+            throw new UsuarioNoEncontradoException("Usuario no encontrado");
+        }
+        String email = usuario.getMail();
+        usuarios.remove(id);
+        usuariosm.remove(email);
+        logger.info("Usuario eliminado: " + id);
+    }
 }
