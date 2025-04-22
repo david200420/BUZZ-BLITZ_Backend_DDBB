@@ -63,6 +63,20 @@ public class GameService {
         }
     }
 
+    @DELETE
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteUsuario(@PathParam("id") String id) {
+        try {
+            gm.deleteUsuario(id);
+            return Response.status(200).build();
+        } catch (UsuarioNoEncontradoException e) {
+            return Response.status(404).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error interno").build();
+        }
+    }
+
     @PUT
     @Path("/comprar")
     @Consumes(MediaType.APPLICATION_JSON)
