@@ -156,12 +156,14 @@ public class GameService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSkinUsuario(@PathParam("id")String u) {
         try {
+            System.out.println("va el getSkinUsuario():");
             ConsultaTienda skins = gm.skinsUsuario(u);
             return Response.ok(skins).build();
         } catch (CredencialesIncorrectasException e) {
             System.out.println("Error interno del servidor");
             return Response.status(401).entity(e.getMessage()).build();
         } catch (NoHayObjetos e) {
+            System.out.println("Error no hay objetos");
             return Response.status(400).entity(e.getMessage()).build();
         }
     }
