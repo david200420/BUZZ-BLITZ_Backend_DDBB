@@ -317,9 +317,10 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
                     //       "precio": 150
                     //     }
                     //   ] Este seria el JSON y cada objeto esta entre un claudator (objeto JSON)
+                    resolve();
                 },
                 error: function (xhr) {
-                    alert("No hay Usuario o hay algun problema en armas " + xhr.responseText);
+                    resolve();
                 }
             });
         });
@@ -336,11 +337,11 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
                         //Basicamente aqui estamos recorriendo toda la lista JSON y poniendo el listaSkinsss los
                         //objetos.id SOLO. Selecionas los atributos que quieres sbs.
                     })
-
+                        resolve();
                 },
 
                 error: function (xhr) {
-                    alert("No hay Usuario o hay algun problema en skins " + xhr.responseText);
+                    resolve();
                 }
             });
         });
