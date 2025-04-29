@@ -37,7 +37,7 @@ public class GameService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerUsuario(UsuReg usuReg) {
         try {
-            gm.addUsuario(usuReg.getId(), usuReg.getName(), usuReg.getPswd(), usuReg.getMail(), usuReg.getPregunta(), usuReg.getRespuesta());
+            gm.addUsuario(usuReg.getId(), usuReg.getName(), usuReg.getApellidos(),usuReg.getPswd(), usuReg.getMail(), usuReg.getPregunta(), usuReg.getRespuesta());
             return Response.status(201).build(); // Registrado con éxito
         } catch (UsuarioYaRegistradoException e) {
             return Response.status(409).entity(e.getMessage()).build(); // Conflicto

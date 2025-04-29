@@ -37,7 +37,7 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public void addUsuario(String id, String name, String contra, String mail, String q, String a) throws UsuarioYaRegistradoException {
+    public void addUsuario(String id, String name, String ape,String contra, String mail, String q, String a) throws UsuarioYaRegistradoException {
         logger.info("Registrando nuevo usuario: " + id + " / " + mail);
 
         if (usuarios.containsKey(id)) {
@@ -48,7 +48,7 @@ public class GameManagerImpl implements GameManager {
             throw new UsuarioYaRegistradoException("El MAIL ya está registrado");
         }
 
-        Usuario nuevo = new Usuario(id, name, contra, mail,q,a);
+        Usuario nuevo = new Usuario(id, name, ape ,contra, mail,q,a);
         this.usuarios.put(id, nuevo);
         this.usuariosm.put(mail, nuevo);
         logger.info("Usuario registrado exitosamente");
@@ -103,9 +103,9 @@ public class GameManagerImpl implements GameManager {
     @Override
     public void initTestUsers() throws UsuarioYaRegistradoException {
         try {
-            this.addUsuario("carlos2004", "Carlos", "123", "carlos@gmail.com","Tu comida favorita?","Arroz" );
-            this.addUsuario("MSC78", "Marc", "321", "marc@gmail.com","Como se llamaba tu escuela de Primaria?" ,"Dali" );
-            this.addUsuario("Test", "Dani", "147", "dani@gmail.com","El nombre de tu familiar mas mayor?" ,"Teresa" );
+            this.addUsuario("carlos2004", "Carlos","Gonzalez", "123", "carlos@gmail.com","Tu comida favorita?","Arroz" );
+            this.addUsuario("MSC78", "Marc", "Lopez","321", "marc@gmail.com","Como se llamaba tu escuela de Primaria?" ,"Dali" );
+            this.addUsuario("Test", "Dani", "Buenosdias","147", "dani@gmail.com","El nombre de tu familiar mas mayor?" ,"Teresa" );
             this.addObjeto(new Objeto("1", "Palo",200 ,1, "Un paaaaaaaaaaaaaalo","palo1"));
             this.addObjeto(new Objeto("2", "Hacha",700, 1,"Un hacha asequible para todos pero mortal como ninguna, su especialidad: las telarañas" ,"hacha1"));
             this.addObjeto(new Objeto("3", "Gorro Pirata", 1000, 2, "Para surcar los mares","gorropirata"));

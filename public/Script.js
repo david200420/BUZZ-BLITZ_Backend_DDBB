@@ -143,6 +143,7 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
         const signupData = { //definimos variables necesarias para la funcion ya que no son globales
             id: $("#signup-user").val(), // y las metemos en un objeto que lo transformaremos a JSON
             name: $("#signup-fullname").val(),
+            apellidos:$("#signup-surname").val(),
             pswd: $("#signup-password").val(),
             mail: $("#signup-email").val(),
             pregunta:$("#security-question").val(),

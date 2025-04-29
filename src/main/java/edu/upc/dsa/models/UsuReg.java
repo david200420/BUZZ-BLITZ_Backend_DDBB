@@ -4,19 +4,28 @@ public class UsuReg {
 
     private String id;
     private String name;
+    private String apellidos;
     private String pswd;
     private String mail;
     private String pregunta;
     private String respuesta;
 
     public UsuReg() {}
-    public UsuReg(String id, String name, String pswd, String mail, String q, String a) {
+    public UsuReg(String id, String name, String apellidos,String pswd, String mail, String q, String a) {
         this.id = id;
         this.name = name;
+        this.apellidos = apellidos;
         this.pswd = pswd;
         this.mail = mail;
         this.pregunta = q;
         this.respuesta = a;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
+    }
+    public String getApellidos() {
+        return apellidos;
     }
 
     public void setId(String id) {
