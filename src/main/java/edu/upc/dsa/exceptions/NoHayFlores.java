@@ -1,8 +1,8 @@
 // CredencialesIncorrectasException.java
 package edu.upc.dsa.exceptions;
 
-public class CredencialesIncorrectasException extends Exception {
-    public CredencialesIncorrectasException(String msg) {
+public class NoHayFlores extends Exception {
+    public NoHayFlores(String msg) {
         super(msg);
     }
 }

@@ -11,7 +11,7 @@ public interface GameManager {
     public UsuarioEnviar login(String mail_nombre, String pswd) throws CredencialesIncorrectasException;
     public ConsultaTienda findSkins();
     public ConsultaTienda findArmas();
-    public Usuario Comprar (Compra compra) throws UsuarioNoAutenticadoException, NoSuficientesTarrosException;
+    public DevolverCompra Comprar (Compra compra) throws UsuarioNoAutenticadoException, NoSuficientesTarrosException;
     public void addObjeto(Objeto objeto);
     public Objeto findObjeto(String idObjeto);
     public void initTestUsers() throws UsuarioYaRegistradoException;
@@ -20,6 +20,7 @@ public interface GameManager {
     public void CambiarContra(String usuario, String contra) throws CredencialesIncorrectasException;
     public ConsultaTienda skinsUsuario(String usuario) throws CredencialesIncorrectasException, NoHayObjetos;
     public ConsultaTienda armasUsuario(String usuario) throws CredencialesIncorrectasException, NoHayObjetos;
-    void deleteUsuario(String id) throws UsuarioNoEncontradoException;
-
+    public void deleteUsuario(String id) throws UsuarioNoEncontradoException;
+    public Intercambio intercambio(String usuario, int florNormal, int florDorada) throws CredencialesIncorrectasException, NoHayFlores;
+    public List<Info> informcion ();
 }

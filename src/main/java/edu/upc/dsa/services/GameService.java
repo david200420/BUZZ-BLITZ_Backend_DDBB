@@ -83,7 +83,7 @@ public class GameService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response comprarObjeto(Compra compra) {
         try {
-            Usuario usuarioActualizado = gm.Comprar(compra);
+            DevolverCompra usuarioActualizado = gm.Comprar(compra);
             return Response.status(200).entity(usuarioActualizado).build();
         } catch (UsuarioNoAutenticadoException e) {
             return Response.status(401).entity(e.getMessage()).build();
@@ -180,6 +180,29 @@ public class GameService {
             System.out.println("Error no hay objetos");
             return Response.status(400).entity(e.getMessage()).build();
         }
+    }
+
+    @PUT
+    @Path("/tienda/intercambio")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response Conversion(@QueryParam("id") String id, @QueryParam("floresNorm") int f, @QueryParam("floresDoradas") int d ) {
+        try {
+            Intercambio i = gm.intercambio(id, f, d);
+            return Response.status(200).entity(i).build();
+        } catch (CredencialesIncorrectasException e) {
+            return Response.status(401).entity(e.getMessage()).build();
+        } catch (NoHayFlores e) {
+            return Response.status(400).entity(e.getMessage()).build();
+        }
+    }
+
+    @GET
+    @Path("/informacion")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getInfo() {
+        List<Info> informcion = gm.informcion();
+        return Response.status(200).entity(informcion).build();
     }
 }
 

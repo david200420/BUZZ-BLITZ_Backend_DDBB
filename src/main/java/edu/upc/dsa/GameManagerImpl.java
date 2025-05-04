@@ -80,7 +80,7 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public Usuario Comprar (Compra compra) throws UsuarioNoAutenticadoException, NoSuficientesTarrosException { // va a ser un @PUT
+    public DevolverCompra Comprar (Compra compra) throws UsuarioNoAutenticadoException, NoSuficientesTarrosException { // va a ser un @PUT
         //Algo de que si idUsuari, mande una excepcion de que falta iniciar session, de quiero saber si
         // se ha registrado, mi idea esq en la web arriba a la derecha tengas un parametro con tu
         //id para almacenar la variable y poderla mandar en cada JSON
@@ -98,7 +98,8 @@ public class GameManagerImpl implements GameManager {
             else if(compra.getObjeto().getTipo() == 2){ //skin
                 u.UpdateSkin(compra.getObjeto());
             }
-            return u;
+            DevolverCompra y = new DevolverCompra(u.getTarrosMiel());
+            return y;
     }
     @Override
     public void initTestUsers() throws UsuarioYaRegistradoException {
@@ -225,5 +226,35 @@ public class GameManagerImpl implements GameManager {
         usuarios.remove(id);
         usuariosm.remove(email);
         logger.info("Usuario eliminado: " + id);
+    }
+
+    @Override
+    public Intercambio intercambio (String usuario, int florNorm, int florDorada) throws CredencialesIncorrectasException, NoHayFlores {
+        Usuario u = obtenerUsuario(usuario);
+        int Tarros = 0;
+        int FloresSobrantes = florNorm;
+        if (u == null) {
+            throw new CredencialesIncorrectasException("No esta registrado");
+        }
+        if((florNorm < 30) && (florDorada == 0)) {
+            throw new NoHayFlores("No hay nada a convertir en Tarros, juega mas para conseguir mas!!");
+        }
+        while(FloresSobrantes >= 30){ // Va ahciendo restas de 30 n 30 i ba sumando Tarros pq cada 30 flores normales
+            Tarros++;                // equivalen a 1 solo Tarro de Miel
+            FloresSobrantes = FloresSobrantes - 30;
+        }
+        Tarros = Tarros + (florDorada*50); // 1 Dorada = 50 Tarros
+        u.setFlor(u.getFlor() - (florNorm - FloresSobrantes));
+        u.setFloreGold(u.getFloreGold() - florDorada);
+        u.setTarrosMiel(u.getTarrosMiel() + Tarros);
+        Intercambio i = new Intercambio(Tarros, FloresSobrantes);
+        return i;
+    }
+    public List<Info> informcion (){
+        List<Info> info = new ArrayList<>();
+        for (Usuario u : usuarios.values()){
+            info.add(new Info(u.getId(),u.getMejorPuntuacion(), u.getNumPartidas()));
+        }
+        return info;
     }
 }
