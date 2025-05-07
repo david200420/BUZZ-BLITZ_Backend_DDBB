@@ -250,11 +250,18 @@ public class GameManagerImpl implements GameManager {
         Intercambio i = new Intercambio(Tarros, FloresSobrantes);
         return i;
     }
-    public List<Info> informcion (){
+    @Override
+    public List<Info> informcion() {
         List<Info> info = new ArrayList<>();
-        for (Usuario u : usuarios.values()){
-            info.add(new Info(u.getId(),u.getMejorPuntuacion(), u.getNumPartidas()));
+
+        for (Usuario u : usuarios.values()) {
+            info.add(new Info(u.getId(), u.getMejorPuntuacion(), u.getNumPartidas()));
         }
-        return info;
+
+        // Ordenar la lista por mejor puntuación de mayor a menor
+        info.sort((i1, i2) -> Integer.compare(i2.getMejorPuntuacion(), i1.getMejorPuntuacion()));
+
+        // Devolver solo los 5 primeros (o menos si hay menos usuarios)
+        return info.subList(0, Math.min(5, info.size()));
     }
 }
