@@ -2,12 +2,12 @@ package edu.upc.dsa.models;
 
 public class Intercambio {
     private int tarrosMiel;
-    private int Flores;
+    private int flores;
 
     public Intercambio(int tarrosMiel){}
     public Intercambio(int tarrosMiel, int Flores){
         this.tarrosMiel = tarrosMiel;
-        this.Flores = Flores;
+        this.flores = Flores;
     }
 
     public void setTarrosMiel(int tarrosMiel) {
@@ -15,11 +15,11 @@ public class Intercambio {
     }
 
     public void setFlores(int flores) {
-        Flores = flores;
+        this.flores = flores;
     }
 
     public int getFlores() {
-        return Flores;
+        return flores;
     }
 
     public int getTarrosMiel() {

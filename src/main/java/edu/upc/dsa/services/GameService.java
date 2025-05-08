@@ -183,12 +183,12 @@ public class GameService {
     }
 
     @PUT
-    @Path("/tienda/intercambio")
+    @Path("/tienda/{id}/intercambio")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response Conversion(@QueryParam("id") String id, @QueryParam("floresNorm") int f, @QueryParam("floresDoradas") int d ) {
+    public Response Conversion(@PathParam("id") String id) {
         try {
-            Intercambio i = gm.intercambio(id, f, d);
+            Intercambio i = gm.intercambio(id);
             return Response.status(200).entity(i).build();
         } catch (CredencialesIncorrectasException e) {
             return Response.status(401).entity(e.getMessage()).build();

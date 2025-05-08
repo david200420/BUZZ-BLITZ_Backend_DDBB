@@ -129,6 +129,10 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
                 alert("Login exitoso! Bienvenido, " + response.name);
                 updateNav();
                 showSection("#about");
+                $("#num-tarros").text(response.tarrosMiel);
+                $("#num-flores").text(response.flor);
+                $("#num-flores-doradas").text(response.floreGold);
+
                 $("#nav-about").addClass("active");
                 $("#user-info").text("ID: " + response.id).fadeIn();
             },
@@ -364,9 +368,10 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
                           <li>
                           <article>
                           <h4>${objeto.nombre}</h4>
+                          <img src="img/${objeto.imagen}" alt="${objeto.nombre}" />
                           <h5>${objeto.precio} Tarros de Miel</h5>
                            <p>${objeto.descripcion}</p>
-                           <button class="btn-compra" data-id="${objeto.id}">
+                            <button class="btn-ya-comprado" disabled>
                            Comprado
                            </button>
                            </article>
@@ -377,9 +382,10 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
                       <li>
                         <article>
                           <h4>${objeto.nombre}</h4>
+                          <img src="img/${objeto.imagen}" alt="${objeto.nombre}" />
                           <h5>${objeto.precio} Tarros de Miel</h5>
                            <p>${objeto.descripcion}</p>
-                           <button class="btn-ya-comprado" data-id="${objeto.id}">
+                           <button class= "btn-comprar" data-id="${objeto.id}" data-nombre="${objeto.nombre}">
                            Compra
                            </button>
                         </article>
@@ -410,9 +416,10 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
                             <li>
                             <article>
                             <h4>${objeto.nombre}</h4>
+                            <img src="img/${objeto.imagen}" alt="${objeto.nombre}" />
                             <h5>${objeto.precio} Tarros de Miel</h5>
                             <p>${objeto.descripcion}</p>
-                            <button class="btn-compra" data-id="${objeto.id}">
+                            <button class="btn-ya-comprado" disabled>
                             Comprado
                             </button>
                             </article>
@@ -423,9 +430,10 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
                         <li>
                         <article>
                         <h4>${objeto.nombre}</h4>
+                        <img src="img/${objeto.imagen}" alt="${objeto.nombre}" />
                         <h5>${objeto.precio} Tarros de Miel</h5>
                         <p>${objeto.descripcion}</p>
-                        <button class="btn-ya-comprado" data-id="${objeto.id}">
+                        <button class="btn-comprar" data-id="${objeto.id}" data-nombre="${objeto.nombre}">
                             Compra
                         </button>
                     </article>
@@ -441,5 +449,53 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
             });
         });
     }
+    $(document).on("click", ".btn-compra", function () {
+        e.preventDefault();
+        const idUsuario = usuarioActual.id;
+        const nombreObjeto = $(this).data("nombre");
+
+        const jsonData = {
+            usuarioId: idUsuario,
+            objeto: nombreObjeto
+        };
+
+        $.ajax({
+            url: "http://localhost:8080/dsaApp/usuarios/comprar",
+            type: "PUT",
+            data: JSON.stringify(jsonData),
+            contentType: "application/json",
+            success: function (response) {
+                alert("Compra realizada con éxito");
+                $("#num-tarros").text(response.tarrosMiel);
+                // Cambiar el botón a apagado (sin recargar todo)
+                $(this)
+                    .removeClass("btn-compra")
+                    .addClass("btn-compra-hecho")
+                    .text("Comprado")
+                    .attr("disabled", true);
+            }.bind(this),
+            error: function (xhr) {
+                alert("Error al comprar: " + xhr.responseText);
+            }
+        });
+    });
+
+    $("#conversion").click(function (e) {
+        e.preventDefault();
+        const userId = usuarioActual.id; // o el valor que necesites
+        $.ajax({
+            url: "http://localhost:8080/dsaApp/"+ usuarioActual.id +"/conversion",
+            type: "PUT",
+            contentType: "application/json",
+            success: function (response) {
+                $("#num-tarros").text(response.tarrosMiel);
+                $("#num-flores-doradas").text(0);
+                $("#num-flores").text(response.flores);
+            },
+            error: function (xhr) {
+                alert(xhr.responseText);
+            }
+        });
+    });
 
 });

@@ -71,7 +71,7 @@ public class GameManagerImpl implements GameManager {
     @Override
     public void addObjeto(Objeto objeto) {
         logger.info("Iniciando objeto");
-        this.objetos.put(objeto.getId(), objeto);
+        this.objetos.put(objeto.getNombre(), objeto);
     }
 
     @Override
@@ -88,15 +88,16 @@ public class GameManagerImpl implements GameManager {
         if(u == null) {
             throw new UsuarioNoAutenticadoException("Usuario no autenticado o no encontrado. Debe iniciar sesión.");
         }
-        if(compra.getObjeto().getPrecio() > u.getTarrosMiel()){
+        Objeto o = objetos.get(compra.getObjeto());
+        if(o.getPrecio() > u.getTarrosMiel()){
             throw new NoSuficientesTarrosException("No tienes suficiente Miel");
         }
-            u.setTarrosMiel(u.getTarrosMiel() - compra.getObjeto().getPrecio());
-            if(compra.getObjeto().getTipo() == 1){ //arma
-                u.UpdateArmas(compra.getObjeto());
+            u.setTarrosMiel(u.getTarrosMiel() - o.getPrecio());
+            if(o.getTipo() == 1){ //arma
+                u.UpdateArmas(o);
             }
-            else if(compra.getObjeto().getTipo() == 2){ //skin
-                u.UpdateSkin(compra.getObjeto());
+            else if(o.getTipo() == 2){ //skin
+                u.UpdateSkin(o);
             }
             DevolverCompra y = new DevolverCompra(u.getTarrosMiel());
             return y;
@@ -107,13 +108,13 @@ public class GameManagerImpl implements GameManager {
             this.addUsuario("carlos2004", "Carlos","Gonzalez", "123", "carlos@gmail.com","Tu comida favorita?","Arroz" );
             this.addUsuario("MSC78", "Marc", "Lopez","321", "marc@gmail.com","Como se llamaba tu escuela de Primaria?" ,"Dali" );
             this.addUsuario("Test", "Dani", "Buenosdias","147", "dani@gmail.com","El nombre de tu familiar mas mayor?" ,"Teresa" );
-            this.addObjeto(new Objeto("1", "Palo",200 ,1, "Un paaaaaaaaaaaaaalo","palo1"));
-            this.addObjeto(new Objeto("2", "Hacha",700, 1,"Un hacha asequible para todos pero mortal como ninguna, su especialidad: las telarañas" ,"hacha1"));
-            this.addObjeto(new Objeto("3", "Gorro Pirata", 1000, 2, "Para surcar los mares","gorropirata"));
-            this.addObjeto(new Objeto("4", "Gorro Patito", 1000, 2, "Para nadar mucho","gorropatito"));
-            this.addObjeto(new Objeto("5", "Mister Potato", 1000, 2, "Para ser feliz","misterpotato"));
-            this.addObjeto(new Objeto("7", "Espada",1150 ,1, "Un corte profundo que hiere a las arañas más poderosas","espada1"));
-            this.addObjeto(new Objeto("8", "Espada Real",1350 ,1, "De su corte se entera hasta la mismisima Anansi","espada2"));
+            this.addObjeto(new Objeto("1", "Palo",200 ,1, "Un paaaaaaaaaaaaaalo","palo1.png"));
+            this.addObjeto(new Objeto("2", "Hacha",700, 1,"Un hacha asequible para todos pero mortal como ninguna, su especialidad: las telarañas" ,"hacha1.png"));
+            this.addObjeto(new Objeto("3", "Gorro Pirata", 1000, 2, "Para surcar los mares","gorropirata.png"));
+            this.addObjeto(new Objeto("4", "Gorro Patito", 1000, 2, "Para nadar mucho","gorropatito.png"));
+            this.addObjeto(new Objeto("5", "Mister Potato", 1000, 2, "Para ser feliz","misterpotato.png"));
+            this.addObjeto(new Objeto("7", "Espada",1150 ,1, "Un corte profundo que hiere a las arañas más poderosas","espada1.png"));
+            this.addObjeto(new Objeto("8", "Espada Real",1350 ,1, "De su corte se entera hasta la mismisima Anansi","espada2.png"));
         } catch (UsuarioYaRegistradoException e) {
             logger.warn("Usuario de prueba ya estaba registrado");
         }
@@ -229,23 +230,23 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public Intercambio intercambio (String usuario, int florNorm, int florDorada) throws CredencialesIncorrectasException, NoHayFlores {
+    public Intercambio intercambio (String usuario) throws CredencialesIncorrectasException, NoHayFlores {
         Usuario u = obtenerUsuario(usuario);
         int Tarros = 0;
-        int FloresSobrantes = florNorm;
+        int FloresSobrantes = u.getFlor();
         if (u == null) {
             throw new CredencialesIncorrectasException("No esta registrado");
         }
-        if((florNorm < 30) && (florDorada == 0)) {
+        if((u.getFlor() < 30) && (u.getFloreGold() == 0)) {
             throw new NoHayFlores("No hay nada a convertir en Tarros, juega mas para conseguir mas!!");
         }
         while(FloresSobrantes >= 30){ // Va ahciendo restas de 30 n 30 i ba sumando Tarros pq cada 30 flores normales
             Tarros++;                // equivalen a 1 solo Tarro de Miel
             FloresSobrantes = FloresSobrantes - 30;
         }
-        Tarros = Tarros + (florDorada*50); // 1 Dorada = 50 Tarros
-        u.setFlor(u.getFlor() - (florNorm - FloresSobrantes));
-        u.setFloreGold(u.getFloreGold() - florDorada);
+        Tarros = Tarros + (u.getFloreGold()*50); // 1 Dorada = 50 Tarros
+        u.setFlor(FloresSobrantes);
+        u.setFloreGold(0);
         u.setTarrosMiel(u.getTarrosMiel() + Tarros);
         Intercambio i = new Intercambio(Tarros, FloresSobrantes);
         return i;
