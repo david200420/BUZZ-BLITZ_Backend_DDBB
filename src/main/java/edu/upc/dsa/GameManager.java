@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface GameManager {
 
-    public void addUsuario(String id, String name, String ape, String contra, String mail, String a, String q) throws UsuarioYaRegistradoException;
+    public void addUsuario(String id, String name, String ape,String contra, String mail, String q, String a) throws UsuarioYaRegistradoException;
     public UsuarioEnviar login(String mail_nombre, String pswd) throws CredencialesIncorrectasException;
     public ConsultaTienda findSkins();
     public ConsultaTienda findArmas();

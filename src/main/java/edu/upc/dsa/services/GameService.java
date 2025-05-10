@@ -21,7 +21,7 @@ public class GameService {
     private static boolean initialized = false; // Bandera estática
 
     public GameService() throws UsuarioYaRegistradoException {
-        this.gm = GameManagerImpl.getInstance();
+        this.gm = GameManagerImpl.getInstance(); // new GameManagerDAO()
         if (!initialized) {
             try {
                 this.gm.initTestUsers();

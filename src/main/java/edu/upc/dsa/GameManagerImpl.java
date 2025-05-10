@@ -54,6 +54,23 @@ public class GameManagerImpl implements GameManager {
         logger.info("Usuario registrado exitosamente");
     }
 
+    public void addUsuarioTest(String id, String name, String ape,String contra, String mail, String q, String a, int tarros, int flores, int mejor) throws UsuarioYaRegistradoException {
+        logger.info("Registrando nuevo usuario: " + id + " / " + mail);
+
+        if (usuarios.containsKey(id)) {
+            throw new UsuarioYaRegistradoException("El USER ya está registrado");
+        }
+
+        if (usuariosm.containsKey(mail)) {
+            throw new UsuarioYaRegistradoException("El MAIL ya está registrado");
+        }
+
+        Usuario nuevo = new Usuario(id, name, ape ,contra, mail,q,a, tarros, flores,mejor);
+        this.usuarios.put(id, nuevo);
+        this.usuariosm.put(mail, nuevo);
+        logger.info("Usuario registrado exitosamente");
+    }
+
     @Override
     public UsuarioEnviar login(String mailOId, String pswd) throws CredencialesIncorrectasException {
        logger.info("Iniciando login");
@@ -100,14 +117,15 @@ public class GameManagerImpl implements GameManager {
                 u.UpdateSkin(o);
             }
             DevolverCompra y = new DevolverCompra(u.getTarrosMiel());
+            System.out.println(y.getTarrosMiel());
             return y;
     }
     @Override
     public void initTestUsers() throws UsuarioYaRegistradoException {
         try {
-            this.addUsuario("carlos2004", "Carlos","Gonzalez", "123", "carlos@gmail.com","Tu comida favorita?","Arroz" );
-            this.addUsuario("MSC78", "Marc", "Lopez","321", "marc@gmail.com","Como se llamaba tu escuela de Primaria?" ,"Dali" );
-            this.addUsuario("Test", "Dani", "Buenosdias","147", "dani@gmail.com","El nombre de tu familiar mas mayor?" ,"Teresa" );
+            this.addUsuarioTest("carlos2004", "Carlos","Gonzalez", "123", "carlos@gmail.com","Tu comida favorita?","Arroz", 1000, 106, 250 );
+            this.addUsuarioTest("MSC78", "Marc", "Lopez","321", "marc@gmail.com","Como se llamaba tu escuela de Primaria?" ,"Dali", 1500, 120, 500 );
+            this.addUsuarioTest("Test", "Dani", "Buenosdias","147", "dani@gmail.com","El nombre de tu familiar mas mayor?" ,"Teresa",2500, 151, 190 );
             this.addObjeto(new Objeto("1", "Palo",200 ,1, "Un paaaaaaaaaaaaaalo","palo1.png"));
             this.addObjeto(new Objeto("2", "Hacha",700, 1,"Un hacha asequible para todos pero mortal como ninguna, su especialidad: las telarañas" ,"hacha1.png"));
             this.addObjeto(new Objeto("3", "Gorro Pirata", 1000, 2, "Para surcar los mares","gorropirata.png"));
@@ -232,6 +250,7 @@ public class GameManagerImpl implements GameManager {
     @Override
     public Intercambio intercambio (String usuario) throws CredencialesIncorrectasException, NoHayFlores {
         Usuario u = obtenerUsuario(usuario);
+        System.out.println(u.getTarrosMiel() + "+" + u.getFlor()+ "+" + u.getFloreGold());
         int Tarros = 0;
         int FloresSobrantes = u.getFlor();
         if (u == null) {
@@ -249,6 +268,7 @@ public class GameManagerImpl implements GameManager {
         u.setFloreGold(0);
         u.setTarrosMiel(u.getTarrosMiel() + Tarros);
         Intercambio i = new Intercambio(Tarros, FloresSobrantes);
+        System.out.println(u.getTarrosMiel() + "+" + u.getFlor()+ "+" + u.getFloreGold());
         return i;
     }
     @Override
