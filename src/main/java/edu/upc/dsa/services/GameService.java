@@ -2,33 +2,29 @@ package edu.upc.dsa.services;
 
 
 import edu.upc.dsa.GameManager;
-import edu.upc.dsa.GameManagerImpl;
+import edu.upc.dsa.db.orm.dao.GameManagerDAO;
+import edu.upc.dsa.db.orm.dao.GameManagerDAOImpl;
 import edu.upc.dsa.exceptions.*;
 import edu.upc.dsa.models.*;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
-import java.util.logging.Logger;
 
 @Api(value = "/usuarios", description = "Endpoint to Usuario Service")
 @Path("/usuarios")
 public class GameService {
 
-    private GameManager gm;
-    private static boolean initialized = false; // Bandera estática
+    private GameManagerDAO dao;
 
-    public GameService() throws UsuarioYaRegistradoException {
-        this.gm = GameManagerImpl.getInstance(); // new GameManagerDAO()
-        if (!initialized) {
-            try {
-                this.gm.initTestUsers();
-                initialized = true;
-            } catch (UsuarioYaRegistradoException e) {
-            }
-        }
+    public GameService(){
+        this.dao = new GameManagerDAOImpl();
     }
 
     @POST
@@ -37,7 +33,7 @@ public class GameService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response registerUsuario(UsuReg usuReg) {
         try {
-            gm.addUsuario(usuReg.getId(), usuReg.getName(), usuReg.getApellidos(),usuReg.getPswd(), usuReg.getMail(), usuReg.getPregunta(), usuReg.getRespuesta());
+            dao.addUsuario(usuReg.getId(), usuReg.getName(), usuReg.getApellidos(),usuReg.getPswd(), usuReg.getMail(), usuReg.getPregunta(), usuReg.getRespuesta());
             return Response.status(201).build(); // Registrado con éxito
         } catch (UsuarioYaRegistradoException e) {
             return Response.status(409).entity(e.getMessage()).build(); // Conflicto
@@ -52,7 +48,7 @@ public class GameService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response loginUsuario(Usulogin loginData) {
         try {
-            UsuarioEnviar u = gm.login(loginData.getIdoname(), loginData.getPswd());
+            UsuarioEnviar u = dao.login(loginData.getIdoname(), loginData.getPswd());
             return Response.status(200).entity(u).build(); // Login OK
         } catch (CredencialesIncorrectasException e) {
 
@@ -68,7 +64,7 @@ public class GameService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteUsuario(@PathParam("id") String id) {
         try {
-            gm.deleteUsuario(id);
+            dao.deleteUsuario(id);
             return Response.status(200).build();
         } catch (UsuarioNoEncontradoException e) {
             return Response.status(404).entity(e.getMessage()).build();
@@ -81,9 +77,9 @@ public class GameService {
     @Path("/comprar")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response comprarObjeto(Compra compra) {
+    public Response comprarObjeto(usuario_objeto usuarioobjeto) {
         try {
-            DevolverCompra usuarioActualizado = gm.Comprar(compra);
+            DevolverCompra usuarioActualizado = dao.Comprar(usuarioobjeto);
             return Response.status(200).entity(usuarioActualizado).build();
         } catch (UsuarioNoAutenticadoException e) {
             return Response.status(401).entity(e.getMessage()).build();
@@ -98,65 +94,71 @@ public class GameService {
     @Path("/tienda/armas")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getArmas() {
-            System.out.println("va el getArmas():");
-            ConsultaTienda armas = gm.findArmas();
-            return Response.status(200).entity(armas).build();
+            List<Objeto> armas = dao.findArmas();
+            GenericEntity<List<Objeto>> entity = new GenericEntity<List<Objeto>>(armas) {};
+            return Response.status(200).entity(entity).build();
     }
 
     @GET
     @Path("/tienda/skins")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSkin() {
-        ConsultaTienda t = gm.findSkins();
-        return Response.status(200).entity(t).build();
+        List<Objeto> skins = dao.findSkins();
+        GenericEntity<List<Objeto>> entity = new GenericEntity<List<Objeto>>(skins) {};
+        return Response.status(200).entity(entity).build();
     }
 
-    @GET
-    @Path("/login/recordarContraseña")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getlogin(@QueryParam("id")String u) {
-        try {
-            String pregunta = gm.obtenerContra(u);
-            return Response.ok(pregunta).build();
-        } catch (CredencialesIncorrectasException e) {
-            System.out.println("Error interno del servidor");
-            return Response.status(401).entity(e.getMessage()).build();
-        }
-    }
-    @POST
-    @Path("/login/recuperarCuenta")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response loginUsuario(OlvContra usu) {
-        try {
-            Usuario u = gm.relogin(usu.getId(), usu.getRespuesta());
-            return Response.status(200).entity(u).build(); // Login OK
-        } catch (CredencialesIncorrectasException e) {
-            return Response.status(401).entity(e.getMessage()).build(); // No autorizado
-        } catch (Exception e) {
-            return Response.status(500).entity("Error interno del servidor").build(); // Error general
-        }
-    }
-    @POST
-    @Path("/login/cambiarContraseña")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response cambiarContra(Usulogin u) {
-        try {
-            gm.CambiarContra(u.getIdoname(), u.getPswd());
-            return Response.status(200).entity("Contraseña cambiada con éxito").build();
-        } catch (CredencialesIncorrectasException e) {
-            return Response.status(401).entity(e.getMessage()).build();
-        }
-    }
-
+//    @GET
+//    @Path("/login/recordarContraseña")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response getlogin(@QueryParam("id")String u) {
+//        try {
+//            String pregunta = dao.obtenerContra(u);
+//            return Response.ok(pregunta).build();
+//        } catch (CredencialesIncorrectasException e) {
+//            System.out.println("Error interno del servidor");
+//            return Response.status(401).entity(e.getMessage()).build();
+//        }
+//    }
+//    @POST
+//    @Path("/login/recuperarCuenta")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response loginUsuario(OlvContra usu) {
+//        try {
+//            Usuario u = dao.relogin(usu.getId(), usu.getRespuesta());
+//            return Response.status(200).entity(u).build(); // Login OK
+//        } catch (CredencialesIncorrectasException e) {
+//            return Response.status(401).entity(e.getMessage()).build(); // No autorizado
+//        } catch (Exception e) {
+//            return Response.status(500).entity("Error interno del servidor").build(); // Error general
+//        }
+//    }
+//    @POST
+//    @Path("/login/cambiarContraseña")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response cambiarContra(Usulogin u) {
+//        try {
+//            dao.CambiarContra(u.getIdoname(), u.getPswd());
+//            return Response.status(200).entity("Contraseña cambiada con éxito").build();
+//        } catch (CredencialesIncorrectasException e) {
+//            return Response.status(401).entity(e.getMessage()).build();
+//        }
+//    }
+//
     @GET
     @Path("/tienda/{id}/armas")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "proporciona TOTES les armes d'un usuari", notes = "asdasd")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Objeto.class, responseContainer="List"),
+    })
     public Response getArmasUsuario(@PathParam("id")String u) {
         try {
-            ConsultaTienda armas = gm.armasUsuario(u);
-            return Response.ok(armas).build();
+            List<Objeto> armas = dao.armasUsuario(u);
+            GenericEntity<List<Objeto>> entity = new GenericEntity<List<Objeto>>(armas) {};
+            return Response.status(201).entity(entity).build();
         } catch (CredencialesIncorrectasException e) {
             System.out.println("Error interno del servidor");
             return Response.status(401).entity(e.getMessage()).build();
@@ -168,12 +170,17 @@ public class GameService {
     @GET
     @Path("/tienda/{id}/skins")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "proporciona TOTES les skins d'un usuari", notes = "asdasd")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Objeto.class, responseContainer="List"),
+    })
     public Response getSkinUsuario(@PathParam("id")String u) {
         try {
             System.out.println("va el getSkinUsuario():");
-            ConsultaTienda skins = gm.skinsUsuario(u);
-            return Response.ok(skins).build();
-        } catch (CredencialesIncorrectasException e) {
+            List<Objeto> skins = dao.skinsUsuario(u);
+            GenericEntity<List<Objeto>> entity = new GenericEntity<List<Objeto>>(skins) {};
+            // aixo s'utilitza per fer el json d'un contenidor d'objectes
+            return Response.status(201).entity(entity).build();        } catch (CredencialesIncorrectasException e) {
             System.out.println("Error interno del servidor");
             return Response.status(401).entity(e.getMessage()).build();
         } catch (NoHayObjetos e) {
@@ -188,7 +195,7 @@ public class GameService {
     @Produces(MediaType.APPLICATION_JSON)
     public Response Conversion(@PathParam("id") String id) {
         try {
-            Intercambio i = gm.intercambio(id);
+            Intercambio i = dao.intercambio(id);
             return Response.status(200).entity(i).build();
         } catch (CredencialesIncorrectasException e) {
             return Response.status(401).entity(e.getMessage()).build();
@@ -196,14 +203,14 @@ public class GameService {
             return Response.status(400).entity(e.getMessage()).build();
         }
     }
-
-    @GET
-    @Path("/informacion")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getInfo() {
-        List<Info> informcion = gm.informcion();
-        return Response.status(200).entity(informcion).build();
-    }
+//
+//    @GET
+//    @Path("/informacion")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response getInfo() {
+//        List<Info> informcion = dao.informcion();
+//        return Response.status(200).entity(informcion).build();
+//    }
 }
 
 

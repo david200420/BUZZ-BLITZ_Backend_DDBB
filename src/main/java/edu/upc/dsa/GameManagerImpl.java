@@ -65,7 +65,7 @@ public class GameManagerImpl implements GameManager {
             throw new UsuarioYaRegistradoException("El MAIL ya está registrado");
         }
 
-        Usuario nuevo = new Usuario(id, name, ape ,contra, mail,q,a, tarros, flores,mejor);
+        Usuario nuevo = new Usuario(id, name, ape ,contra, mail,q,a);
         this.usuarios.put(id, nuevo);
         this.usuariosm.put(mail, nuevo);
         logger.info("Usuario registrado exitosamente");
@@ -97,53 +97,70 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public DevolverCompra Comprar (Compra compra) throws UsuarioNoAutenticadoException, NoSuficientesTarrosException { // va a ser un @PUT
+    public DevolverCompra Comprar (usuario_objeto usuarioobjeto) throws UsuarioNoAutenticadoException, NoSuficientesTarrosException { // va a ser un @PUT
         //Algo de que si idUsuari, mande una excepcion de que falta iniciar session, de quiero saber si
         // se ha registrado, mi idea esq en la web arriba a la derecha tengas un parametro con tu
         //id para almacenar la variable y poderla mandar en cada JSON
-        Usuario u = this.usuarios.get(compra.getUsuarioId());
+        Usuario u = this.usuarios.get(usuarioobjeto.getUsuario_id());
         if(u == null) {
             throw new UsuarioNoAutenticadoException("Usuario no autenticado o no encontrado. Debe iniciar sesión.");
         }
-        Objeto o = objetos.get(compra.getObjeto());
+        Objeto o = objetos.get(usuarioobjeto.getObjeto_id());
         if(o.getPrecio() > u.getTarrosMiel()){
             throw new NoSuficientesTarrosException("No tienes suficiente Miel");
         }
             u.setTarrosMiel(u.getTarrosMiel() - o.getPrecio());
-            if(o.getTipo() == 1){ //arma
+            if(o.getTipo().equals("arma")){ //arma
                 u.UpdateArmas(o);
             }
-            else if(o.getTipo() == 2){ //skin
+            else if(o.getTipo().equals("skin")){ //skin
                 u.UpdateSkin(o);
             }
             DevolverCompra y = new DevolverCompra(u.getTarrosMiel());
             System.out.println(y.getTarrosMiel());
             return y;
     }
-    @Override
-    public void initTestUsers() throws UsuarioYaRegistradoException {
-        try {
-            this.addUsuarioTest("carlos2004", "Carlos","Gonzalez", "123", "carlos@gmail.com","Tu comida favorita?","Arroz", 1000, 106, 250 );
-            this.addUsuarioTest("MSC78", "Marc", "Lopez","321", "marc@gmail.com","Como se llamaba tu escuela de Primaria?" ,"Dali", 1500, 120, 500 );
-            this.addUsuarioTest("Test", "Dani", "Buenosdias","147", "dani@gmail.com","El nombre de tu familiar mas mayor?" ,"Teresa",2500, 151, 190 );
-            this.addObjeto(new Objeto("1", "Palo",200 ,1, "Un paaaaaaaaaaaaaalo","palo1.png"));
-            this.addObjeto(new Objeto("2", "Hacha",700, 1,"Un hacha asequible para todos pero mortal como ninguna, su especialidad: las telarañas" ,"hacha1.png"));
-            this.addObjeto(new Objeto("3", "Gorro Pirata", 1000, 2, "Para surcar los mares","gorropirata.png"));
-            this.addObjeto(new Objeto("4", "Gorro Patito", 1000, 2, "Para nadar mucho","gorropatito.png"));
-            this.addObjeto(new Objeto("5", "Mister Potato", 1000, 2, "Para ser feliz","misterpotato.png"));
-            this.addObjeto(new Objeto("7", "Espada",1150 ,1, "Un corte profundo que hiere a las arañas más poderosas","espada1.png"));
-            this.addObjeto(new Objeto("8", "Espada Real",1350 ,1, "De su corte se entera hasta la mismisima Anansi","espada2.png"));
-        } catch (UsuarioYaRegistradoException e) {
-            logger.warn("Usuario de prueba ya estaba registrado");
-        }
-    }
+
+    //@Override
+   // public void initTestUsers() throws UsuarioYaRegistradoException {
+//        try {
+////            this.addUsuarioTest("carlos2004", "Carlos","Gonzalez", "123", "carlos@gmail.com","Tu comida favorita?","Arroz", 1000, 106, 250 );
+////            this.addUsuarioTest("MSC78", "Marc", "Lopez","321", "marc@gmail.com","Como se llamaba tu escuela de Primaria?" ,"Dali", 1500, 120, 500 );
+////            this.addUsuarioTest("Test", "Dani", "Buenosdias","147", "dani@gmail.com","El nombre de tu familiar mas mayor?" ,"Teresa",2500, 151, 190 );
+////            // Objetos de prueba
+////            this.addObjeto(new Objeto("1", "Palo", 200, 1, "Un paaaaaaaaaaaaaalo", "palo1.png"));
+////            this.addObjeto(new Objeto("2", "Hacha", 700, 1, "Un hacha asequible para todos pero mortal como ninguna, su especialidad: las telarañas", "hacha1.png"));
+////            this.addObjeto(new Objeto("3", "Gorro Pirata", 1000, 2, "Para surcar los mares", "gorropirata.png"));
+////            this.addObjeto(new Objeto("4", "Gorro Patito", 1000, 2, "Para nadar mucho", "gorropatito.png"));
+////            this.addObjeto(new Objeto("5", "Mister Potato", 1000, 2, "Para ser feliz", "misterpotato.png"));
+////            this.addObjeto(new Objeto("7", "Espada", 1150, 1, "Un corte profundo que hiere a las arañas más poderosas", "espada1.png"));
+////            this.addObjeto(new Objeto("8", "Espada Real", 1350, 1, "De su corte se entera hasta la mismisima Anansi", "espada2.png"));
+////
+////            // Asignar objetos a usuarios
+////            Usuario carlos = this.usuarios.get("carlos2004");
+////            carlos.UpdateArmas(this.objetos.get("1")); // Palo
+////            carlos.UpdateSkin(this.objetos.get("3")); // Gorro Pirata
+////
+////            Usuario marc = this.usuarios.get("MSC78");
+////            marc.UpdateArmas(this.objetos.get("2")); // Hacha
+////            marc.UpdateSkin(this.objetos.get("4")); // Gorro Patito
+////
+////            Usuario dani = this.usuarios.get("Test");
+////            dani.UpdateArmas(this.objetos.get("7")); // Espada
+////            dani.UpdateSkin(this.objetos.get("5")); // Mister Potato
+//
+//            logger.info("Usuarios de prueba inicializados con objetos asignados");
+//        } catch (UsuarioYaRegistradoException e) {
+//            logger.warn("Usuario de prueba ya estaba registrado");
+//        }
+//    }
 
     @Override
     public ConsultaTienda findArmas() {
 
         HashMap<String, Objeto> armas = new HashMap<>();
         for (Objeto obj : this.objetos.values()) {
-            if (obj.getTipo() == 1) { // tipo 1 = arma
+            if (obj.getTipo().equals("")) { // tipo 1 = arma
                 armas.put(obj.getId(), obj);
             }
         }
@@ -156,7 +173,7 @@ public class GameManagerImpl implements GameManager {
 
         HashMap<String, Objeto> skins = new HashMap<>();
         for (Objeto obj : this.objetos.values()) {
-            if (obj.getTipo() == 2) { // tipo 2 = arma
+            if (obj.getTipo().equals("")) { // tipo 2 = arma
                 skins.put(obj.getId(), obj);
             }
         }

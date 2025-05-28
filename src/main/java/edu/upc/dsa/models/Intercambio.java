@@ -9,6 +9,8 @@ public class Intercambio {
         this.tarrosMiel = tarrosMiel;
         this.flores = Flores;
     }
+    public Intercambio() {
+   }
 
     public void setTarrosMiel(int tarrosMiel) {
         this.tarrosMiel = tarrosMiel;

@@ -1,119 +1,234 @@
 package edu.upc.dsa.db.orm;
-import edu.upc.dsa.db.orm.Session;
+
 import edu.upc.dsa.db.orm.util.ObjectHelper;
 import edu.upc.dsa.db.orm.util.QueryHelper;
 
 import java.sql.*;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
+import static org.reflections.Reflections.log;
 
 public class SessionImpl implements Session {
     private final Connection conn;
+    private boolean transactionActive = false;
 
     public SessionImpl(Connection conn) {
-
         this.conn = conn;
+        // Iniciamos transacción automáticamente al abrir la sesión
+        beginTransaction();
     }
 
-    public void save(Object entity) {
-
-        // INSERT INTO Partida () ()
-        String insertQuery = QueryHelper.createQueryINSERT(entity);
-        // INSERT INTO User (ID, lastName, firstName, address, city) VALUES (0, ?, ?, ?,?), he hecho qe sea todo interrogantes
-
-        PreparedStatement pstm = null;
-
+    /**
+     * Inicia una transacción JDBC (desactiva auto-commit)
+     */
+    public void beginTransaction() {
         try {
-            pstm = conn.prepareStatement(insertQuery);
-            int i = 1;
-
-            for (String field: ObjectHelper.getFields(entity)) {
-                Object _aux = ObjectHelper.getter(entity, field);
-                pstm.setObject(i++, _aux);
+            if (!transactionActive) {
+                conn.setAutoCommit(false);
+                transactionActive = true;
             }
-
-            pstm.executeUpdate();
-
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException("No se pudo iniciar transacción", e);
         }
-
     }
 
-    public void close() {
+    /**
+     * Confirma todos los cambios si hay transacción activa
+     */
+    public void commit() {
+        if (!transactionActive) return;
+        try {
+            conn.commit();
+            conn.setAutoCommit(true);
+            transactionActive = false;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al hacer commit", e);
+        }
+    }
 
+    /**
+     * Deshace todos los cambios pendientes si hay transacción activa
+     */
+    public void rollback() {
+        if (!transactionActive) return;
+        try {
+            conn.rollback();
+            conn.setAutoCommit(true);
+            transactionActive = false;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al hacer rollback", e);
+        }
     }
 
     @Override
-    public Object get(Class theClass, String filtro, Object ID) {
-        Object o = null;
+    public void close() {
         try {
-            String sql = QueryHelper.createQuerySELECT(theClass, filtro);  // En esta linea se hace la peticion sql con el Query Helper
-            //pero sale con interrogantes los valores del WHERE, t lo buscamos por el atributo
-            PreparedStatement pstm = conn.prepareStatement(sql);//Es un objeto de SQL que permite ejecutar las peticiones
-            pstm.setObject(1, ID);  // sustituye ? por el ID
+            if (conn != null && !conn.isClosed()) conn.close();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error al cerrar conexión", e);
+        }
+    }
 
-            ResultSet res = pstm.executeQuery();//ejecuta la queryx
-
-            if (res.next()) { //mira si la primera file del res esta vacia o no
-                o = theClass.getDeclaredConstructor().newInstance(); //crea un objeto vacio de la classe que se quiere obtener
-                ResultSetMetaData rsmd = res.getMetaData();//te da info de cuantas columnas filas hay
-                int numColumns = rsmd.getColumnCount();//basicamente para saber los atributos que tiene
-
-                for (int i = 1; i <= numColumns; i++) {
-                    String columnName = rsmd.getColumnName(i);//el nombre del atributo
-                    int type = rsmd.getColumnType(i);
-                    //System.out.println("type"+type);
-                    Object value = res.getObject(i);//el valor de la celda
-                    if (type== Types.DECIMAL) {
-                        value = Double.valueOf(value.toString());
-                    }
-
-                    //if (type==java.sql.Types.B
-                    ObjectHelper.setter(o, columnName, value);  // llama al setter del helper
-                }
+    @Override
+    public void save(Object entity) {
+        String insertQuery = QueryHelper.createQueryINSERT(entity);
+        try (PreparedStatement pstm = conn.prepareStatement(insertQuery)) {
+            int index = 1;
+            for (String field : ObjectHelper.getNotNullFields(entity)) {
+                Object value = ObjectHelper.getter(entity, field);
+                pstm.setObject(index++, value);
             }
+            System.out.println("Ejecutando consulta: " + pstm.toString());
+            pstm.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error en save(): " + e.getMessage(), e);
+        }
+    }
 
+    @Override
+    public Object get(Class<?> theClass, List<String> filtros, List<Object> valores, List<String> deseados) {
+        String sql = QueryHelper.createQuerySELECT(filtros, theClass, deseados);
+        try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+            for (int i = 0; i < valores.size(); i++) {
+                pstm.setObject(i + 1, valores.get(i));
+            }
+            System.out.println("Ejecutando consulta: " + pstm.toString());
+            ResultSet rs = pstm.executeQuery();
+            return mapResultSetToEntity(rs, theClass);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error en get(): " + e.getMessage(), e);
+        }
+    }
+    @Override
+    public Object getLista(Class<?> theClass, List<String> filtros, List<Object> valores, List<String> deseados) {
+        String sql = QueryHelper.createQuerySELECT(filtros, theClass, deseados);
+        try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+            for (int i = 0; i < valores.size(); i++) {
+                pstm.setObject(i + 1, valores.get(i));
+            }
+            System.out.println("Ejecutando consulta: " + pstm.toString());
+            ResultSet rs = pstm.executeQuery();
+            return mapResultSetToEntityList(rs, theClass);
+        } catch (Exception e) {
+            throw new RuntimeException("Error en get(): " + e.getMessage(), e);
+        }
+    }
+
+
+    @Override
+    public Object getCondicional(Class<?> theClass,
+                                 List<String> filtros,
+                                 List<String> deseados,
+                                 List<String> orAttributes,
+                                 List<Object> valores) {
+        if (filtros == null || valores == null || filtros.size() != valores.size()) {
+            throw new IllegalArgumentException("Los filtros y valores deben tener el mismo tamaño y no ser null");
+        }
+        String sql = QueryHelper.createQuerySELECTConditional(filtros, theClass, deseados, orAttributes);
+        try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+            for (int i = 0; i < valores.size(); i++) {
+                pstm.setObject(i + 1, valores.get(i));
+            }
+            System.out.println("Ejecutando consulta: " + pstm.toString());
+            ResultSet rs = pstm.executeQuery();
+            return mapResultSetToEntity(rs, theClass);
+        } catch (Exception e) {
+            throw new RuntimeException("Error en getCondicional(): " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Object getWithJoin(Class<?> class1, Class<?> class2,
+                              List<String> deseados,
+                              List<String> filtros,
+                              String valorOn, Object valores) {
+//        String sql = QueryHelper.createQueryJoin(class1, class2, deseados, filtros, valorOn);
+        String sql = ("SELECT o.*" +
+                "  FROM usuario_objeto uo" +
+                "  JOIN objeto o" +
+                "    ON uo.objeto_nombre = o.nombre" +
+                " WHERE uo.usuario_id = ?;");
+        try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+            // Asignar valores a los parámetros de la consulta
+            pstm.setObject( 1, valores);
+
+            System.out.println("Ejecutando consulta: " + pstm.toString());
+            // Ejecutar la consulta
+            ResultSet rs = pstm.executeQuery();
+            return mapResultSetToEntityList(rs, class2);
+        } catch (Exception e) {
+            throw new RuntimeException("Error en getWithJoin(): " + e.getMessage(), e);
+        }
+    }
+
+
+    @Override
+    public void update(Class<?> theClass, List<String> cambios, List<String> filtros, List<Object> valores) {
+        String sql = QueryHelper.createQueryUPDATE(theClass, cambios, filtros);
+        try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+            for (int i = 0; i < valores.size(); i++) {
+                pstm.setObject(i + 1, valores.get(i));
+            }
+            System.out.println("Ejecutando consulta: " + pstm.toString());
+            pstm.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException("Error en update(): " + e.getMessage(), e);
+        }
+    }
+
+    /**
+     * Mapea la primera fila del ResultSet a una instancia de la clase dada.
+     */
+    private Object mapResultSetToEntity(ResultSet rs, Class<?> theClass) throws Exception {
+        if (!rs.next()) return null;
+        Object entity = theClass.getDeclaredConstructor().newInstance();
+        ResultSetMetaData meta = rs.getMetaData();
+        int cols = meta.getColumnCount();
+        for (int i = 1; i <= cols; i++) {
+            String colName = meta.getColumnName(i);
+            Object value = rs.getObject(i);
+            ObjectHelper.setter(entity, colName, value);
+        }
+        return entity;
+    }
+
+    private List<Object> mapResultSetToEntityList(ResultSet rs, Class<?> theClass) throws Exception {
+        List<Object> list = new ArrayList<>();
+        ResultSetMetaData meta = rs.getMetaData();
+        int cols = meta.getColumnCount();
+
+        while (rs.next()) {
+            Object entity = theClass.getDeclaredConstructor().newInstance();
+            for (int i = 1; i <= cols; i++) {
+                String colName = meta.getColumnName(i);
+                Object value = rs.getObject(i);
+                ObjectHelper.setter(entity, colName, value);
+            }
+            list.add(entity);
         }
 
-        return o;
+        return list;
     }
 
-    public void update(Object object) {
-
-    }
-
-    public void delete(Object object) {
-
-    }
-
-    public List<Object> findAll(Class theClass) {
-        return null;
-    }
-
-    public List<Object> findAll(Class theClass, HashMap params) {
-     /*   String theQuery = QueryHelper.createSelectFindAll(theClass, params);
-        PreparedStatement pstm = null;
-        pstm = conn.prepareStatement(theQuery);
-
-        int i=1;
-        for (Object value : params.values()) {
-            pstm.setObject(i++, value );
+    @Override
+    public void delete(Object theClass) {
+        int x =0;
+        List<String> atributos = ObjectHelper.getNotNullFields(theClass);
+        List<Object> valores = new ArrayList<>();
+        while (atributos.size() > x) {
+            valores.add(ObjectHelper.getter(theClass, atributos.get(x)));
+            x++;
         }
-        //ResultSet rs = pstm.executeQuery();
-
-
-
-
-        return result;
-*/
-     return null;
-    }
-
-    public List<Object> query(String query, Class theClass, HashMap params) {
-        return null;
+            String sql = QueryHelper.createQueryDELETE(theClass.getClass(), atributos);
+        try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+            for (int i = 0; i < valores.size(); i++) {
+                pstm.setObject(i + 1, valores.get(i));
+            }
+            System.out.println("Ejecutando consulta: " + pstm.toString());
+            pstm.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException("Error en delete(): " + e.getMessage(), e);
+        }
     }
 }

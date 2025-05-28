@@ -1,29 +1,29 @@
 package edu.upc.dsa.models;
 
-public class Compra {
-    private String usuarioId;
-    private String objeto;
+public class usuario_objeto {
+    private String usuario_id;
+    private String objeto_id;
 
-    public Compra() { }
+    public usuario_objeto() { }
 
-    public Compra(String usuarioId, String objeto) {
-        this.usuarioId = usuarioId;
-        this.objeto = objeto;
+    public usuario_objeto(String usuario_id, String objeto_id) {
+        this.usuario_id = usuario_id;
+        this.objeto_id = objeto_id;
     }
 
-    public String getUsuarioId() {
-        return usuarioId;
+    public String getUsuario_id() {
+        return usuario_id;
     }
 
-    public void setUsuarioId(String usuarioId) {
-        this.usuarioId = usuarioId;
+    public void setUsuario_id(String usuario_id) {
+        this.usuario_id = usuario_id;
     }
 
-    public String getObjeto() {
-        return objeto;
+    public String getObjeto_id() {
+        return objeto_id;
     }
 
-    public void setObjeto(String objeto) {
-        this.objeto = objeto;
+    public void setObjeto_id(String objeto_id) {
+        this.objeto_id = objeto_id;
     }
 }

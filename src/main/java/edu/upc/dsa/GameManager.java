@@ -11,10 +11,10 @@ public interface GameManager {
     public UsuarioEnviar login(String mail_nombre, String pswd) throws CredencialesIncorrectasException;
     public ConsultaTienda findSkins();
     public ConsultaTienda findArmas();
-    public DevolverCompra Comprar (Compra compra) throws UsuarioNoAutenticadoException, NoSuficientesTarrosException;
+    public DevolverCompra Comprar (usuario_objeto usuarioobjeto) throws UsuarioNoAutenticadoException, NoSuficientesTarrosException;
     public void addObjeto(Objeto objeto);
     public Objeto findObjeto(String idObjeto);
-    public void initTestUsers() throws UsuarioYaRegistradoException;
+
     public String obtenerContra(String usuario) throws CredencialesIncorrectasException;
     public Usuario relogin(String id, String respuesta) throws CredencialesIncorrectasException;
     public void CambiarContra(String usuario, String contra) throws CredencialesIncorrectasException;

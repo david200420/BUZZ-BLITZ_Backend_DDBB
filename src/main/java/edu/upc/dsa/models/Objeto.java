@@ -4,13 +4,13 @@ public class Objeto {
     private String id;
     private String nombre;
     private Integer precio;
-    private int tipo;// "arma" o "skin"
+    private String tipo;// "arma" o "skin"
     private String descripcion;
     private String imagen;
 
     public Objeto() {}
 
-    public Objeto(String id, String nombre, int precio , int tipo, String descripcion ,String imagen) {
+    public Objeto(String id, String nombre, int precio , String tipo, String descripcion ,String imagen) {
         this.id = id;
         this.nombre = nombre;
         this.tipo = tipo;
@@ -61,11 +61,11 @@ public class Objeto {
         this.nombre = nombre;
     }
 
-    public int getTipo() {
+    public String getTipo() {
         return tipo;
     }
 
-    public void setTipo(int tipo) {
+    public void setTipo(String tipo) {
 
         this.tipo = tipo;
     }

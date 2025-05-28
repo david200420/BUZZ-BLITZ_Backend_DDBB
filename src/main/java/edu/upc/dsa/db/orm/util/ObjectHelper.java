@@ -2,6 +2,8 @@ package edu.upc.dsa.db.orm.util;
 
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ObjectHelper {
     public static String[] getFields(Object entity) { // Sirve para poder coger los atributos del objeto
@@ -17,6 +19,30 @@ public class ObjectHelper {
 
         return sFields;
 
+    }
+
+    public static List<String> getNotNullFields(Object entity) {
+        if (entity == null) {
+            throw new IllegalArgumentException("La entidad no puede ser null");
+        }
+
+        List<String> result = new ArrayList<>();
+        Class<?> theClass = entity.getClass();
+
+        // Recorremos sólo la clase actual (o podrías subir la jerarquía si heredas campos)
+        for (Field f : theClass.getDeclaredFields()) {
+            f.setAccessible(true);
+            try {
+                Object value = f.get(entity);
+                if (value != null) {
+                    result.add(f.getName());
+                }
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(
+                        "No se pudo leer el campo '" + f.getName() + "' de la entidad", e);
+            }
+        }
+        return result;
     }
 
 

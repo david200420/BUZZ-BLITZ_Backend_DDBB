@@ -307,7 +307,7 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
                 type: "GET",
                 contentType: "application/json",
                 success: function (response) {
-                    listaArmasss = response.consulta.map(objeto => objeto.id);
+                    listaArmasss = response.map(objeto => objeto.id);
                     //En el foreach va en minusculas ya que aqui lo que hacemos es crear una variable,
                     //por cada objeto Json no le hacemos caso a que consulta sea de classe Objeto sbs,
                     //esto se llama objeto JSON o literal."consulta": [
@@ -336,8 +336,8 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
                 type: "GET",
                 contentType: "application/json",
                 success: function (response) {
-                    response.consulta.forEach(objeto => {
-                        listaSkinsss = response.consulta.map(objeto => objeto.id);
+                    response.forEach(objeto => {
+                        listaSkinsss = response.map(objeto => objeto.id);
                         //el .map sirve para recorrer toda la lista y seleccionar el valor que estas seleccionando
                         //Basicamente aqui estamos recorriendo toda la lista JSON y poniendo el listaSkinsss los
                         //objetos.id SOLO. Selecionas los atributos que quieres sbs.
@@ -360,7 +360,7 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
                 success: function (response) {
                     const listaArmas = $("#listas-armas");
                     listaArmas.empty();
-                    response.consulta.forEach(objeto => {
+                    response.forEach(objeto => {
                         const comprado = objeto.id;
                         let li;
                         if (listaArmasss.includes(comprado)) {
@@ -408,7 +408,7 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
                 success: function (response) {
                     const listaSkins = $("#listas-skins");
                     listaSkins.empty();
-                    response.consulta.forEach(objeto => {
+                    response.forEach(objeto => {
                         const comprado = objeto.id;
                         let li;
                         if (listaSkinsss.includes(comprado)) {
@@ -449,20 +449,20 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
             });
         });
     }
-    $(document).on("click", ".btn-compra", function () {
+    $(document).on("click", ".btn-compra", function (e) {
         e.preventDefault();
         const idUsuario = usuarioActual.id;
         const nombreObjeto = $(this).data("nombre");
 
-        const jsonData = {
-            usuarioId: idUsuario,
-            objeto: nombreObjeto
+        const usuario_objeto = {
+            usuario_id: idUsuario,
+            objeto_id: nombreObjeto
         };
 
         $.ajax({
             url: "http://localhost:8080/dsaApp/usuarios/comprar",
             type: "PUT",
-            data: JSON.stringify(jsonData),
+            data: JSON.stringify(usuario_objeto),
             contentType: "application/json",
             success: function (response) {
                 alert("Compra realizada con éxito");

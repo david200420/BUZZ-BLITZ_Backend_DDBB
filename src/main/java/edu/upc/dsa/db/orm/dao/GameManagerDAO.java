@@ -1,18 +1,20 @@
-/* package edu.upc.dsa.db.orm.dao;
+package edu.upc.dsa.db.orm.dao;
 
-
-import edu.upc.eetac.dsa.db.orm.model.*;
+import edu.upc.dsa.exceptions.*;
+import edu.upc.dsa.models.*;
 
 import java.util.List;
 
-public interface IEmployeeDAO {
+public interface GameManagerDAO {
 
-    public int addEmployee(String id, String name, String surname, double salary);
-    public Employee getEmployee(int employeeID);
-    public void updateEmployee(int employeeID, String name, String surname, double salary);
-    public void deleteEmployee(int employeeID);
-    public List<Employee> getEmployees();
-    public List <Employee> getEmployeeByDept(int deptId);
 
- */
-//}
+    public void addUsuario(String id, String name, String ape,String contra, String mail, String q, String a) throws UsuarioYaRegistradoException;
+    public UsuarioEnviar login(String mail_nombre, String pswd) throws CredencialesIncorrectasException;
+    public DevolverCompra Comprar (usuario_objeto usuarioobjeto) throws UsuarioNoAutenticadoException, NoSuficientesTarrosException;
+    public List<Objeto> findSkins();
+    public List<Objeto> findArmas();
+    public List<Objeto> skinsUsuario(String usuario) throws CredencialesIncorrectasException, NoHayObjetos;
+    public List<Objeto> armasUsuario(String usuario) throws CredencialesIncorrectasException, NoHayObjetos;
+    public void deleteUsuario(String id) throws UsuarioNoEncontradoException;
+    public Intercambio intercambio(String usuario) throws CredencialesIncorrectasException, NoHayFlores;
+}
