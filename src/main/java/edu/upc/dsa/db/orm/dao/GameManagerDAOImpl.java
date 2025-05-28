@@ -1,5 +1,5 @@
 
-/*package edu.upc.dsa.db.orm.dao;
+package edu.upc.dsa.db.orm.dao;
 
 import edu.upc.eetac.dsa.db.orm.FactorySession;
 import edu.upc.eetac.dsa.db.orm.Session;
@@ -130,7 +130,7 @@ public class EmployeeDAOImpl implements IEmployeeDAO {
         return employeeList;
     }
 
-    /*
+
 
     public void customQuery(xxxx) {
         Session session = null;
@@ -141,7 +141,7 @@ public class EmployeeDAOImpl implements IEmployeeDAO {
             c.createStatement("SELECT * ")
 
         }
-*/
 
-//}
+
+}
 
