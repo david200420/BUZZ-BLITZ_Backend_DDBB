@@ -324,5 +324,63 @@ public class GameManagerDAOImpl implements GameManagerDAO {
             session.close();
         }
     }
+
+    @Override
+    public void CambiarContra(String usuario, String contra) throws CredencialesIncorrectasException{
+        Session session = FactorySession.openSession();
+        try {
+            List<String> filtros = Arrays.asList("id");
+            List<Object> valores = Arrays.asList(usuario);
+            Usuario u = (Usuario) session.get(Usuario.class,null, null, filtros);
+            if(u.getId() == null) {
+                throw new CredencialesIncorrectasException("Usuario no puede ser nulo o vacío");
+            }
+
+            u.setPswd(contra);
+            session.update(Usuario.class, Arrays.asList("pswd"), Arrays.asList("id"), Arrays.asList(contra, usuario));
+            session.commit();
+        } catch (CredencialesIncorrectasException e) {
+            session.rollback();
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public String obtenerContra(String usuario) throws CredencialesIncorrectasException{
+        Session session = FactorySession.openSession();
+        try {
+            List<String> filtros = Arrays.asList("id");
+            List<Object> valores = Arrays.asList(usuario);
+            Usuario u = (Usuario) session.get(Usuario.class, filtros, valores, null);
+            if (u == null) {
+                throw new CredencialesIncorrectasException("Usuario no encontrado: " + usuario);
+            }
+            return u.getPregunta();
+        } catch (CredencialesIncorrectasException e) {
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public Usuario relogin(String id, String respuesta) throws CredencialesIncorrectasException {
+        Session session = FactorySession.openSession();
+        try {
+            List<String> filtros = Arrays.asList("id", "respuesta");
+            List<Object> valores = Arrays.asList(id, respuesta);
+            Usuario u = (Usuario) session.getCondicional(Usuario.class, filtros, null, null, valores);
+            if (u == null) {
+                throw new CredencialesIncorrectasException("Respuesta incorrecta o usuario no encontrado");
+            }
+            return u;
+        } catch (CredencialesIncorrectasException e) {
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
 }
 

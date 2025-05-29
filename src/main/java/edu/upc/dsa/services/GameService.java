@@ -108,45 +108,45 @@ public class GameService {
         return Response.status(200).entity(entity).build();
     }
 
-//    @GET
-//    @Path("/login/recordarContraseña")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response getlogin(@QueryParam("id")String u) {
-//        try {
-//            String pregunta = dao.obtenerContra(u);
-//            return Response.ok(pregunta).build();
-//        } catch (CredencialesIncorrectasException e) {
-//            System.out.println("Error interno del servidor");
-//            return Response.status(401).entity(e.getMessage()).build();
-//        }
-//    }
-//    @POST
-//    @Path("/login/recuperarCuenta")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response loginUsuario(OlvContra usu) {
-//        try {
-//            Usuario u = dao.relogin(usu.getId(), usu.getRespuesta());
-//            return Response.status(200).entity(u).build(); // Login OK
-//        } catch (CredencialesIncorrectasException e) {
-//            return Response.status(401).entity(e.getMessage()).build(); // No autorizado
-//        } catch (Exception e) {
-//            return Response.status(500).entity("Error interno del servidor").build(); // Error general
-//        }
-//    }
-//    @POST
-//    @Path("/login/cambiarContraseña")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response cambiarContra(Usulogin u) {
-//        try {
-//            dao.CambiarContra(u.getIdoname(), u.getPswd());
-//            return Response.status(200).entity("Contraseña cambiada con éxito").build();
-//        } catch (CredencialesIncorrectasException e) {
-//            return Response.status(401).entity(e.getMessage()).build();
-//        }
-//    }
-//
+    @GET
+    @Path("/login/recordarContraseña")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getlogin(@QueryParam("id")String u) {
+        try {
+            String pregunta = dao.obtenerContra(u);
+            return Response.ok(pregunta).build();
+        } catch (CredencialesIncorrectasException e) {
+            System.out.println("Error interno del servidor");
+            return Response.status(401).entity(e.getMessage()).build();
+        }
+    }
+    @POST
+    @Path("/login/recuperarCuenta")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response loginUsuario(OlvContra usu) {
+        try {
+            Usuario u = dao.relogin(usu.getId(), usu.getRespuesta());
+            return Response.status(200).entity(u).build(); // Login OK
+        } catch (CredencialesIncorrectasException e) {
+            return Response.status(401).entity(e.getMessage()).build(); // No autorizado
+        } catch (Exception e) {
+            return Response.status(500).entity("Error interno del servidor").build(); // Error general
+        }
+    }
+    @POST
+    @Path("/login/cambiarContraseña")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response cambiarContra(Usulogin u) {
+        try {
+            dao.CambiarContra(u.getIdoname(), u.getPswd());
+            return Response.status(200).entity("Contraseña cambiada con éxito").build();
+        } catch (CredencialesIncorrectasException e) {
+            return Response.status(401).entity(e.getMessage()).build();
+        }
+    }
+
     @GET
     @Path("/tienda/{id}/armas")
     @Produces(MediaType.APPLICATION_JSON)

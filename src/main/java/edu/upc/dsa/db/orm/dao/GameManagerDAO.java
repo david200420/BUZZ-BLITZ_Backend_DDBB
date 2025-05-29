@@ -18,4 +18,7 @@ public interface GameManagerDAO {
     public void deleteUsuario(String id) throws UsuarioNoEncontradoException;
     public Intercambio intercambio(String usuario) throws CredencialesIncorrectasException, NoHayFlores;
     public List<Info> informcion (String UserId);
+    public void CambiarContra(String usuario, String contra) throws CredencialesIncorrectasException; // Cambia la contraseña del usuario
+    public String obtenerContra(String usuario) throws CredencialesIncorrectasException; //Obtiene la pregunta de seguridad del usuario para el relogin
+    public Usuario relogin(String id, String respuesta) throws CredencialesIncorrectasException; //comprueba la respuesta
 }
