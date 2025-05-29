@@ -203,14 +203,15 @@ public class GameService {
             return Response.status(400).entity(e.getMessage()).build();
         }
     }
-//
-//    @GET
-//    @Path("/informacion")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response getInfo() {
-//        List<Info> informcion = dao.informcion();
-//        return Response.status(200).entity(informcion).build();
-//    }
+
+    @GET
+    @Path("/informacion/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getInfo(@PathParam("id") String id ) {
+        List<Info> informcion = dao.informcion(id);
+        GenericEntity<List<Info>> entity = new GenericEntity<List<Info>>(informcion) {};
+        return Response.status(200).entity(entity).build();
+    }
 }
 
 

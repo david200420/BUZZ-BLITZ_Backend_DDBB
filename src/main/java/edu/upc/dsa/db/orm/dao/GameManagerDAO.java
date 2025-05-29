@@ -17,4 +17,5 @@ public interface GameManagerDAO {
     public List<Objeto> armasUsuario(String usuario) throws CredencialesIncorrectasException, NoHayObjetos;
     public void deleteUsuario(String id) throws UsuarioNoEncontradoException;
     public Intercambio intercambio(String usuario) throws CredencialesIncorrectasException, NoHayFlores;
+    public List<Info> informcion (String UserId);
 }
