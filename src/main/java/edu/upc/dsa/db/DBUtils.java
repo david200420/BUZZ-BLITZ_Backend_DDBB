@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class DBUtils {
 
-    public static final String DB_NAME = "Basededatos_BuzzBlitz";
+    public static final String DB_NAME = "DDBB";
     public static final String DB_HOST = "127.0.0.1";
     public static final String DB_USER = "root";
     public static final String DB_PASS = "Mazinger72";

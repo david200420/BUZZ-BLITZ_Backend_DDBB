@@ -77,7 +77,7 @@ public class GameManagerDAOImpl implements GameManagerDAO {
         }
     }
     @Override
-    public DevolverCompra Comprar(usuario_objeto usuarioobjeto)
+    public DevolverCompra Comprar(Usuario_objeto usuarioobjeto)
             throws UsuarioNoAutenticadoException, NoSuficientesTarrosException {
 
         Session session = null;
@@ -122,9 +122,9 @@ public class GameManagerDAOImpl implements GameManagerDAO {
                     Arrays.asList(nuevosTarros, u.getId())  // valores: primero nuevosTarros, luego id
             );
 
-            // 6) Insertar registro en usuario_objeto
-            // Construimos la entidad de relación (usuario_objeto)
-            usuario_objeto rel = new usuario_objeto();
+            // 6) Insertar registro en Usuario_objeto
+            // Construimos la entidad de relación (Usuario_objeto)
+            Usuario_objeto rel = new Usuario_objeto();
             rel.setUsuario_id(u.getId());
             rel.setObjeto_id(obj.getId());
             session.save(rel);  // método genérico de INSERT
@@ -182,14 +182,14 @@ public class GameManagerDAOImpl implements GameManagerDAO {
     public List<Objeto> armasUsuario(String usuario) throws CredencialesIncorrectasException, NoHayObjetos {
         Session session = FactorySession.openSession();
         List<Objeto> armas = new ArrayList<>();
-        usuario_objeto u = new usuario_objeto();
+        Usuario_objeto u = new Usuario_objeto();
         List<Objeto> arma = new ArrayList<>();
         u.setUsuario_id(usuario);
         try {
             List<String> filtros = Arrays.asList("usuario_id","id");
             Object valores = usuario;
 
-            armas = (List<Objeto>) session.getWithJoin(usuario_objeto.class, Objeto.class,null, filtros,"nombre" ,valores);
+            armas = (List<Objeto>) session.getWithJoin(Usuario_objeto.class, Objeto.class,null, filtros,"nombre" ,valores);
             if (armas == null || armas.isEmpty()) {
                 throw new NoHayObjetos("No hay objetos");
             }
@@ -207,14 +207,14 @@ public class GameManagerDAOImpl implements GameManagerDAO {
     public List<Objeto>  skinsUsuario(String usuario) throws CredencialesIncorrectasException, NoHayObjetos {
         Session session = FactorySession.openSession();
         List<Objeto> skins = new ArrayList<>();
-        usuario_objeto u = new usuario_objeto();
+        Usuario_objeto u = new Usuario_objeto();
         List<Objeto> skin = new ArrayList<>();
         u.setUsuario_id(usuario);
         try {
             List<String> filtros = Arrays.asList("usuario_id", "id");
             Object valores = usuario;
 
-            skins = (List<Objeto>) session.getWithJoin(usuario_objeto.class, Objeto.class, null, filtros, "nombre", valores);
+            skins = (List<Objeto>) session.getWithJoin(Usuario_objeto.class, Objeto.class, null, filtros, "nombre", valores);
             if (skins == null || skins.isEmpty()) {
                 throw new NoHayObjetos("No hay objetos");
             }
@@ -241,8 +241,8 @@ public class GameManagerDAOImpl implements GameManagerDAO {
                 throw new UsuarioNoEncontradoException("Usuario no encontrado: " + id);
             }
             session.delete(u); // primer delete lo borra de la tabla usuarioUsuario
-            usuario_objeto a = new usuario_objeto(id, null);
-            session.delete(a);// segundo delete lo borra de la tabla usuario_objeto
+            Usuario_objeto a = new Usuario_objeto(id, null);
+            session.delete(a);// segundo delete lo borra de la tabla Usuario_objeto
             session.commit();
         } catch (UsuarioNoEncontradoException e) {
             session.rollback();

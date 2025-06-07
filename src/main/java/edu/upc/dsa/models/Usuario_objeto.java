@@ -1,12 +1,12 @@
 package edu.upc.dsa.models;
 
-public class usuario_objeto {
+public class Usuario_objeto {
     private String usuario_id;
     private String objeto_id;
 
-    public usuario_objeto() { }
+    public Usuario_objeto() { }
 
-    public usuario_objeto(String usuario_id, String objeto_id) {
+    public Usuario_objeto(String usuario_id, String objeto_id) {
         this.usuario_id = usuario_id;
         this.objeto_id = objeto_id;
     }

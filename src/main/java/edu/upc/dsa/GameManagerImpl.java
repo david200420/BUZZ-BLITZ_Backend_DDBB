@@ -97,7 +97,7 @@ public class GameManagerImpl implements GameManager {
     }
 
     @Override
-    public DevolverCompra Comprar (usuario_objeto usuarioobjeto) throws UsuarioNoAutenticadoException, NoSuficientesTarrosException { // va a ser un @PUT
+    public DevolverCompra Comprar (Usuario_objeto usuarioobjeto) throws UsuarioNoAutenticadoException, NoSuficientesTarrosException { // va a ser un @PUT
         //Algo de que si idUsuari, mande una excepcion de que falta iniciar session, de quiero saber si
         // se ha registrado, mi idea esq en la web arriba a la derecha tengas un parametro con tu
         //id para almacenar la variable y poderla mandar en cada JSON

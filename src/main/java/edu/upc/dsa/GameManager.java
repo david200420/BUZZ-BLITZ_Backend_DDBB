@@ -11,7 +11,7 @@ public interface GameManager {
     public UsuarioEnviar login(String mail_nombre, String pswd) throws CredencialesIncorrectasException;
     public ConsultaTienda findSkins();
     public ConsultaTienda findArmas();
-    public DevolverCompra Comprar (usuario_objeto usuarioobjeto) throws UsuarioNoAutenticadoException, NoSuficientesTarrosException;
+    public DevolverCompra Comprar (Usuario_objeto usuarioobjeto) throws UsuarioNoAutenticadoException, NoSuficientesTarrosException;
     public void addObjeto(Objeto objeto);
     public Objeto findObjeto(String idObjeto);
 

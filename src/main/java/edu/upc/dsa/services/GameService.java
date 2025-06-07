@@ -1,7 +1,6 @@
 package edu.upc.dsa.services;
 
 
-import edu.upc.dsa.GameManager;
 import edu.upc.dsa.db.orm.dao.GameManagerDAO;
 import edu.upc.dsa.db.orm.dao.GameManagerDAOImpl;
 import edu.upc.dsa.exceptions.*;
@@ -77,7 +76,7 @@ public class GameService {
     @Path("/comprar")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response comprarObjeto(usuario_objeto usuarioobjeto) {
+    public Response comprarObjeto(Usuario_objeto usuarioobjeto) {
         try {
             DevolverCompra usuarioActualizado = dao.Comprar(usuarioobjeto);
             return Response.status(200).entity(usuarioActualizado).build();
