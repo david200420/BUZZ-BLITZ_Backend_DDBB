@@ -30,6 +30,7 @@ public class GameService {
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "registra un usuario", notes = "asdasd")
     public Response registerUsuario(UsuReg usuReg) {
         try {
             dao.addUsuario(usuReg.getId(), usuReg.getName(), usuReg.getApellidos(),usuReg.getPswd(), usuReg.getMail(), usuReg.getPregunta(), usuReg.getRespuesta());
@@ -45,6 +46,7 @@ public class GameService {
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "login d'un usuari")
     public Response loginUsuario(Usulogin loginData) {
         try {
             UsuarioEnviar u = dao.login(loginData.getIdoname(), loginData.getPswd());
@@ -61,6 +63,7 @@ public class GameService {
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "borra un usuari")
     public Response deleteUsuario(@PathParam("id") String id) {
         try {
             dao.deleteUsuario(id);
@@ -76,6 +79,7 @@ public class GameService {
     @Path("/comprar")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Compra un objcte de la tenda")
     public Response comprarObjeto(Usuario_objeto usuarioobjeto) {
         try {
             DevolverCompra usuarioActualizado = dao.Comprar(usuarioobjeto);
@@ -92,6 +96,7 @@ public class GameService {
     @GET
     @Path("/tienda/armas")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "proporciona TOTES les armes de la tenda")
     public Response getArmas() {
             List<Objeto> armas = dao.findArmas();
             GenericEntity<List<Objeto>> entity = new GenericEntity<List<Objeto>>(armas) {};
@@ -101,6 +106,7 @@ public class GameService {
     @GET
     @Path("/tienda/skins")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "proporciona TOTES les skins de la tenda")
     public Response getSkin() {
         List<Objeto> skins = dao.findSkins();
         GenericEntity<List<Objeto>> entity = new GenericEntity<List<Objeto>>(skins) {};
@@ -110,6 +116,7 @@ public class GameService {
     @GET
     @Path("/login/recordarContraseña")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "envia la pregunta de seguridad de un usuario")
     public Response getlogin(@QueryParam("id")String u) {
         try {
             String pregunta = dao.obtenerContra(u);
@@ -123,6 +130,7 @@ public class GameService {
     @Path("/login/recuperarCuenta")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "inicia el proces de recuperació del compte")
     public Response loginUsuario(OlvContra usu) {
         try {
             Usuario u = dao.relogin(usu.getId(), usu.getRespuesta());
@@ -137,6 +145,7 @@ public class GameService {
     @Path("/login/cambiarContraseña")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Cambia la contrasenya d'un usuari")
     public Response cambiarContra(Usulogin u) {
         try {
             dao.CambiarContra(u.getIdoname(), u.getPswd());
@@ -149,7 +158,7 @@ public class GameService {
     @GET
     @Path("/tienda/{id}/armas")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "proporciona TOTES les armes d'un usuari", notes = "asdasd")
+    @ApiOperation(value = "proporciona TOTES les armes d'un usuari")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = Objeto.class, responseContainer="List"),
     })
@@ -169,7 +178,7 @@ public class GameService {
     @GET
     @Path("/tienda/{id}/skins")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "proporciona TOTES les skins d'un usuari", notes = "asdasd")
+    @ApiOperation(value = "proporciona TOTES les skins d'un usuari")
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successful", response = Objeto.class, responseContainer="List"),
     })
@@ -192,6 +201,7 @@ public class GameService {
     @Path("/tienda/{id}/intercambio")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Intercambia les flors per tarros de mel")
     public Response Conversion(@PathParam("id") String id) {
         try {
             Intercambio i = dao.intercambio(id);
@@ -206,6 +216,7 @@ public class GameService {
     @GET
     @Path("/informacion/{id}")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Dona un ranking de la informació d'un usuari")
     public Response getInfo(@PathParam("id") String id ) {
         List<Info> informcion = dao.informcion(id);
         GenericEntity<List<Info>> entity = new GenericEntity<List<Info>>(informcion) {};

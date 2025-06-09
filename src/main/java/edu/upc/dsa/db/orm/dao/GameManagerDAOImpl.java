@@ -26,7 +26,6 @@ public class GameManagerDAOImpl implements GameManagerDAO {
             List<String> filtros = Arrays.asList("id", "mail");
             List<Object> valores = Arrays.asList(id, mail);
             List<String> orAttributes = Arrays.asList("id","mail");
-            // CREO QUE FALLA ESTA LINEA LA DE DEBAJO
             Usuario existente = (Usuario) session.getCondicional(Usuario.class, filtros,null, orAttributes ,valores);
 
             if (existente != null) {
@@ -84,11 +83,9 @@ public class GameManagerDAOImpl implements GameManagerDAO {
         DevolverCompra resultado = new DevolverCompra();
 
         try {
-            // 1) Abrimos sesión y arrancamos la transacción
             session = FactorySession.openSession();
             session.beginTransaction();
 
-            // 2) Recuperar usuario por ID
             List<String> filtrosUser   = Arrays.asList("id");
             List<Object> valoresUser   = Arrays.asList(usuarioobjeto.getUsuario_id());
             List<String > deseo   = Arrays.asList("tarrosMiel");
@@ -97,47 +94,41 @@ public class GameManagerDAOImpl implements GameManagerDAO {
                 throw new UsuarioNoAutenticadoException("Usuario no autenticado");
             }
 
-            // 3) Recuperar objeto (para sacarle el precio)
             List<String> filtrosObj   = Arrays.asList("nombre");
-            List<Object> valoresObj   = Arrays.asList(usuarioobjeto.getObjeto_id());
-            List<String> deseados   = Arrays.asList("precio", "id");
+            List<Object> valoresObj   = Arrays.asList(usuarioobjeto.getObjeto_nombre());
+            List<String> deseados   = Arrays.asList("precio", "nombre");
             Objeto obj = (Objeto) session.get(Objeto.class, filtrosObj, valoresObj, deseados);
             if (obj == null) {
-                throw new RuntimeException("Objeto no encontrado: " + usuarioobjeto.getObjeto_id());
+                throw new RuntimeException("Objeto no encontrado: " + usuarioobjeto.getObjeto_nombre());
             }
             int precio = obj.getPrecio();  // suponemos getter getPrecio()
 
-            // 4) Comprobar si tiene suficientes tarros de miel
             if (u.getTarrosMiel() < precio) {
                 throw new NoSuficientesTarrosException("No tienes suficientes tarros de miel");
             }
 
-            // 5) Restar tarros y actualizar en la tabla usuario
             int nuevosTarros = u.getTarrosMiel() - precio;
             u.setTarrosMiel(nuevosTarros);
             session.update(
                     Usuario.class,
                     Arrays.asList("tarrosMiel"),
                     Arrays.asList("id"),
-                    Arrays.asList(nuevosTarros, u.getId())  // valores: primero nuevosTarros, luego id
+                    Arrays.asList(nuevosTarros, usuarioobjeto.getUsuario_id())  // valores: primero nuevosTarros, luego id
             );
+            System.out.println("Tarros de miel actualizados: " + nuevosTarros);
 
-            // 6) Insertar registro en Usuario_objeto
-            // Construimos la entidad de relación (Usuario_objeto)
             Usuario_objeto rel = new Usuario_objeto();
-            rel.setUsuario_id(u.getId());
-            rel.setObjeto_id(obj.getId());
+            rel.setUsuario_id(usuarioobjeto.getUsuario_id());
+            rel.setObjeto_nombre(obj.getNombre());
             session.save(rel);  // método genérico de INSERT
-
+            session.commit();
             resultado.setTarrosMiel(nuevosTarros);
             return resultado;
 
         } catch (UsuarioNoAutenticadoException | NoSuficientesTarrosException ex) {
-            // En caso de nuestros errores de negocio, hacemos rollback y re-lanzamos
             if (session != null) session.rollback();
             throw ex;
         } catch (Exception ex) {
-            // Cualquier otro error interno: rollback y envolvemos
             if (session != null) session.rollback();
             throw new RuntimeException("Error interno al comprar: " + ex.getMessage(), ex);
         } finally {
@@ -270,15 +261,15 @@ public class GameManagerDAOImpl implements GameManagerDAO {
          if((u.getFlor() < 30) && (u.getFloreGold() == 0)) {
             throw new NoHayFlores("No hay nada a convertir en Tarros, juega mas para conseguir mas!!");
          }
-         while(FloresSobrantes >= 30){ // Va ahciendo restas de 30 n 30 i ba sumando Tarros pq cada 30 flores normales
-            Tarros++;                // equivalen a 1 solo Tarro de Miel
+         while(FloresSobrantes >= 30){
+            Tarros++;
             FloresSobrantes = FloresSobrantes - 30;
          }
             Tarros = Tarros + (u.getFloreGold()*50); // 1 Dorada = 50 Tarros
 
             List<String> cambios2 = Arrays.asList("tarrosMiel", "flor", "floreGold");
             List<String> filtros2 = Arrays.asList("id");
-            List<Object> valores2 = Arrays.asList(u.getId(), u.getTarrosMiel() + Tarros, FloresSobrantes, 0);
+            List<Object> valores2 = Arrays.asList( u.getTarrosMiel() + Tarros, FloresSobrantes, 0, u.getId());
             session.update(Usuario.class ,cambios2, filtros2, valores2); //aqui se hace un update del usuario, para que se le reste los tarros de miel y las flores sobrantes
 
          Intercambio i = new Intercambio(Tarros, FloresSobrantes);

@@ -19,9 +19,7 @@ public class SessionImpl implements Session {
         beginTransaction();
     }
 
-    /**
-     * Inicia una transacción JDBC (desactiva auto-commit)
-     */
+
     public void beginTransaction() {
         try {
             if (!transactionActive) {
@@ -33,9 +31,6 @@ public class SessionImpl implements Session {
         }
     }
 
-    /**
-     * Confirma todos los cambios si hay transacción activa
-     */
     public void commit() {
         if (!transactionActive) return;
         try {
@@ -47,9 +42,6 @@ public class SessionImpl implements Session {
         }
     }
 
-    /**
-     * Deshace todos los cambios pendientes si hay transacción activa
-     */
     public void rollback() {
         if (!transactionActive) return;
         try {

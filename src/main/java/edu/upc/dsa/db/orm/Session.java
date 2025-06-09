@@ -2,24 +2,12 @@ package edu.upc.dsa.db.orm;
 
 import java.util.List;
 
-/**
- * Sesión de acceso a datos con soporte de transacciones JDBC.
- */
 public interface Session {
 
-    /**
-     * Inicia una transacción (desactiva auto-commit de JDBC).
-     */
     void beginTransaction();
 
-    /**
-     * Confirma la transacción actual (commit).
-     */
     void commit();
 
-    /**
-     * Deshace la transacción actual (rollback).
-     */
     void rollback();
 
     void save(Object entity);
@@ -31,7 +19,10 @@ public interface Session {
             List<String> deseados
     );
 
-    public Object getLista(Class<?> theClass, List<String> filtros, List<Object> valores, List<String> deseados);
+    public Object getLista(Class<?> theClass,
+                           List<String> filtros,
+                           List<Object> valores,
+                           List<String> deseados);
 
     Object getCondicional(
             Class<?> theClass,

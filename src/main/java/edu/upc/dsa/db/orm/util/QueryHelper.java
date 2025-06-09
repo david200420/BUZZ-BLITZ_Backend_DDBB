@@ -38,7 +38,6 @@ public class QueryHelper {
     public static String createQuerySELECT(List<String> filtros, Class<?> theClass, List<String> deseados) {
         StringBuilder sb = new StringBuilder();
 
-        // 1) SELECT: columnas específicas o todas (* si es null o vacía)
         if (deseados == null || deseados.isEmpty()) {
             sb.append("SELECT * ");
         } else {
@@ -47,10 +46,8 @@ public class QueryHelper {
                     .append(" ");
         }
 
-        // 2) FROM: nombre de la clase (tabla)
         sb.append("FROM ").append(theClass.getSimpleName());
 
-        // 3) WHERE: condiciones AND
         if (filtros != null && !filtros.isEmpty()) {
             sb.append(" WHERE ")
                     .append(filtros.stream()
@@ -70,7 +67,6 @@ public class QueryHelper {
 
         StringBuilder sb = new StringBuilder();
 
-        // 1) SELECT: columnas deseadas o *
         if (deseados == null || deseados.isEmpty()) {
             sb.append("SELECT * ");
         } else {
@@ -79,11 +75,9 @@ public class QueryHelper {
                     .append(" ");
         }
 
-        // 2) FROM: nombre de la tabla (clase)
         sb.append("FROM ")
                 .append(theClass.getSimpleName());
 
-        // 3) WHERE: condiciones OR y AND
         if (filtros != null && !filtros.isEmpty()) {
 
             // separar filtros OR y filtros AND
@@ -153,18 +147,15 @@ public class QueryHelper {
             List<String> filtros,   // [ joinFieldInClass1, whereFieldInClass1 ]
             String valorOn          // joinFieldInClass2
     ) {
-        // 0) Validación de filtros
         if (filtros == null || filtros.size() != 2) {
             throw new IllegalArgumentException("Se requieren 2 filtros: [joinField, whereField]");
         }
 
-        // 1) Nombres de tabla en minúsculas
         String t1 = class1.getSimpleName().toLowerCase();
         String t2 = class2.getSimpleName().toLowerCase();
 
         StringBuilder sb = new StringBuilder();
 
-        // 2) SELECT dinámico
         sb.append("SELECT ");
         if (deseados == null || deseados.isEmpty()) {
             sb.append(t2).append(".*");
@@ -175,13 +166,11 @@ public class QueryHelper {
             }
         }
 
-        // 3) FROM y JOIN
         sb.append(" FROM ").append(t1)
                 .append(" JOIN ").append(t2)
                 .append(" ON ").append(t1).append(".").append(filtros.get(0))
                 .append(" = ").append(t2).append(".").append(valorOn);
 
-        // 4) WHERE
         sb.append(" WHERE ").append(t1).append(".").append(filtros.get(1)).append(" = ?");
 
         return sb.toString();

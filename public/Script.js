@@ -20,30 +20,30 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
     <!--const ObjetoContainer = $("#armas-container");-->
 
     function setUpWeb(){
-        landing.show();      // Se muestra la landing
-        mainContent.hide(); // Se oculta el contenido principal
+        landing.removeClass('hidden');// Se muestra la landing
+        mainContent.addClass('hidden');// Se oculta el contenido principal
     }
 
     function updateNav() {
         if (usuarioActual) {
-            $("#nav-signup").hide();
-            $("#nav-shop").show(); //QUIERO HACER QUE CERRAR SESSION SE VAYA ARRIBA A LA DERECHA
+            $("#nav-signup").addClass('hidden');
+            $("#nav-shop").removeClass('hidden');
             $("#nav-login").text("Cerrar sesión");
         } else {
-            $("#nav-signup").show();
-            $("#nav-shop").hide();
+            $("#nav-shop").removeClass('hidden');
+            $("#nav-shop").addClass('hidden');
             $("#nav-login").text("Log in");
         }
     }
 
     function showSection(sectionId) { //Como hacemos una SPA cada vez que cliquemos a uno del nav
-        $("#about, #login, #signup, #shop, #olvidadoContra,#terminos-condiciones").hide();//Vamos a tener que hacer hide de los <div>
+        $("#about, #login, #signup, #shop, #olvidadoContra,#terminos-condiciones").addClass('hidden');//Vamos a tener que hacer hide de los <div>
         $("nav a").removeClass("active");
-        $(sectionId).show();
+        $(sectionId).removeClass('hidden');
     }
 
     function mostrarWeb (){
-        mainContent.fadeIn(500);
+        mainContent.removeClass('hidden').hide().fadeIn(500);
         mainHeader.removeClass("header-portada").addClass("header-principal");
         updateNav();
     }
@@ -65,6 +65,7 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
             if (confirm("¿Estás seguro que quieres cerrar sesión?")) {
                 usuarioActual = null;
                 updateNav();
+                $("#nav-signup").removeClass('hidden');
                 showSection("#about");
                 $("#nav-about").addClass("active");
                 $("#user-info").fadeOut();
@@ -159,12 +160,11 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
             alert("Las contraseñas no coinciden");
             return;
         }
-        const checkbox = $("#checkboxx");//miramos is ha aceptado los terminos o no
+        const checkbox = $("#checkboxx"); // miramos si ha aceptado los términos o no
         if (!checkbox.prop("checked")) {
-            $("#terminos-label").addClass("shake-border"); // Añadimos la classe para que el usuario vea
-                                                                //en lo que se esta equivocando
+            $('#Terminos-enlace').addClass('shake-border'); // hace temblar el enlace
             setTimeout(() => {
-                $("#terminos-label").removeClass("shake-border");
+                $('#Terminos-enlace').removeClass('shake-border');
             }, 1000);
 
             alert("Debes aceptar los términos y condiciones para registrarte");
@@ -214,11 +214,11 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
             success: function (response) {
                 console.log("Respuesta recibida:", response);
                 $("#nav-login").click();
-                $("#enviar-usuario").hide();
+                $("#enviar-usuario").addClass('hidden');
                 $("#pregunta-conseguida").text(response);
-                $("#pregunta-conseguida").show();
-                $("#respuesta-olv").show();
-                $("#relogin").show();
+                $("#pregunta-conseguida").removeClass('hidden');
+                $("#respuesta-olv").removeClass('hidden');
+                $("#relogin").removeClass('hidden');
             },
             error: function (xhr) {
                 console.error("Entró en error del AJAX", xhr);
@@ -248,8 +248,8 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
             data: JSON.stringify(usuarioData),
             success: function (response) {
             $("#usuario-a-cambiar").text(id);
-            $("#olvidadoContra").hide();
-            $("#update-password").show();
+            $("#olvidadoContra").addClass('hidden');
+            $("#update-password").removeClass('hidden');
             },
             error: function (xhr) {
                 alert("Respuesta Incorrecta - Vigilia con las Mayúsuclas " + xhr.responseText);
@@ -385,9 +385,9 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
                           <img src="img/${objeto.imagen}" alt="${objeto.nombre}" />
                           <h5>${objeto.precio} Tarros de Miel</h5>
                            <p>${objeto.descripcion}</p>
-                           <button class= "btn-comprar" data-id="${objeto.id}" data-nombre="${objeto.nombre}">
-                           Compra
-                           </button>
+                        <button class="btn-item-comprar comprar-arma" data-id="${objeto.id}" data-nombre="${objeto.nombre}">
+                         Compra
+                        </button>
                         </article>
                      </li>  
                      `);
@@ -433,8 +433,8 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
                         <img src="img/${objeto.imagen}" alt="${objeto.nombre}" />
                         <h5>${objeto.precio} Tarros de Miel</h5>
                         <p>${objeto.descripcion}</p>
-                        <button class="btn-comprar" data-id="${objeto.id}" data-nombre="${objeto.nombre}">
-                            Compra
+                        <button class="btn-item-comprar comprar-skin" data-id="${objeto.id}" data-nombre="${objeto.nombre}">
+                         Compra
                         </button>
                     </article>
                     </li>
@@ -449,20 +449,20 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
             });
         });
     }
-    $(document).on("click", ".btn-compra", function (e) {
+    $(document).on("click", ".btn-item-comprar", function (e) {
         e.preventDefault();
         const idUsuario = usuarioActual.id;
         const nombreObjeto = $(this).data("nombre");
 
-        const usuario_objeto = {
+        const Usuario_objeto = {
             usuario_id: idUsuario,
-            objeto_id: nombreObjeto
+            objeto_nombre: nombreObjeto
         };
 
         $.ajax({
             url: "/dsaApp/usuarios/comprar",
             type: "PUT",
-            data: JSON.stringify(usuario_objeto),
+            data: JSON.stringify(Usuario_objeto),
             contentType: "application/json",
             success: function (response) {
                 alert("Compra realizada con éxito");
@@ -470,7 +470,7 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
                 // Cambiar el botón a apagado (sin recargar todo)
                 $(this)
                     .removeClass("btn-compra")
-                    .addClass("btn-compra-hecho")
+                    .addClass("btn-ya-comprado")
                     .text("Comprado")
                     .attr("disabled", true);
             }.bind(this),
@@ -484,7 +484,7 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
         e.preventDefault();
         const userId = usuarioActual.id; // o el valor que necesites
         $.ajax({
-            url: "/dsaApp/"+ usuarioActual.id +"/conversion",
+            url: "/dsaApp/usuarios/tienda/"+ usuarioActual.id +"/intercambio",
             type: "PUT",
             contentType: "application/json",
             success: function (response) {
@@ -499,3 +499,4 @@ $(document).ready(function() { // espera a que todo este cargado ( el html)
     });
 
 });
+

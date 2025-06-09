@@ -105,7 +105,7 @@ public class GameManagerImpl implements GameManager {
         if(u == null) {
             throw new UsuarioNoAutenticadoException("Usuario no autenticado o no encontrado. Debe iniciar sesión.");
         }
-        Objeto o = objetos.get(usuarioobjeto.getObjeto_id());
+        Objeto o = objetos.get(usuarioobjeto.getObjeto_nombre());
         if(o.getPrecio() > u.getTarrosMiel()){
             throw new NoSuficientesTarrosException("No tienes suficiente Miel");
         }
