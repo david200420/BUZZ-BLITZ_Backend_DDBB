@@ -226,15 +226,12 @@ public class GameService {
 
     @GET
     @Path("/media")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getVideos() {
         List<VideoDTO> videos = new ArrayList<>();
         videos.add(new VideoDTO("youtube.com/watch?v=tAGnKpE4NCI"));
         videos.add(new VideoDTO("https://www.youtube.com/watch?v=_Yhyp-_hX2s"));
         videos.add(new VideoDTO("https://www.youtube.com/watch?v=5qm8PH4xAss"));
         videos.add(new VideoDTO("https://www.youtube.com/watch?v=bm51ihfi1p4"));
-
-        System.out.println("[API] GET /media - Videos de soporte solicitados");
 
         VideoListDTO videoList = new VideoListDTO(videos);
         return Response.status(200).entity(videoList).build();
