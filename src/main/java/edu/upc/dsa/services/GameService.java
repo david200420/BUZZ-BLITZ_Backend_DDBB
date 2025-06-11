@@ -232,7 +232,7 @@ public class GameService {
         videos.add(new VideoDTO("https://www.youtube.com/watch?v=_Yhyp-_hX2s"));
         videos.add(new VideoDTO("https://www.youtube.com/watch?v=5qm8PH4xAss"));
         videos.add(new VideoDTO("https://www.youtube.com/watch?v=bm51ihfi1p4"));
-
+        //Prueba de video
         VideoListDTO videoList = new VideoListDTO(videos);
         return Response.status(200).entity(videoList).build();
     }
