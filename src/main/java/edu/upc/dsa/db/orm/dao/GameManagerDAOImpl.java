@@ -271,7 +271,7 @@ public class GameManagerDAOImpl implements GameManagerDAO {
             List<String> filtros2 = Arrays.asList("id");
             List<Object> valores2 = Arrays.asList( u.getTarrosMiel() + Tarros, FloresSobrantes, 0, u.getId());
             session.update(Usuario.class ,cambios2, filtros2, valores2); //aqui se hace un update del usuario, para que se le reste los tarros de miel y las flores sobrantes
-
+	    session.commit();
          Intercambio i = new Intercambio(Tarros, FloresSobrantes);
          System.out.println(u.getTarrosMiel() + "+" + u.getFlor()+ "+" + u.getFloreGold());
           return i;

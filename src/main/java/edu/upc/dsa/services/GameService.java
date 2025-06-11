@@ -184,9 +184,10 @@ public class GameService {
             @ApiResponse(code = 201, message = "Successful", response = Objeto.class, responseContainer="List"),
     })
     public Response getSkinUsuario(@PathParam("id")String u) {
+	    List<Objeto> skins = null;
         try {
             System.out.println("va el getSkinUsuario():");
-            List<Objeto> skins = dao.skinsUsuario(u);
+            skins = dao.skinsUsuario(u);
             GenericEntity<List<Objeto>> entity = new GenericEntity<List<Objeto>>(skins) {};
             // aixo s'utilitza per fer el json d'un contenidor d'objectes
             return Response.status(201).entity(entity).build();        } catch (CredencialesIncorrectasException e) {
@@ -195,7 +196,10 @@ public class GameService {
         } catch (NoHayObjetos e) {
             System.out.println("Error no hay objetos");
             return Response.status(400).entity(e.getMessage()).build();
-        }
+        } catch (Throwable t) {
+		t.printStackTrace();
+	}
+	return null;
     }
 
     @PUT
@@ -204,14 +208,19 @@ public class GameService {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Intercambia les flors per tarros de mel")
     public Response Conversion(@PathParam("id") String id) {
+	    Intercambio i = null;
         try {
-            Intercambio i = dao.intercambio(id);
+            i = dao.intercambio(id);
             return Response.status(200).entity(i).build();
         } catch (CredencialesIncorrectasException e) {
             return Response.status(401).entity(e.getMessage()).build();
         } catch (NoHayFlores e) {
             return Response.status(400).entity(e.getMessage()).build();
-        }
+        } catch (Throwable t) {
+		t.printStackTrace();
+	}
+	return null;
+	
     }
 
     @GET
