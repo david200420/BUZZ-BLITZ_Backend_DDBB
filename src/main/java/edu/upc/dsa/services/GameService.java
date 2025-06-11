@@ -248,29 +248,13 @@ public class GameService {
 
     @GET
     @Path("/badges/{userId}/badges")
-    @Produces(MediaType.APPLICATION_JSON)
     public Response getUserBadges(@PathParam("userId") String userId) {
-        List<Badge> badges = new ArrayList<>();
-
-        if ("carlos2003".equals(userId)) {
-            badges.add(new Badge("master del universo",
-                    "https://cdn.pixabay.com/photo/2017/07/11/15/51/kermit-2493979_1280.png"));
+        try {
+            List<Badge> badges = dao.getUserBadges(userId);
+            return Response.status(200).entity(new BadgeListDTO(badges)).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error: " + e.getMessage()).build();
         }
-        else if ("MSC78".equals(userId)) {
-            badges.add(new Badge("becario enfurismado",
-                    "https://cdn.pixabay.com/photo/2017/07/11/15/51/kermit-2493979_1280.png"));
-        }
-        else if ("Test".equals(userId)) {
-            badges.add(new Badge("insignia especial para Test",
-                    "https://cdn.pixabay.com/photo/2017/07/11/15/51/kermit-2493979_1280.png"));
-        }
-        else {
-            badges.add(new Badge("insignia predeterminada",
-                    "https://ejemplo.com/default.png"));
-        }
-
-        System.out.println("Retornando insignias para: " + userId);
-        return Response.status(200).entity(new edu.upc.dsa.models.BadgeListDTO(badges)).build();
     }
 }
 

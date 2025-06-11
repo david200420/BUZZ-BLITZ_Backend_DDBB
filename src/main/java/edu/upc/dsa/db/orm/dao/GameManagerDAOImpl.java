@@ -373,5 +373,17 @@ public class GameManagerDAOImpl implements GameManagerDAO {
             session.close();
         }
     }
+
+    @Override
+    public List<Badge> getUserBadges(String userId) throws Exception {
+        Session session = FactorySession.openSession();
+        try {
+            List<String> filtros = Arrays.asList("user_id");
+            List<Object> valores = Arrays.asList(userId);
+            return (List<Badge>) session.getLista(Badge.class, filtros, valores, null);
+        } finally {
+            session.close();
+        }
+    }
 }
 
