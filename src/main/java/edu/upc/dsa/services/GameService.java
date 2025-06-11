@@ -14,6 +14,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 @Api(value = "/usuarios", description = "Endpoint to Usuario Service")
@@ -221,6 +222,49 @@ public class GameService {
         List<Info> informcion = dao.informcion(id);
         GenericEntity<List<Info>> entity = new GenericEntity<List<Info>>(informcion) {};
         return Response.status(200).entity(entity).build();
+    }
+
+    @GET
+    @Path("/media")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getVideos() {
+        List<VideoDTO> videos = new ArrayList<>();
+        videos.add(new VideoDTO("youtube.com/watch?v=tAGnKpE4NCI"));
+        videos.add(new VideoDTO("https://www.youtube.com/watch?v=_Yhyp-_hX2s"));
+        videos.add(new VideoDTO("https://www.youtube.com/watch?v=5qm8PH4xAss"));
+        videos.add(new VideoDTO("https://www.youtube.com/watch?v=bm51ihfi1p4"));
+
+        System.out.println("[API] GET /media - Videos de soporte solicitados");
+
+        VideoListDTO videoList = new VideoListDTO(videos);
+        return Response.status(200).entity(videoList).build();
+    }
+
+    @GET
+    @Path("/badges/{userId}/badges")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getUserBadges(@PathParam("userId") String userId) {
+        List<Badge> badges = new ArrayList<>();
+
+        if ("carlos2003".equals(userId)) {
+            badges.add(new Badge("master del universo",
+                    "https://cdn.pixabay.com/photo/2017/07/11/15/51/kermit-2493979_1280.png"));
+        }
+        else if ("MSC78".equals(userId)) {
+            badges.add(new Badge("becario enfurismado",
+                    "https://cdn.pixabay.com/photo/2017/07/11/15/51/kermit-2493979_1280.png"));
+        }
+        else if ("Test".equals(userId)) {
+            badges.add(new Badge("insignia especial para Test",
+                    "https://cdn.pixabay.com/photo/2017/07/11/15/51/kermit-2493979_1280.png"));
+        }
+        else {
+            badges.add(new Badge("insignia predeterminada",
+                    "https://ejemplo.com/default.png"));
+        }
+
+        System.out.println("Retornando insignias para: " + userId);
+        return Response.status(200).entity(new edu.upc.dsa.models.BadgeListDTO(badges)).build();
     }
 }
 
