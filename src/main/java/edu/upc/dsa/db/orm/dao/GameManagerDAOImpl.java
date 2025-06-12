@@ -387,20 +387,27 @@ public class GameManagerDAOImpl implements GameManagerDAO {
     @Override
     public ListFreqQuest getPreguntasFrecuentes() {
         Session session = FactorySession.openSession();
-        List<FreqQuest> faqs = new ArrayList<>(); // Inicializa como lista vacía
+        List<FreqQuest> faqs = new ArrayList<>(); // Lista vacía por defecto
         try {
+            // Consulta sin filtros (todos los FAQs)
             faqs = (List<FreqQuest>) session.getLista(
                     FreqQuest.class,
-                    null,   // sin filtros
-                    null,   // sin valores de filtro
-                    null    // sin campos deseados (trae todos)
+                    null,
+                    null,
+                    null
             );
+
+            // Si la lista es null, inicialízala como vacía
+            if (faqs == null) {
+                faqs = new ArrayList<>();
+            }
         } catch (Exception e) {
-            System.err.println("Error al obtener preguntas frecuentes: " + e.getMessage());
+            System.err.println("Error al obtener FAQs: " + e.getMessage());
+            faqs = new ArrayList<>(); // Asegura lista vacía en errores
         } finally {
             session.close();
         }
-        return new ListFreqQuest(faqs); // Retorna una lista vacía si ocurre un error
+        return new ListFreqQuest(faqs);
     }
 
 }
