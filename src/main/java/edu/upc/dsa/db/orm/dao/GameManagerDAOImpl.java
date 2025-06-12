@@ -1,6 +1,7 @@
 package edu.upc.dsa.db.orm.dao;
 
 import edu.upc.dsa.db.orm.util.ObjectHelper;
+import edu.upc.dsa.db.orm.util.QueryHelper;
 import edu.upc.dsa.exceptions.*;
 import edu.upc.dsa.models.*;
 import edu.upc.dsa.db.orm.FactorySession;
@@ -390,15 +391,20 @@ public class GameManagerDAOImpl implements GameManagerDAO {
         ListFreqQuest listaFreqQuest = new ListFreqQuest();
 
         try {
-            // Si no quieres filtrar por nada, deja filtros y valores vacíos
             List<String> filtros = new ArrayList<>();
             List<Object> valores = new ArrayList<>();
-            List<String> deseados = new ArrayList<>();  // O puedes poner ["id", "pregunta", "respuesta", ...] si solo quieres ciertos campos
+            List<String> deseados = new ArrayList<>();
+
+            String sql = QueryHelper.createQuerySELECT(filtros, FreqQuest.class, deseados);
+            System.out.println("Consulta generada: " + sql);
+
+            for (int i = 0; i < valores.size(); i++) {
+                System.out.println("Parámetro " + (i + 1) + ": " + valores.get(i));
+            }
 
             List<Object> resultados = (List<Object>) session.getLista(FreqQuest.class, filtros, valores, deseados);
 
             List<FreqQuest> faqs = new ArrayList<>();
-
             if (resultados != null) {
                 for (Object obj : resultados) {
                     if (obj instanceof FreqQuest) {
@@ -410,9 +416,10 @@ public class GameManagerDAOImpl implements GameManagerDAO {
             listaFreqQuest.setFaqs(faqs);
         } catch (Exception e) {
             System.err.println("Error al obtener FAQs: " + e.getMessage());
-            listaFreqQuest.setFaqs(new ArrayList<>());  // devuelve lista vacía si hay error
+            e.printStackTrace();
+            listaFreqQuest.setFaqs(new ArrayList<>());
         } finally {
-            session.close();  // buena práctica cerrar sesión
+            session.close();
         }
 
         return listaFreqQuest;
