@@ -387,28 +387,37 @@ public class GameManagerDAOImpl implements GameManagerDAO {
     @Override
     public ListFreqQuest getPreguntasFrecuentes() {
         Session session = FactorySession.openSession();
-        List<FreqQuest> faqs = new ArrayList<>(); // Lista vacía por defecto
-        try {
-            // Consulta sin filtros (todos los FAQs)
-            faqs = (List<FreqQuest>) session.getLista(
-                    FreqQuest.class,
-                    null,
-                    null,
-                    null
-            );
+        ListFreqQuest listaFreqQuest = new ListFreqQuest();
 
-            // Si la lista es null, inicialízala como vacía
-            if (faqs == null) {
-                faqs = new ArrayList<>();
+        try {
+            // Si no quieres filtrar por nada, deja filtros y valores vacíos
+            List<String> filtros = new ArrayList<>();
+            List<Object> valores = new ArrayList<>();
+            List<String> deseados = new ArrayList<>();  // O puedes poner ["id", "pregunta", "respuesta", ...] si solo quieres ciertos campos
+
+            List<Object> resultados = (List<Object>) session.getLista(FreqQuest.class, filtros, valores, deseados);
+
+            List<FreqQuest> faqs = new ArrayList<>();
+
+            if (resultados != null) {
+                for (Object obj : resultados) {
+                    if (obj instanceof FreqQuest) {
+                        faqs.add((FreqQuest) obj);
+                    }
+                }
             }
+
+            listaFreqQuest.setFaqs(faqs);
         } catch (Exception e) {
             System.err.println("Error al obtener FAQs: " + e.getMessage());
-            faqs = new ArrayList<>(); // Asegura lista vacía en errores
+            listaFreqQuest.setFaqs(new ArrayList<>());  // devuelve lista vacía si hay error
         } finally {
-            session.close();
+            session.close();  // buena práctica cerrar sesión
         }
-        return new ListFreqQuest(faqs);
+
+        return listaFreqQuest;
     }
+
 
 }
 
