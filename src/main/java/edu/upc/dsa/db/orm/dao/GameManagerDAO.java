@@ -23,4 +23,5 @@ public interface GameManagerDAO {
     public Usuario relogin(String id, String respuesta) throws CredencialesIncorrectasException; //comprueba la respuesta
     List<Badge> getUserBadges(String userId) throws Exception;
     ListFreqQuest getPreguntasFrecuentes();
+    void addQuestion(Question question) throws Exception;
 }

@@ -425,6 +425,19 @@ public class GameManagerDAOImpl implements GameManagerDAO {
         return listaFreqQuest;
     }
 
+    @Override
+    public void addQuestion(Question question) throws Exception {
+        Session session = FactorySession.openSession();
+        try {
+            session.save(question);
+            session.commit();
+        } catch (Exception e) {
+            session.rollback();
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
 
 }
 

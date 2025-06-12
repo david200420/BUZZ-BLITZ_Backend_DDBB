@@ -16,6 +16,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Api(value = "/usuarios", description = "Endpoint to Usuario Service")
 @Path("/usuarios")
@@ -266,6 +267,20 @@ public class GameService {
             return Response.status(200).entity(faqs).build();
         } catch (Exception e) {
             return Response.status(500).entity("Error interno del servidor: " + e.getMessage()).build();
+        }
+    }
+
+    @POST
+    @Path("/question")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Envía una nueva consulta")
+    public Response submitQuestion(Question question) {
+        try {
+            question.setId(UUID.randomUUID().toString());
+            dao.addQuestion(question);
+            return Response.status(201).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error: " + e.getMessage()).build();
         }
     }
 }
