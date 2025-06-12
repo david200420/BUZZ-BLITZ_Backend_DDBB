@@ -256,6 +256,18 @@ public class GameService {
             return Response.status(500).entity("Error: " + e.getMessage()).build();
         }
     }
+
+    @GET
+    @Path("/faqs")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFaqs() {
+        try {
+            ListFreqQuest faqs = dao.getPreguntasFrecuentes();
+            return Response.status(200).entity(faqs).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error interno del servidor: " + e.getMessage()).build();
+        }
+    }
 }
 
 

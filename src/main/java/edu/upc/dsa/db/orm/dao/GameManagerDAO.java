@@ -22,4 +22,5 @@ public interface GameManagerDAO {
     public String obtenerContra(String usuario) throws CredencialesIncorrectasException; //Obtiene la pregunta de seguridad del usuario para el relogin
     public Usuario relogin(String id, String respuesta) throws CredencialesIncorrectasException; //comprueba la respuesta
     List<Badge> getUserBadges(String userId) throws Exception;
+    ListFreqQuest getPreguntasFrecuentes();
 }

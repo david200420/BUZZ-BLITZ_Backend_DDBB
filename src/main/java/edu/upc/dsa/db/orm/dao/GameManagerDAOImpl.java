@@ -7,9 +7,7 @@ import edu.upc.dsa.db.orm.FactorySession;
 import edu.upc.dsa.db.orm.Session;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GameManagerDAOImpl implements GameManagerDAO {
@@ -385,5 +383,24 @@ public class GameManagerDAOImpl implements GameManagerDAO {
             session.close();
         }
     }
+
+    @Override
+    public ListFreqQuest getPreguntasFrecuentes() {
+        Session session = FactorySession.openSession();
+        try {
+            List<FreqQuest> faqs = (List<FreqQuest>) session.getLista(
+                    FreqQuest.class,
+                    null,   // sin filtros
+                    null,   // sin valores de filtro
+                    null    // sin campos deseados (trae todos)
+            );
+            return new ListFreqQuest(faqs);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al obtener preguntas frecuentes: " + e.getMessage(), e);
+        } finally {
+            session.close();
+        }
+    }
+
 }
 
