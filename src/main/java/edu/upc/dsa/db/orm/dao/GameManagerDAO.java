@@ -24,4 +24,6 @@ public interface GameManagerDAO {
     List<Badge> getUserBadges(String userId) throws Exception;
     ListFreqQuest getPreguntasFrecuentes();
     void addQuestion(Question question) throws Exception;
+    void addIssue(Issue issue) throws Exception;
+    List<Issue> getAllIssues() throws Exception;
 }

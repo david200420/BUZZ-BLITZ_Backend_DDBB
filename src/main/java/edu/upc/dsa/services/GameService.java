@@ -283,6 +283,31 @@ public class GameService {
             return Response.status(500).entity("Error: " + e.getMessage()).build();
         }
     }
+
+    @POST
+    @Path("/issue")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response reportIssue(Issue issue) {
+        try {
+            dao.addIssue(issue);
+            return Response.status(201).build(); // 201 Created
+        } catch (Exception e) {
+            return Response.status(500).entity("Error: " + e.getMessage()).build();
+        }
+    }
+
+    @GET
+    @Path("/issue")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllIssues() {
+        try {
+            List<Issue> issues = dao.getAllIssues();
+            GenericEntity<List<Issue>> entity = new GenericEntity<List<Issue>>(issues) {};
+            return Response.status(200).entity(entity).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error: " + e.getMessage()).build();
+        }
+    }
 }
 
 

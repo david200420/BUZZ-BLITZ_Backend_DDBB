@@ -439,5 +439,26 @@ public class GameManagerDAOImpl implements GameManagerDAO {
         }
     }
 
+    @Override
+    public void addIssue(Issue issue) throws Exception {
+        Session session = FactorySession.openSession();
+        try {
+            session.save(issue);
+            session.commit();
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public List<Issue> getAllIssues() throws Exception {
+        Session session = FactorySession.openSession();
+        try {
+            return (List<Issue>) session.getLista(Issue.class, null, null, null);
+        } finally {
+            session.close();
+        }
+    }
+
 }
 
