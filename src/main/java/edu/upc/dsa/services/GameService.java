@@ -77,6 +77,9 @@ public class GameService {
             return Response.status(404).entity(e.getMessage()).build();
         } catch (Exception e) {
             return Response.status(500).entity("Error interno").build();
+        }catch (Throwable t) {
+            t.printStackTrace();
+            return null;
         }
     }
 
@@ -131,6 +134,7 @@ public class GameService {
             return Response.status(401).entity(e.getMessage()).build();
         }
     }
+
     @POST
     @Path("/login/recuperarCuenta")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -153,7 +157,8 @@ public class GameService {
     @ApiOperation(value = "Cambia la contrasenya d'un usuari")
     public Response cambiarContra(Usulogin u) {
         try {
-            dao.CambiarContra(u.getIdoname(), u.getPswd());
+            String HashedPswd = HashUtil.hash(u.getPswd());
+            dao.CambiarContra(u.getIdoname(), HashedPswd);
             return Response.status(200).entity("Contraseña cambiada con éxito").build();
         } catch (CredencialesIncorrectasException e) {
             return Response.status(401).entity(e.getMessage()).build();

@@ -60,10 +60,8 @@ public class GameManagerDAOImpl implements GameManagerDAO {
             List<String> deseo = Arrays.asList(ObjectHelper.getFields(ue));
             List<Object> valores = Arrays.asList(mail_nombre, mail_nombre);
             u = (Usuario)session.getCondicional(u.getClass(),filtro, deseo, condicionales, valores);
-            String HashedPswd = HashUtil.hash(pswd);
-            System.out.println("contraseña con hash: " + u.getPswd());
-            System.out.println("contraseña hasheada del user: " + HashedPswd);
-            if (u == null || !HashUtil.matches(u.getPswd(), HashedPswd)) {
+
+            if (u == null || !HashUtil.matches(pswd, u.getPswd())) {
                 throw new CredencialesIncorrectasException("Credenciales incorrectas");
             }
 
@@ -367,7 +365,8 @@ public class GameManagerDAOImpl implements GameManagerDAO {
             List<String> filtros = Arrays.asList("id", "respuesta");
             List<Object> valores = Arrays.asList(id, respuesta);
             Usuario u = (Usuario) session.getCondicional(Usuario.class, filtros, null, null, valores);
-            if (u == null) {
+            String HashedAns = HashUtil.hash(respuesta);
+            if (u == null || !HashUtil.matches(respuesta, u.getRespuesta())) {
                 throw new CredencialesIncorrectasException("Respuesta incorrecta o usuario no encontrado");
             }
             return u;
