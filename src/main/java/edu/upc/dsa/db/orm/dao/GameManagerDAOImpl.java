@@ -63,11 +63,11 @@ public class GameManagerDAOImpl implements GameManagerDAO {
             String HashedPswd = HashUtil.hash(pswd);
             System.out.println("contraseña con hash: " + u.getPswd());
             System.out.println("contraseña sin hash: " + HashedPswd);
-            if (u == null || !HashUtil.matches(u.getPswd(), HashedPswd)) {
+            if (u == null || !HashUtil.matches(pswd, u.getPswd())) {
                 throw new CredencialesIncorrectasException("Credenciales incorrectas");
             }
 
-            ue = new UsuarioEnviar(u.getId(), u.getName(), u.getApellidos(), u.getPswd(), u.getMail(), u.getPregunta(), u.getRespuesta(), u.getTarrosMiel(), u.getFlor(), u.getMejorPuntuacion(), u.getNumPartidas(), u.getFloreGold());
+            ue = new UsuarioEnviar(u.getId(), u.getName(), u.getApellidos(), pswd , u.getMail(), u.getPregunta(), u.getRespuesta(), u.getTarrosMiel(), u.getFlor(), u.getMejorPuntuacion(), u.getNumPartidas(), u.getFloreGold());
 
             return ue;
 
