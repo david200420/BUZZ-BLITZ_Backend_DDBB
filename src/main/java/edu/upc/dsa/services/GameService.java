@@ -3,6 +3,7 @@ package edu.upc.dsa.services;
 
 import edu.upc.dsa.db.orm.dao.GameManagerDAO;
 import edu.upc.dsa.db.orm.dao.GameManagerDAOImpl;
+import edu.upc.dsa.db.orm.util.HashUtil;
 import edu.upc.dsa.exceptions.*;
 import edu.upc.dsa.models.*;
 import io.swagger.annotations.Api;
@@ -33,7 +34,9 @@ public class GameService {
     @ApiOperation(value = "registra un usuario", notes = "asdasd")
     public Response registerUsuario(UsuReg usuReg) {
         try {
-            dao.addUsuario(usuReg.getId(), usuReg.getName(), usuReg.getApellidos(),usuReg.getPswd(), usuReg.getMail(), usuReg.getPregunta(), usuReg.getRespuesta());
+            String HashedAns = HashUtil.hash(usuReg.getRespuesta()); // Aquí deberías aplicar el hash a la contraseña
+            String HashedPswd = HashUtil.hash(usuReg.getPswd());
+            dao.addUsuario(usuReg.getId(), usuReg.getName(), usuReg.getApellidos(),HashedPswd, usuReg.getMail(), usuReg.getPregunta(), HashedAns);
             return Response.status(201).build(); // Registrado con éxito
         } catch (UsuarioYaRegistradoException e) {
             return Response.status(409).entity(e.getMessage()).build(); // Conflicto

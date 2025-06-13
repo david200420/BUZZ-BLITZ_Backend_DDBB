@@ -1,5 +1,6 @@
 package edu.upc.dsa.db.orm.dao;
 
+import edu.upc.dsa.db.orm.util.HashUtil;
 import edu.upc.dsa.db.orm.util.ObjectHelper;
 import edu.upc.dsa.exceptions.*;
 import edu.upc.dsa.models.*;
@@ -55,14 +56,16 @@ public class GameManagerDAOImpl implements GameManagerDAO {
 
         try {
             session = FactorySession.openSession();
-            List<String> filtro = Arrays.asList("mail", "id", "pswd"); // meto los atributos que quiero filtrar
+            List<String> filtro = Arrays.asList("mail", "id"); // meto los atributos que quiero filtrar
             List<String> condicionales= Arrays.asList("mail", "id");//condicionales
             List<String> deseo = Arrays.asList(ObjectHelper.getFields(ue));
-            List<Object> valores = Arrays.asList(mail_nombre, mail_nombre, pswd);
+            List<Object> valores = Arrays.asList(mail_nombre, mail_nombre);
             u = (Usuario)session.getCondicional(u.getClass(),filtro, deseo, condicionales, valores);
-            if (u == null) {
+            String HashedPswd = HashUtil.hash(pswd);
+            if (u == null || !HashUtil.matches(u.getPswd(), HashedPswd)) {
                 throw new CredencialesIncorrectasException("Credenciales incorrectas");
             }
+
             ue = new UsuarioEnviar(u.getId(), u.getName(), u.getApellidos(), u.getPswd(), u.getMail(), u.getPregunta(), u.getRespuesta(), u.getTarrosMiel(), u.getFlor(), u.getMejorPuntuacion(), u.getNumPartidas(), u.getFloreGold());
 
             return ue;
