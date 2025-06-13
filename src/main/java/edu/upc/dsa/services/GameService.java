@@ -300,7 +300,7 @@ public class GameService {
     }
 
     @GET
-    @Path("/issue")
+    @Path("/issue/all")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllIssues() {
         try {
