@@ -459,7 +459,8 @@ public class GameManagerDAOImpl implements GameManagerDAO {
     public List<Issue> getAllIssues() throws Exception {
         Session session = FactorySession.openSession();
         try {
-            return (List<Issue>) session.getLista(Issue.class, null, null, null);
+            // Antes: return (List<Issue>) session.getLista(Issue.class, null, null, null);
+            return (List<Issue>) session.getLista(Issue.class, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
         } finally {
             session.close();
         }
