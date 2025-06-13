@@ -443,6 +443,11 @@ public class GameManagerDAOImpl implements GameManagerDAO {
     public void addIssue(Issue issue) throws Exception {
         Session session = FactorySession.openSession();
         try {
+            // Generar ID único si no existe
+            if (issue.getId() == null || issue.getId().isEmpty()) {
+                issue.setId(UUID.randomUUID().toString());
+            }
+            issue.setDate(new Date().toString()); // Actualizar fecha
             session.save(issue);
             session.commit();
         } finally {
