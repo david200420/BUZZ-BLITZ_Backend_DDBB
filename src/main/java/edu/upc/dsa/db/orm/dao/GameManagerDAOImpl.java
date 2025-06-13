@@ -298,13 +298,13 @@ public class GameManagerDAOImpl implements GameManagerDAO {
             List<Info> top5 = usuarios.stream()
                     .sorted((u1, u2) -> Integer.compare(u2.getMejorPuntuacion(), u1.getMejorPuntuacion()))
                     .limit(5)
-                    .map(u -> new Info(u.getId(), u.getMejorPuntuacion(), u.getNumPartidas(), u.getPregunta()))
+                    .map(u -> new Info(u.getId(), u.getMejorPuntuacion(), u.getNumPartidas()))
                     .collect(Collectors.toList());
             top5.stream().limit(6);
 
              for (int i = 0;usuarios.size()<i;i++) {
                 if(usuarios.get(i).getId().equals(UserId)) {
-                    top5.add(new Info(usuarios.get(i).getId(), usuarios.get(i).getMejorPuntuacion(), usuarios.get(i).getNumPartidas(), usuarios.get(i).getPregunta()));
+                    top5.add(new Info(usuarios.get(i).getId(), usuarios.get(i).getMejorPuntuacion(), usuarios.get(i).getNumPartidas()));
                 }
              }
              return top5;
@@ -459,8 +459,7 @@ public class GameManagerDAOImpl implements GameManagerDAO {
     public List<Issue> getAllIssues() throws Exception {
         Session session = FactorySession.openSession();
         try {
-            // Antes: return (List<Issue>) session.getLista(Issue.class, null, null, null);
-            return (List<Issue>) session.getLista(Issue.class, new ArrayList<>(), new ArrayList<>(), new ArrayList<>());
+            return (List<Issue>) session.getLista(Issue.class, null, null, null);
         } finally {
             session.close();
         }
