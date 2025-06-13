@@ -61,6 +61,8 @@ public class GameManagerDAOImpl implements GameManagerDAO {
             List<Object> valores = Arrays.asList(mail_nombre, mail_nombre);
             u = (Usuario)session.getCondicional(u.getClass(),filtro, deseo, condicionales, valores);
             String HashedPswd = HashUtil.hash(pswd);
+            System.out.println("contraseña con hash: " + u.getPswd());
+            System.out.println("contraseña sin hash: " + HashedPswd);
             if (u == null || !HashUtil.matches(u.getPswd(), HashedPswd)) {
                 throw new CredencialesIncorrectasException("Credenciales incorrectas");
             }
