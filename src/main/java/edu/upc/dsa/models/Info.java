@@ -13,27 +13,11 @@ public class Info {
     }
     public Info(){}
 
-    public void setUsuario(String usuario) {
-        this.usuario = usuario;
-    }
+    public void setUsuario(String usuario) { this.usuario = usuario; }
+    public void setMejorPuntuacion(int mejorPuntuacion) { this.mejorPuntuacion = mejorPuntuacion; }
+    public void setNumPartidas(int numPartidas) { this.numPartidas = numPartidas; }
 
-    public void setMejorPuntuacion(int mejorPuntuacion) {
-        this.mejorPuntuacion = mejorPuntuacion;
-    }
-
-    public void setNumPartidas(int numPartidas) {
-        this.numPartidas = numPartidas;
-    }
-
-    public String getUsuario() {
-        return usuario;
-    }
-
-    public int getNumPartidas() {
-        return numPartidas;
-    }
-
-    public int getMejorPuntuacion() {
-        return mejorPuntuacion;
-    }
+    public String getUsuario() { return usuario; }
+    public int getNumPartidas() { return numPartidas; }
+    public int getMejorPuntuacion() { return mejorPuntuacion; }
 }

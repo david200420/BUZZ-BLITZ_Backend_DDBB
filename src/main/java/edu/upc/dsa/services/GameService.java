@@ -15,7 +15,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Api(value = "/usuarios", description = "Endpoint to Usuario Service")
 @Path("/usuarios")
@@ -186,9 +188,10 @@ public class GameService {
             @ApiResponse(code = 201, message = "Successful", response = Objeto.class, responseContainer="List"),
     })
     public Response getSkinUsuario(@PathParam("id")String u) {
+	    List<Objeto> skins = null;
         try {
             System.out.println("va el getSkinUsuario():");
-            List<Objeto> skins = dao.skinsUsuario(u);
+            skins = dao.skinsUsuario(u);
             GenericEntity<List<Objeto>> entity = new GenericEntity<List<Objeto>>(skins) {};
             // aixo s'utilitza per fer el json d'un contenidor d'objectes
             return Response.status(201).entity(entity).build();        } catch (CredencialesIncorrectasException e) {
@@ -197,7 +200,10 @@ public class GameService {
         } catch (NoHayObjetos e) {
             System.out.println("Error no hay objetos");
             return Response.status(400).entity(e.getMessage()).build();
-        }
+        } catch (Throwable t) {
+		t.printStackTrace();
+	}
+	return null;
     }
 
     @PUT
@@ -206,14 +212,19 @@ public class GameService {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Intercambia les flors per tarros de mel")
     public Response Conversion(@PathParam("id") String id) {
+	    Intercambio i = null;
         try {
-            Intercambio i = dao.intercambio(id);
+            i = dao.intercambio(id);
             return Response.status(200).entity(i).build();
         } catch (CredencialesIncorrectasException e) {
             return Response.status(401).entity(e.getMessage()).build();
         } catch (NoHayFlores e) {
             return Response.status(400).entity(e.getMessage()).build();
-        }
+        } catch (Throwable t) {
+		t.printStackTrace();
+	}
+	return null;
+	
     }
 
     @GET
@@ -224,6 +235,81 @@ public class GameService {
         List<Info> informcion = dao.informcion(id);
         GenericEntity<List<Info>> entity = new GenericEntity<List<Info>>(informcion) {};
         return Response.status(200).entity(entity).build();
+    }
+
+    @GET
+    @Path("/media")
+    public Response getVideos() {
+        List<VideoDTO> videos = new ArrayList<>();
+        videos.add(new VideoDTO("youtube.com/watch?v=tAGnKpE4NCI"));
+        videos.add(new VideoDTO("https://www.youtube.com/watch?v=_Yhyp-_hX2s"));
+        videos.add(new VideoDTO("https://www.youtube.com/watch?v=5qm8PH4xAss"));
+        videos.add(new VideoDTO("https://www.youtube.com/watch?v=bm51ihfi1p4"));
+        //Prueba de video
+        VideoListDTO videoList = new VideoListDTO(videos);
+        return Response.status(200).entity(videoList).build();
+    }
+
+    @GET
+    @Path("/badges/{userId}/badges")
+    public Response getUserBadges(@PathParam("userId") String userId) {
+        try {
+            List<Badge> badges = dao.getUserBadges(userId);
+            return Response.status(200).entity(new BadgeListDTO(badges)).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error: " + e.getMessage()).build();
+        }
+    }
+
+    @GET
+    @Path("/faqs")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getFaqs() {
+        try {
+            ListFreqQuest faqs = dao.getPreguntasFrecuentes();
+            return Response.status(200).entity(faqs).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error interno del servidor: " + e.getMessage()).build();
+        }
+    }
+
+    @POST
+    @Path("/question")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Envía una nueva consulta")
+    public Response submitQuestion(Question question) {
+        try {
+            question.setId(UUID.randomUUID().toString());
+            dao.addQuestion(question);
+            return Response.status(201).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error: " + e.getMessage()).build();
+        }
+    }
+
+    @POST
+    @Path("/issue")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response reportIssue(Issue issue) {
+        try {
+            dao.addIssue(issue);
+            return Response.status(201).build(); // 201 Created
+        } catch (Exception e) {
+            return Response.status(500).entity("Error: " + e.getMessage()).build();
+        }
+    }
+
+    @GET
+    @Path("/issue")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllIssues() {
+        try {
+            List<Issue> issues = dao.getAllIssues();
+            GenericEntity<List<Issue>> entity = new GenericEntity<List<Issue>>(issues) {};
+            return Response.status(200).entity(entity).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error: " + e.getMessage()).build();
+        }
     }
 }
 

@@ -2,15 +2,14 @@ package edu.upc.dsa.db.orm.dao;
 
 import edu.upc.dsa.db.orm.util.HashUtil;
 import edu.upc.dsa.db.orm.util.ObjectHelper;
+import edu.upc.dsa.db.orm.util.QueryHelper;
 import edu.upc.dsa.exceptions.*;
 import edu.upc.dsa.models.*;
 import edu.upc.dsa.db.orm.FactorySession;
 import edu.upc.dsa.db.orm.Session;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class GameManagerDAOImpl implements GameManagerDAO {
@@ -274,7 +273,7 @@ public class GameManagerDAOImpl implements GameManagerDAO {
             List<String> filtros2 = Arrays.asList("id");
             List<Object> valores2 = Arrays.asList( u.getTarrosMiel() + Tarros, FloresSobrantes, 0, u.getId());
             session.update(Usuario.class ,cambios2, filtros2, valores2); //aqui se hace un update del usuario, para que se le reste los tarros de miel y las flores sobrantes
-
+	    session.commit();
          Intercambio i = new Intercambio(Tarros, FloresSobrantes);
          System.out.println(u.getTarrosMiel() + "+" + u.getFlor()+ "+" + u.getFloreGold());
           return i;
@@ -376,5 +375,98 @@ public class GameManagerDAOImpl implements GameManagerDAO {
             session.close();
         }
     }
+
+    @Override
+    public List<Badge> getUserBadges(String userId) throws Exception {
+        Session session = FactorySession.openSession();
+        try {
+            List<String> filtros = Arrays.asList("user_id");
+            List<Object> valores = Arrays.asList(userId);
+            return (List<Badge>) session.getLista(Badge.class, filtros, valores, null);
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public ListFreqQuest getPreguntasFrecuentes() {
+        Session session = FactorySession.openSession();
+        ListFreqQuest listaFreqQuest = new ListFreqQuest();
+
+        try {
+            List<String> filtros = new ArrayList<>();
+            List<Object> valores = new ArrayList<>();
+            List<String> deseados = new ArrayList<>();
+
+            String sql = QueryHelper.createQuerySELECT(filtros, FreqQuest.class, deseados);
+            System.out.println("Consulta generada: " + sql);
+
+            for (int i = 0; i < valores.size(); i++) {
+                System.out.println("Parámetro " + (i + 1) + ": " + valores.get(i));
+            }
+
+            List<Object> resultados = (List<Object>) session.getLista(FreqQuest.class, filtros, valores, deseados);
+
+            List<FreqQuest> faqs = new ArrayList<>();
+            if (resultados != null) {
+                for (Object obj : resultados) {
+                    if (obj instanceof FreqQuest) {
+                        faqs.add((FreqQuest) obj);
+                    }
+                }
+            }
+
+            listaFreqQuest.setFaqs(faqs);
+        } catch (Exception e) {
+            System.err.println("Error al obtener FAQs: " + e.getMessage());
+            e.printStackTrace();
+            listaFreqQuest.setFaqs(new ArrayList<>());
+        } finally {
+            session.close();
+        }
+
+        return listaFreqQuest;
+    }
+
+    @Override
+    public void addQuestion(Question question) throws Exception {
+        Session session = FactorySession.openSession();
+        try {
+            session.save(question);
+            session.commit();
+        } catch (Exception e) {
+            session.rollback();
+            throw e;
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public void addIssue(Issue issue) throws Exception {
+        Session session = FactorySession.openSession();
+        try {
+            // Generar ID único si no existe
+            if (issue.getId() == null || issue.getId().isEmpty()) {
+                issue.setId(UUID.randomUUID().toString());
+            }
+            issue.setDate(new Date().toString()); // Actualizar fecha
+            session.save(issue);
+            session.commit();
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public List<Issue> getAllIssues() throws Exception {
+        Session session = FactorySession.openSession();
+        try {
+            return (List<Issue>) session.getLista(Issue.class, null, null, null);
+        } finally {
+            session.close();
+        }
+    }
+
 }
 

@@ -137,8 +137,8 @@ public class SessionImpl implements Session {
                               String valorOn, Object valores) {
 //        String sql = QueryHelper.createQueryJoin(class1, class2, deseados, filtros, valorOn);
         String sql = ("SELECT o.*" +
-                "  FROM usuario_objeto uo" +
-                "  JOIN objeto o" +
+                "  FROM Usuario_objeto uo" +
+                "  JOIN Objeto o" +
                 "    ON uo.objeto_nombre = o.nombre" +
                 " WHERE uo.usuario_id = ?;");
         try (PreparedStatement pstm = conn.prepareStatement(sql)) {
@@ -158,12 +158,15 @@ public class SessionImpl implements Session {
     @Override
     public void update(Class<?> theClass, List<String> cambios, List<String> filtros, List<Object> valores) {
         String sql = QueryHelper.createQueryUPDATE(theClass, cambios, filtros);
-        try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+        System.out.println("SQL : "+sql);
+	try (PreparedStatement pstm = conn.prepareStatement(sql)) {
             for (int i = 0; i < valores.size(); i++) {
+		    System.out.println(i +" : "+valores.get(i));
                 pstm.setObject(i + 1, valores.get(i));
             }
             System.out.println("Ejecutando consulta: " + pstm.toString());
-            pstm.executeUpdate();
+            int res = pstm.executeUpdate();
+	    System.out.println("Res: "+res);
         } catch (Exception e) {
             throw new RuntimeException("Error en update(): " + e.getMessage(), e);
         }
