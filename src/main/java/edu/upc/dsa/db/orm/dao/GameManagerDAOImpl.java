@@ -298,13 +298,13 @@ public class GameManagerDAOImpl implements GameManagerDAO {
             List<Info> top5 = usuarios.stream()
                     .sorted((u1, u2) -> Integer.compare(u2.getMejorPuntuacion(), u1.getMejorPuntuacion()))
                     .limit(5)
-                    .map(u -> new Info(u.getId(), u.getMejorPuntuacion(), u.getNumPartidas()))
+                    .map(u -> new Info(u.getId(), u.getMejorPuntuacion(), u.getNumPartidas(), u.getPregunta()))
                     .collect(Collectors.toList());
             top5.stream().limit(6);
 
              for (int i = 0;usuarios.size()<i;i++) {
                 if(usuarios.get(i).getId().equals(UserId)) {
-                    top5.add(new Info(usuarios.get(i).getId(), usuarios.get(i).getMejorPuntuacion(), usuarios.get(i).getNumPartidas()));
+                    top5.add(new Info(usuarios.get(i).getId(), usuarios.get(i).getMejorPuntuacion(), usuarios.get(i).getNumPartidas(), usuarios.get(i).getPregunta()));
                 }
              }
              return top5;
