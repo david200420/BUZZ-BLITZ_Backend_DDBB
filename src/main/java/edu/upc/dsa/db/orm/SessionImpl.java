@@ -92,18 +92,36 @@ public class SessionImpl implements Session {
             throw new RuntimeException("Error en get(): " + e.getMessage(), e);
         }
     }
+//    @Override
+//    public Object getLista(Class<?> theClass, List<String> filtros, List<Object> valores, List<String> deseados) {
+//        String sql = QueryHelper.createQuerySELECT(filtros, theClass, deseados);
+//        try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+//            for (int i = 0; i < valores.size(); i++) {
+//                pstm.setObject(i + 1, valores.get(i));
+//            }
+//            System.out.println("Ejecutando consulta: " + pstm.toString());
+//            ResultSet rs = pstm.executeQuery();
+//            return mapResultSetToEntityList(rs, theClass);
+//        } catch (Exception e) {
+//            throw new RuntimeException("Error en get(): " + e.getMessage(), e);
+//        }
+//    }
+
     @Override
     public Object getLista(Class<?> theClass, List<String> filtros, List<Object> valores, List<String> deseados) {
         String sql = QueryHelper.createQuerySELECT(filtros, theClass, deseados);
         try (PreparedStatement pstm = conn.prepareStatement(sql)) {
-            for (int i = 0; i < valores.size(); i++) {
-                pstm.setObject(i + 1, valores.get(i));
+            // Manejo seguro de valores nulos
+            if(valores != null) {
+                for (int i = 0; i < valores.size(); i++) {
+                    pstm.setObject(i + 1, valores.get(i));
+                }
             }
             System.out.println("Ejecutando consulta: " + pstm.toString());
             ResultSet rs = pstm.executeQuery();
             return mapResultSetToEntityList(rs, theClass);
         } catch (Exception e) {
-            throw new RuntimeException("Error en get(): " + e.getMessage(), e);
+            throw new RuntimeException("Error en getLista(): " + e.getMessage(), e);
         }
     }
 

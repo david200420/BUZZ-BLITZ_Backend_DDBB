@@ -463,11 +463,13 @@ public class GameManagerDAOImpl implements GameManagerDAO {
     public List<Issue> getAllIssues() throws Exception {
         Session session = FactorySession.openSession();
         try {
-            try {
-                return (List<Issue>) session.getLista(Issue.class, null, null, null);
-            } catch (NullPointerException e) {
-                return new ArrayList<>(); // Maneja específicamente el NPE
-            }
+            List<Issue> issues = (List<Issue>) session.getLista(
+                    Issue.class,
+                    null,
+                    Collections.emptyList(), // Envía lista vacía en lugar de null
+                    null
+            );
+            return issues != null ? issues : new ArrayList<>();
         } finally {
             session.close();
         }
