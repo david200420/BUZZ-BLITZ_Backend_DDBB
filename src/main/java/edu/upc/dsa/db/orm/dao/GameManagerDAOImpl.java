@@ -464,8 +464,12 @@ public class GameManagerDAOImpl implements GameManagerDAO {
         Session session = FactorySession.openSession();
         try {
             List<Issue> issues = (List<Issue>) session.getLista(Issue.class, null, null, null);
-            // Si es null, retorna lista vacía
-            return issues != null ? issues : new ArrayList<>();
+
+            // Manejar caso de lista nula
+            if(issues == null) {
+                return new ArrayList<>(); // Devuelve lista vacía en lugar de null
+            }
+            return issues;
         } finally {
             session.close();
         }

@@ -310,9 +310,12 @@ public class GameService {
     public Response getAllIssues() {
         try {
             List<Issue> issues = dao.getAllIssues();
+            System.out.println("Issues encontrados: " + issues.size()); // Log de diagnóstico
+
             GenericEntity<List<Issue>> entity = new GenericEntity<List<Issue>>(issues) {};
             return Response.status(200).entity(entity).build();
         } catch (Exception e) {
+            e.printStackTrace(); // Log completo del error
             return Response.status(500).entity("Error: " + e.getMessage()).build();
         }
     }
