@@ -288,29 +288,28 @@ public class GameManagerDAOImpl implements GameManagerDAO {
     }
 
     @Override
-    public List<Info> informcion (String UserId) throws RuntimeException {
+    public List<Info> informcion(String UserId) {
         Session session = FactorySession.openSession();
-        List<Usuario> usuarios = new ArrayList<>();
         List<Info> informcion = new ArrayList<>();
-        List<String> deseados = Arrays.asList("id","mejorPuntuacion", "numPartidas");
         try {
-            usuarios = (List<Usuario>) session.getLista(Usuario.class, null, null, null);
+            List<Usuario> usuarios = (List<Usuario>) session.getLista(Usuario.class, null, null, null);
             if (usuarios == null || usuarios.isEmpty()) {
                 throw new RuntimeException("No hay usuarios registrados");
             }
-            List<Info> top5 = usuarios.stream()
-                    .sorted((u1, u2) -> Integer.compare(u2.getMejorPuntuacion(), u1.getMejorPuntuacion()))
-                    .limit(5)
-                    .map(u -> new Info(u.getId(), u.getMejorPuntuacion(), u.getNumPartidas()))
-                    .collect(Collectors.toList());
-            top5.stream().limit(6);
 
-             for (int i = 0;usuarios.size()<i;i++) {
-                if(usuarios.get(i).getId().equals(UserId)) {
-                    top5.add(new Info(usuarios.get(i).getId(), usuarios.get(i).getMejorPuntuacion(), usuarios.get(i).getNumPartidas()));
-                }
-             }
-             return top5;
+            // Ordenar usuarios por mejorPuntuacion (descendente)
+            usuarios.sort((u1, u2) -> Integer.compare(u2.getMejorPuntuacion(), u1.getMejorPuntuacion()));
+
+            // Convertir a Info
+            for (Usuario usuario : usuarios) {
+                informcion.add(new Info(
+                        usuario.getId(),
+                        usuario.getMejorPuntuacion(),
+                        usuario.getNumPartidas()
+                ));
+            }
+
+            return informcion;
         } catch (Exception e) {
             throw new RuntimeException("Error al obtener la información: " + e.getMessage(), e);
         } finally {

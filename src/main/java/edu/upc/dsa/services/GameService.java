@@ -235,11 +235,32 @@ public class GameService {
     @GET
     @Path("/informacion/{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Dona un ranking de la informació d'un usuari")
-    public Response getInfo(@PathParam("id") String id ) {
-        List<Info> informcion = dao.informcion(id);
-        GenericEntity<List<Info>> entity = new GenericEntity<List<Info>>(informcion) {};
-        return Response.status(200).entity(entity).build();
+    public Response getInfo(@PathParam("id") String id) {
+        try {
+            List<Info> informcion = dao.informcion(id);
+
+            // Calcular la posición del usuario en el ranking
+            int posicionUsuario = 1;
+            boolean encontrado = false;
+            for (Info info : informcion) {
+                if (info.getUsuario().equals(id)) {
+                    encontrado = true;
+                    break;
+                }
+                posicionUsuario++;
+            }
+
+            if (!encontrado) {
+                posicionUsuario = -1; // Usuario no encontrado en el ranking
+            }
+
+            // Crear la respuesta con la estructura correcta
+            RankingResponse response = new RankingResponse(informcion, posicionUsuario);
+
+            return Response.status(200).entity(response).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error interno: " + e.getMessage()).build();
+        }
     }
 
     @GET
