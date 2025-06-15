@@ -318,24 +318,21 @@ public class GameManagerDAOImpl implements GameManagerDAO {
     }
 
     @Override
-    public void CambiarContra(String usuario, String contra) throws CredencialesIncorrectasException {
-        System.out.println("[CambiarContra] Inicio para usuario: " + usuario);
+    public void CambiarContra(String usuario, String contra)
+            throws CredencialesIncorrectasException {
+
         Session session = FactorySession.openSession();
         try {
-            System.out.println("[CambiarContra] Buscando usuario en la base de datos...");
             List<String> filtros = Arrays.asList("id");
             List<Object> valores = Arrays.asList(usuario);
             Usuario u = (Usuario) session.get(Usuario.class, filtros, valores, null);
 
             if (u == null) {
-                System.out.println("[CambiarContra] Usuario no encontrado: " + usuario);
                 throw new CredencialesIncorrectasException("Usuario no encontrado");
             }
 
-            System.out.println("[CambiarContra] Usuario encontrado. Hasheando nueva contraseña...");
             String hashedPassword = HashUtil.hash(contra);
 
-            System.out.println("[CambiarContra] Actualizando contraseña en la base de datos...");
             session.update(
                     Usuario.class,
                     Arrays.asList("pswd"),
@@ -344,13 +341,8 @@ public class GameManagerDAOImpl implements GameManagerDAO {
             );
 
             session.commit();
-            System.out.println("[CambiarContra] Contraseña cambiada y commit realizado.");
-        } catch (Exception e) {
-            System.out.println("[CambiarContra] Error: " + e.getMessage());
-            throw e;
         } finally {
             session.close();
-            System.out.println("[CambiarContra] Sesión cerrada.");
         }
     }
 

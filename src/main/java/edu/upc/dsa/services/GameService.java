@@ -169,20 +169,13 @@ public class GameService {
     @Path("/login/cambiarContraseña")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Cambia la contrasenya d'un usuari")
     public Response cambiarContra(Usulogin u) {
-        System.out.println("[GameService] Inicio cambiarContra para usuario: " + u.getIdoname());
         try {
-            String HashedPswd = HashUtil.hash(u.getPswd());
-            System.out.println("[GameService] Contraseña hasheada, llamando a dao.CambiarContra...");
-            dao.CambiarContra(u.getIdoname(), HashedPswd);
-            System.out.println("[GameService] Contraseña cambiada con éxito");
+            dao.CambiarContra(u.getIdoname(), u.getPswd());
             return Response.status(200).entity("Contraseña cambiada con éxito").build();
         } catch (CredencialesIncorrectasException e) {
-            System.out.println("[GameService] Error de credenciales: " + e.getMessage());
             return Response.status(401).entity(e.getMessage()).build();
         } catch (Exception e) {
-            System.out.println("[GameService] Error interno: " + e.getMessage());
             return Response.status(500).entity("Error interno del servidor").build();
         }
     }
