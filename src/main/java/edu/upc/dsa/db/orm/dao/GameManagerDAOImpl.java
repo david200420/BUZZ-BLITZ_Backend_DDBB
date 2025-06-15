@@ -318,22 +318,26 @@ public class GameManagerDAOImpl implements GameManagerDAO {
     }
 
     @Override
-    public void CambiarContra(String usuario, String contra) throws CredencialesIncorrectasException{
+    public void CambiarContra(String usuario, String contra) throws CredencialesIncorrectasException {
         Session session = FactorySession.openSession();
         try {
             List<String> filtros = Arrays.asList("id");
             List<Object> valores = Arrays.asList(usuario);
-            Usuario u = (Usuario) session.get(Usuario.class,null, null, filtros);
-            if(u.getId() == null) {
-                throw new CredencialesIncorrectasException("Usuario no puede ser nulo o vacío");
+            Usuario u = (Usuario) session.get(Usuario.class, filtros, valores, null);
+
+            if (u == null) {
+                throw new CredencialesIncorrectasException("Usuario no encontrado");
             }
 
-            u.setPswd(contra);
-            session.update(Usuario.class, Arrays.asList("pswd"), Arrays.asList("id"), Arrays.asList(contra, usuario));
+            String hashedPassword = HashUtil.hash(contra);
+            session.update(
+                    Usuario.class,
+                    Arrays.asList("pswd"),
+                    Arrays.asList("id"),
+                    Arrays.asList(hashedPassword, usuario)
+            );
+
             session.commit();
-        } catch (CredencialesIncorrectasException e) {
-            session.rollback();
-            throw e;
         } finally {
             session.close();
         }
@@ -473,6 +477,69 @@ public class GameManagerDAOImpl implements GameManagerDAO {
             session.close();
         }
     }
+
+    @Override
+    public String recuperarCuenta(String id, String respuesta) throws CredencialesIncorrectasException {
+        Session session = FactorySession.openSession();
+        try {
+            List<String> filtros = Arrays.asList("id");
+            List<Object> valores = Arrays.asList(id);
+            Usuario u = (Usuario) session.get(Usuario.class, filtros, valores, null);
+
+            if (u == null) {
+                throw new CredencialesIncorrectasException("Usuario no encontrado");
+            }
+
+            // Verificar la respuesta usando hash
+            if (!HashUtil.matches(respuesta, u.getRespuesta())) {
+                throw new CredencialesIncorrectasException("Respuesta de seguridad incorrecta");
+            }
+
+            // Generar contraseña temporal
+            String tempPassword = generarContraseñaTemporal();
+            String hashedPassword = HashUtil.hash(tempPassword);
+
+            // Actualizar la contraseña en la base de datos
+            session.update(
+                    Usuario.class,
+                    Arrays.asList("pswd"),
+                    Arrays.asList("id"),
+                    Arrays.asList(hashedPassword, id)
+            );
+
+            session.commit();
+            return tempPassword;
+        } finally {
+            session.close();
+        }
+    }
+
+    private String generarContraseñaTemporal() {
+        return UUID.randomUUID().toString().replaceAll("-", "").substring(0, 8);
+    }
+
+    private String generateRandomPassword() {
+        return UUID.randomUUID().toString().substring(0, 8);
+    }
+
+    @Override
+    public String obtenerPreguntaSeguridad(String id) throws UsuarioNoEncontradoException {
+        Session session = FactorySession.openSession();
+        try {
+            List<String> filtros = Arrays.asList("id");
+            List<Object> valores = Arrays.asList(id);
+            Usuario u = (Usuario) session.get(Usuario.class, filtros, valores, null);
+
+            if (u == null) {
+                throw new UsuarioNoEncontradoException("Usuario no encontrado: " + id);
+            }
+
+            return u.getPregunta();
+        } finally {
+            session.close();
+        }
+    }
+
 
 }
 

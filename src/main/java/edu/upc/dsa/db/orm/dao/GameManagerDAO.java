@@ -26,4 +26,8 @@ public interface GameManagerDAO {
     void addQuestion(Question question) throws Exception;
     void addIssue(Issue issue) throws Exception;
     List<Issue> getAllIssues() throws Exception;
+
+    String recuperarCuenta(String id, String respuesta) throws CredencialesIncorrectasException;
+
+    String obtenerPreguntaSeguridad(String id) throws UsuarioNoEncontradoException;
 }

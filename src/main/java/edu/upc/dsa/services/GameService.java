@@ -135,21 +135,36 @@ public class GameService {
         }
     }
 
+    @GET
+    @Path("/login/obtenerPregunta")
+    @Produces(MediaType.TEXT_PLAIN)
+    @ApiOperation(value = "Obtiene la pregunta de seguridad de un usuario")
+    public Response obtenerPreguntaSeguridad(@QueryParam("id") String id) {
+        try {
+            String pregunta = dao.obtenerPreguntaSeguridad(id);
+            return Response.ok(pregunta).build();
+        } catch (UsuarioNoEncontradoException e) {
+            return Response.status(404).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error interno del servidor").build();
+        }
+    }
+
     @POST
     @Path("/login/recuperarCuenta")
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "inicia el proces de recuperació del compte")
-    public Response loginUsuario(OlvContra usu) {
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response recuperarCuenta(OlvContra usu) {
         try {
-            Usuario u = dao.relogin(usu.getId(), usu.getRespuesta());
-            return Response.status(200).entity(u).build(); // Login OK
+            String tempPassword = dao.recuperarCuenta(usu.getId(), usu.getRespuesta());
+            return Response.ok("Tu nueva contraseña temporal es: " + tempPassword).build();
         } catch (CredencialesIncorrectasException e) {
-            return Response.status(401).entity(e.getMessage()).build(); // No autorizado
+            return Response.status(401).entity(e.getMessage()).build();
         } catch (Exception e) {
-            return Response.status(500).entity("Error interno del servidor").build(); // Error general
+            return Response.status(500).entity("Error interno del servidor").build();
         }
     }
+
     @POST
     @Path("/login/cambiarContraseña")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -162,6 +177,8 @@ public class GameService {
             return Response.status(200).entity("Contraseña cambiada con éxito").build();
         } catch (CredencialesIncorrectasException e) {
             return Response.status(401).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error interno del servidor").build();
         }
     }
 
