@@ -7,18 +7,14 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.reflections.Reflections.log;
-
 public class SessionImpl implements Session {
     private final Connection conn;
     private boolean transactionActive = false;
 
     public SessionImpl(Connection conn) {
         this.conn = conn;
-        // Iniciamos transacción automáticamente al abrir la sesión
         beginTransaction();
     }
-
 
     public void beginTransaction() {
         try {
@@ -92,26 +88,11 @@ public class SessionImpl implements Session {
             throw new RuntimeException("Error en get(): " + e.getMessage(), e);
         }
     }
-//    @Override
-//    public Object getLista(Class<?> theClass, List<String> filtros, List<Object> valores, List<String> deseados) {
-//        String sql = QueryHelper.createQuerySELECT(filtros, theClass, deseados);
-//        try (PreparedStatement pstm = conn.prepareStatement(sql)) {
-//            for (int i = 0; i < valores.size(); i++) {
-//                pstm.setObject(i + 1, valores.get(i));
-//            }
-//            System.out.println("Ejecutando consulta: " + pstm.toString());
-//            ResultSet rs = pstm.executeQuery();
-//            return mapResultSetToEntityList(rs, theClass);
-//        } catch (Exception e) {
-//            throw new RuntimeException("Error en get(): " + e.getMessage(), e);
-//        }
-//    }
 
     @Override
     public Object getLista(Class<?> theClass, List<String> filtros, List<Object> valores, List<String> deseados) {
         String sql = QueryHelper.createQuerySELECT(filtros, theClass, deseados);
         try (PreparedStatement pstm = conn.prepareStatement(sql)) {
-            // Manejo seguro de valores nulos
             if(valores != null) {
                 for (int i = 0; i < valores.size(); i++) {
                     pstm.setObject(i + 1, valores.get(i));
@@ -124,7 +105,6 @@ public class SessionImpl implements Session {
             throw new RuntimeException("Error en getLista(): " + e.getMessage(), e);
         }
     }
-
 
     @Override
     public Object getCondicional(Class<?> theClass,
@@ -153,18 +133,14 @@ public class SessionImpl implements Session {
                               List<String> deseados,
                               List<String> filtros,
                               String valorOn, Object valores) {
-//        String sql = QueryHelper.createQueryJoin(class1, class2, deseados, filtros, valorOn);
         String sql = ("SELECT o.*" +
                 "  FROM Usuario_objeto uo" +
                 "  JOIN Objeto o" +
                 "    ON uo.objeto_nombre = o.nombre" +
                 " WHERE uo.usuario_id = ?;");
         try (PreparedStatement pstm = conn.prepareStatement(sql)) {
-            // Asignar valores a los parámetros de la consulta
-            pstm.setObject( 1, valores);
-
+            pstm.setObject(1, valores);
             System.out.println("Ejecutando consulta: " + pstm.toString());
-            // Ejecutar la consulta
             ResultSet rs = pstm.executeQuery();
             return mapResultSetToEntityList(rs, class2);
         } catch (Exception e) {
@@ -172,27 +148,23 @@ public class SessionImpl implements Session {
         }
     }
 
-
     @Override
     public void update(Class<?> theClass, List<String> cambios, List<String> filtros, List<Object> valores) {
         String sql = QueryHelper.createQueryUPDATE(theClass, cambios, filtros);
         System.out.println("SQL : "+sql);
-	try (PreparedStatement pstm = conn.prepareStatement(sql)) {
+        try (PreparedStatement pstm = conn.prepareStatement(sql)) {
             for (int i = 0; i < valores.size(); i++) {
-		    System.out.println(i +" : "+valores.get(i));
+                System.out.println(i +" : "+valores.get(i));
                 pstm.setObject(i + 1, valores.get(i));
             }
             System.out.println("Ejecutando consulta: " + pstm.toString());
             int res = pstm.executeUpdate();
-	    System.out.println("Res: "+res);
+            System.out.println("Res: "+res);
         } catch (Exception e) {
             throw new RuntimeException("Error en update(): " + e.getMessage(), e);
         }
     }
 
-    /**
-     * Mapea la primera fila del ResultSet a una instancia de la clase dada.
-     */
     private Object mapResultSetToEntity(ResultSet rs, Class<?> theClass) throws Exception {
         if (!rs.next()) return null;
         Object entity = theClass.getDeclaredConstructor().newInstance();
@@ -206,13 +178,13 @@ public class SessionImpl implements Session {
         return entity;
     }
 
-    private List<Object> mapResultSetToEntityList(ResultSet rs, Class<?> theClass) throws Exception {
-        List<Object> list = new ArrayList<>();
+    private <T> List<T> mapResultSetToEntityList(ResultSet rs, Class<T> theClass) throws Exception {
+        List<T> list = new ArrayList<>();
         ResultSetMetaData meta = rs.getMetaData();
         int cols = meta.getColumnCount();
 
         while (rs.next()) {
-            Object entity = theClass.getDeclaredConstructor().newInstance();
+            T entity = theClass.getDeclaredConstructor().newInstance();
             for (int i = 1; i <= cols; i++) {
                 String colName = meta.getColumnName(i);
                 Object value = rs.getObject(i);
@@ -220,7 +192,6 @@ public class SessionImpl implements Session {
             }
             list.add(entity);
         }
-
         return list;
     }
 
@@ -233,7 +204,7 @@ public class SessionImpl implements Session {
             valores.add(ObjectHelper.getter(theClass, atributos.get(x)));
             x++;
         }
-            String sql = QueryHelper.createQueryDELETE(theClass.getClass(), atributos);
+        String sql = QueryHelper.createQueryDELETE(theClass.getClass(), atributos);
         try (PreparedStatement pstm = conn.prepareStatement(sql)) {
             for (int i = 0; i < valores.size(); i++) {
                 pstm.setObject(i + 1, valores.get(i));
@@ -242,6 +213,20 @@ public class SessionImpl implements Session {
             pstm.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException("Error en delete(): " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public <T> List<T> query(String query, Class<T> theClass, List<Object> params) {
+        try (PreparedStatement pstm = conn.prepareStatement(query)) {
+            for (int i = 0; i < params.size(); i++) {
+                pstm.setObject(i + 1, params.get(i));
+            }
+            System.out.println("Ejecutando consulta: " + pstm.toString());
+            ResultSet rs = pstm.executeQuery();
+            return mapResultSetToEntityList(rs, theClass);
+        } catch (Exception e) {
+            throw new RuntimeException("Error en query(): " + e.getMessage(), e);
         }
     }
 }

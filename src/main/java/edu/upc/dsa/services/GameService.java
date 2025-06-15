@@ -16,6 +16,7 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -368,6 +369,80 @@ public class GameService {
             return Response.status(404).entity(e.getMessage()).build();
         } catch (Exception e) {
             return Response.status(500).entity("Error interno del servidor: " + e.getMessage()).build();
+        }
+    }
+
+    @GET
+    @Path("/forum/messages")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Obtener todos los mensajes del foro")
+    public Response getForumMessages() {
+        try {
+            List<Forum> messages = dao.getForumMessages();
+            GenericEntity<List<Forum>> entity = new GenericEntity<List<Forum>>(messages) {};
+            return Response.status(200).entity(entity).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error: " + e.getMessage()).build();
+        }
+    }
+
+    @POST
+    @Path("/forum/post")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Publicar un mensaje en el foro")
+    public Response postForumMessage(Forum forum) {
+        try {
+            forum.setId(UUID.randomUUID().toString());
+            forum.setDate(new Date().toString());
+            dao.addForumMessage(forum);
+            return Response.status(201).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error: " + e.getMessage()).build();
+        }
+    }
+
+    @GET
+    @Path("/chat/users")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Obtener todos los usuarios")
+    public Response getAllUsers() {
+        try {
+            List<Usuario> users = dao.getAllUsers();
+            GenericEntity<List<Usuario>> entity = new GenericEntity<List<Usuario>>(users) {};
+            return Response.status(200).entity(entity).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error interno: " + e.getMessage()).build();
+        }
+    }
+
+    @GET
+    @Path("/chat/{user1}/{user2}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getPrivateMessages(
+            @PathParam("user1") String user1,
+            @PathParam("user2") String user2) {
+
+        try {
+            List<ChatIndividual> messages = dao.getPrivateMessages(user1, user2);
+            GenericEntity<List<ChatIndividual>> entity = new GenericEntity<List<ChatIndividual>>(messages) {};
+            return Response.status(200).entity(entity).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error: " + e.getMessage()).build();
+        }
+    }
+
+    @POST
+    @Path("/chat/send")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Enviar un mensaje privado")
+    public Response sendPrivateMessage(ChatIndividual chat) {
+        try {
+            chat.setId(UUID.randomUUID().toString());
+            chat.setDate(new Date().toString());
+            dao.addPrivateMessage(chat);
+            return Response.status(201).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error: " + e.getMessage()).build();
         }
     }
 }

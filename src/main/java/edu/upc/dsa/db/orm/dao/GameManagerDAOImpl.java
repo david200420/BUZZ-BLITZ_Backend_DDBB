@@ -582,5 +582,64 @@ public class GameManagerDAOImpl implements GameManagerDAO {
         }
     }
 
+    @Override
+    public List<Forum> getForumMessages() {
+        Session session = FactorySession.openSession();
+        try {
+            return (List<Forum>) session.getLista(Forum.class, null, null, null);
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public void addForumMessage(Forum forum) {
+        Session session = FactorySession.openSession();
+        try {
+            session.save(forum);
+            session.commit();
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public List<ChatIndividual> getPrivateMessages(String user1, String user2) {
+        Session session = FactorySession.openSession();
+        try {
+            String query = "SELECT * FROM ChatIndividual WHERE " +
+                    "(nameFrom = ? AND nameTo = ?) OR " +
+                    "(nameFrom = ? AND nameTo = ?) " +
+                    "ORDER BY date ASC";
+
+            return session.query(query,
+                    ChatIndividual.class,
+                    Arrays.asList(user1, user2, user2, user1));
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public void addPrivateMessage(ChatIndividual chat) {
+        Session session = FactorySession.openSession();
+        try {
+            session.save(chat);
+            session.commit();
+        } finally {
+            session.close();
+        }
+    }
+
+    @Override
+    public List<Usuario> getAllUsers() {
+        Session session = FactorySession.openSession();
+        try {
+            return (List<Usuario>) session.getLista(Usuario.class, null, null, null);
+        } finally {
+            session.close();
+        }
+    }
+
 }
 

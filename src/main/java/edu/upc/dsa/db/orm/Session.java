@@ -49,4 +49,6 @@ public interface Session {
     );
 
     void close();
+
+    <T> List<T> query(String query, Class<T> theClass, List<Object> params);
 }
