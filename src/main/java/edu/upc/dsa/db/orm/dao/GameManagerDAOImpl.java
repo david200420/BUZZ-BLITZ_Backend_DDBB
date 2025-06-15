@@ -543,6 +543,44 @@ public class GameManagerDAOImpl implements GameManagerDAO {
         }
     }
 
+    @Override
+    public void resetUserData(String id) throws UsuarioNoEncontradoException {
+        Session session = FactorySession.openSession();
+        try {
+            // Verificar que el usuario existe
+            List<String> filtros = Arrays.asList("id");
+            List<Object> valores = Arrays.asList(id);
+            Usuario u = (Usuario) session.get(Usuario.class, filtros, valores, null);
+
+            if (u == null) {
+                throw new UsuarioNoEncontradoException("Usuario no encontrado: " + id);
+            }
+
+            // Lista de campos a resetear
+            List<String> campos = Arrays.asList(
+                    "tarrosMiel",
+                    "flor",
+                    "mejorPuntuacion",
+                    "numPartidas",
+                    "floreGold"
+            );
+
+            // Todos los valores a 0
+            List<Object> nuevosValores = Arrays.asList(0, 0, 0, 0, 0, id);
+
+            // Actualización en la base de datos
+            session.update(
+                    Usuario.class,
+                    campos,
+                    Arrays.asList("id"),
+                    nuevosValores
+            );
+
+            session.commit();
+        } finally {
+            session.close();
+        }
+    }
 
 }
 

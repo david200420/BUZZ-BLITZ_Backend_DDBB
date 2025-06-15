@@ -30,4 +30,6 @@ public interface GameManagerDAO {
     String recuperarCuenta(String id, String respuesta) throws CredencialesIncorrectasException;
 
     String obtenerPreguntaSeguridad(String id) throws UsuarioNoEncontradoException;
+
+    void resetUserData(String id) throws UsuarioNoEncontradoException;
 }

@@ -355,6 +355,21 @@ public class GameService {
             return Response.status(500).entity("Error: " + e.getMessage()).build();
         }
     }
+
+    @PUT
+    @Path("/resetData/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Resetea los datos del usuario a valores iniciales")
+    public Response resetUserData(@PathParam("id") String id) {
+        try {
+            dao.resetUserData(id);
+            return Response.status(200).entity("Datos reseteados con éxito").build();
+        } catch (UsuarioNoEncontradoException e) {
+            return Response.status(404).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error interno del servidor: " + e.getMessage()).build();
+        }
+    }
 }
 
 
