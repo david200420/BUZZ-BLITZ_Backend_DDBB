@@ -152,6 +152,21 @@ public class GameService {
         }
     }
 
+    @POST
+    @Path("/login/recuperarCuenta")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response recuperarCuenta(OlvContra usu) {
+        try {
+            String tempPassword = dao.recuperarCuenta(usu.getId(), usu.getRespuesta());
+            return Response.ok("Tu nueva contraseña temporal es: " + tempPassword).build();
+        } catch (CredencialesIncorrectasException e) {
+            return Response.status(401).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error interno del servidor").build();
+        }
+    }
+
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -415,50 +430,24 @@ public class GameService {
             return Response.status(500).entity("Error: " + e.getMessage()).build();
         }
     }
-//
-//    @GET
-//    @Path("/login/recordarContraseña")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    @ApiOperation(value = "envia la pregunta de seguridad de un usuario")
-//    public Response getlogin(@QueryParam("id")String u) {
-//        try {
-//            String pregunta = dao.obtenerContra(u);
-//            return Response.ok(pregunta).build();
-//        } catch (CredencialesIncorrectasException e) {
-//            System.out.println("Error interno del servidor");
-//            return Response.status(401).entity(e.getMessage()).build();
-//        }
-//    }
-//
-//    @GET
-//    @Path("/login/obtenerPregunta")
-//    @Produces(MediaType.TEXT_PLAIN)
-//    @ApiOperation(value = "Obtiene la pregunta de seguridad de un usuario")
-//    public Response obtenerPreguntaSeguridad(@QueryParam("id") String id) {
-//        try {
-//            String pregunta = dao.obtenerPreguntaSeguridad(id);
-//            return Response.ok(pregunta).build();
-//        } catch (UsuarioNoEncontradoException e) {
-//            return Response.status(404).entity(e.getMessage()).build();
-//        } catch (Exception e) {
-//            return Response.status(500).entity("Error interno del servidor").build();
-//        }
-//    }
-//
-//    @POST
-//    @Path("/login/recuperarCuenta")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.TEXT_PLAIN)
-//    public Response recuperarCuenta(OlvContra usu) {
-//        try {
-//            String tempPassword = dao.recuperarCuenta(usu.getId(), usu.getRespuesta());
-//            return Response.ok("Tu nueva contraseña temporal es: " + tempPassword).build();
-//        } catch (CredencialesIncorrectasException e) {
-//            return Response.status(401).entity(e.getMessage()).build();
-//        } catch (Exception e) {
-//            return Response.status(500).entity("Error interno del servidor").build();
-//        }
-//    }
+
+
+    @GET
+    @Path("/login/obtenerPregunta")
+    @Produces(MediaType.TEXT_PLAIN)
+    @ApiOperation(value = "Obtiene la pregunta de seguridad de un usuario")
+    public Response obtenerPreguntaSeguridad(@QueryParam("id") String id) {
+        try {
+            String pregunta = dao.obtenerPreguntaSeguridad(id);
+            return Response.ok(pregunta).build();
+        } catch (UsuarioNoEncontradoException e) {
+            return Response.status(404).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error interno del servidor").build();
+        }
+    }
+
+
 }
 
 
