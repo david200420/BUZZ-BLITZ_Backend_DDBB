@@ -66,6 +66,92 @@ public class GameService {
         }
     }
 
+    @POST
+    @Path("/login/cambiarContraseña")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response cambiarContra(Usulogin u) {
+        try {
+            dao.CambiarContra(u.getIdoname(), u.getPswd());
+            return Response.status(200).entity("Contraseña cambiada con éxito").build();
+        } catch (CredencialesIncorrectasException e) {
+            return Response.status(401).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error interno del servidor").build();
+        }
+    }
+
+    @POST
+    @Path("/question")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Envía una nueva consulta")
+    public Response submitQuestion(Question question) {
+        try {
+            question.setId(UUID.randomUUID().toString());
+            dao.addQuestion(question);
+            return Response.status(201).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error: " + e.getMessage()).build();
+        }
+    }
+
+    @POST
+    @Path("/issue")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response reportIssue(Issue issue) {
+        try {
+            dao.addIssue(issue);
+            return Response.status(201).build(); // 201 Created
+        } catch (Exception e) {
+            return Response.status(500).entity("Error: " + e.getMessage()).build();
+        }
+    }
+
+    @POST
+    @Path("/forum/post")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Publicar un mensaje en el foro")
+    public Response postForumMessage(Forum forum) {
+        try {
+            forum.setId(UUID.randomUUID().toString());
+            forum.setDate(new Date().toString());
+            dao.addForumMessage(forum);
+            return Response.status(201).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error: " + e.getMessage()).build();
+        }
+    }
+
+
+
+    @POST
+    @Path("/chat/send")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Enviar un mensaje privado")
+    public Response sendPrivateMessage(ChatIndividual chat) {
+        try {
+            chat.setId(UUID.randomUUID().toString());
+            chat.setDate(new Date().toString());
+            dao.addPrivateMessage(chat);
+            return Response.status(201).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error: " + e.getMessage()).build();
+        }
+    }
+    @POST
+    @Path("/partida/guardar")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Guardar una partida")
+    public Response guardarPartida(PartidaGuardada partida) {
+        try {
+            dao.guardarPartida(partida);
+            return Response.status(201).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error interno del servidor: " + e.getMessage()).build();
+        }
+    }
+
     @DELETE
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -102,138 +188,13 @@ public class GameService {
         }
     }
 
-    @GET
-    @Path("/tienda/armas")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "proporciona TOTES les armes de la tenda")
-    public Response getArmas() {
-            List<Objeto> armas = dao.findArmas();
-            GenericEntity<List<Objeto>> entity = new GenericEntity<List<Objeto>>(armas) {};
-            return Response.status(200).entity(entity).build();
-    }
-
-    @GET
-    @Path("/tienda/skins")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "proporciona TOTES les skins de la tenda")
-    public Response getSkin() {
-        List<Objeto> skins = dao.findSkins();
-        GenericEntity<List<Objeto>> entity = new GenericEntity<List<Objeto>>(skins) {};
-        return Response.status(200).entity(entity).build();
-    }
-
-    @GET
-    @Path("/login/recordarContraseña")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "envia la pregunta de seguridad de un usuario")
-    public Response getlogin(@QueryParam("id")String u) {
-        try {
-            String pregunta = dao.obtenerContra(u);
-            return Response.ok(pregunta).build();
-        } catch (CredencialesIncorrectasException e) {
-            System.out.println("Error interno del servidor");
-            return Response.status(401).entity(e.getMessage()).build();
-        }
-    }
-
-    @GET
-    @Path("/login/obtenerPregunta")
-    @Produces(MediaType.TEXT_PLAIN)
-    @ApiOperation(value = "Obtiene la pregunta de seguridad de un usuario")
-    public Response obtenerPreguntaSeguridad(@QueryParam("id") String id) {
-        try {
-            String pregunta = dao.obtenerPreguntaSeguridad(id);
-            return Response.ok(pregunta).build();
-        } catch (UsuarioNoEncontradoException e) {
-            return Response.status(404).entity(e.getMessage()).build();
-        } catch (Exception e) {
-            return Response.status(500).entity("Error interno del servidor").build();
-        }
-    }
-
-    @POST
-    @Path("/login/recuperarCuenta")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
-    public Response recuperarCuenta(OlvContra usu) {
-        try {
-            String tempPassword = dao.recuperarCuenta(usu.getId(), usu.getRespuesta());
-            return Response.ok("Tu nueva contraseña temporal es: " + tempPassword).build();
-        } catch (CredencialesIncorrectasException e) {
-            return Response.status(401).entity(e.getMessage()).build();
-        } catch (Exception e) {
-            return Response.status(500).entity("Error interno del servidor").build();
-        }
-    }
-
-    @POST
-    @Path("/login/cambiarContraseña")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response cambiarContra(Usulogin u) {
-        try {
-            dao.CambiarContra(u.getIdoname(), u.getPswd());
-            return Response.status(200).entity("Contraseña cambiada con éxito").build();
-        } catch (CredencialesIncorrectasException e) {
-            return Response.status(401).entity(e.getMessage()).build();
-        } catch (Exception e) {
-            return Response.status(500).entity("Error interno del servidor").build();
-        }
-    }
-
-    @GET
-    @Path("/tienda/{id}/armas")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "proporciona TOTES les armes d'un usuari")
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successful", response = Objeto.class, responseContainer="List"),
-    })
-    public Response getArmasUsuario(@PathParam("id")String u) {
-        try {
-            List<Objeto> armas = dao.armasUsuario(u);
-            GenericEntity<List<Objeto>> entity = new GenericEntity<List<Objeto>>(armas) {};
-            return Response.status(201).entity(entity).build();
-        } catch (CredencialesIncorrectasException e) {
-            System.out.println("Error interno del servidor");
-            return Response.status(401).entity(e.getMessage()).build();
-        } catch (NoHayObjetos e) {
-            return Response.status(400).entity(e.getMessage()).build();
-        }
-    }
-
-    @GET
-    @Path("/tienda/{id}/skins")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "proporciona TOTES les skins d'un usuari")
-    @ApiResponses(value = {
-            @ApiResponse(code = 201, message = "Successful", response = Objeto.class, responseContainer="List"),
-    })
-    public Response getSkinUsuario(@PathParam("id")String u) {
-	    List<Objeto> skins = null;
-        try {
-            System.out.println("va el getSkinUsuario():");
-            skins = dao.skinsUsuario(u);
-            GenericEntity<List<Objeto>> entity = new GenericEntity<List<Objeto>>(skins) {};
-            // aixo s'utilitza per fer el json d'un contenidor d'objectes
-            return Response.status(201).entity(entity).build();        } catch (CredencialesIncorrectasException e) {
-            System.out.println("Error interno del servidor");
-            return Response.status(401).entity(e.getMessage()).build();
-        } catch (NoHayObjetos e) {
-            System.out.println("Error no hay objetos");
-            return Response.status(400).entity(e.getMessage()).build();
-        } catch (Throwable t) {
-		t.printStackTrace();
-	}
-	return null;
-    }
-
     @PUT
     @Path("/tienda/{id}/intercambio")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Intercambia les flors per tarros de mel")
     public Response Conversion(@PathParam("id") String id) {
-	    Intercambio i = null;
+        Intercambio i = null;
         try {
             i = dao.intercambio(id);
             return Response.status(200).entity(i).build();
@@ -242,10 +203,25 @@ public class GameService {
         } catch (NoHayFlores e) {
             return Response.status(400).entity(e.getMessage()).build();
         } catch (Throwable t) {
-		t.printStackTrace();
-	}
-	return null;
-	
+            t.printStackTrace();
+        }
+        return null;
+
+    }
+
+    @PUT
+    @Path("/resetData/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Resetea los datos del usuario a valores iniciales")
+    public Response resetUserData(@PathParam("id") String id) {
+        try {
+            dao.resetUserData(id);
+            return Response.status(200).entity("Datos reseteados con éxito").build();
+        } catch (UsuarioNoEncontradoException e) {
+            return Response.status(404).entity(e.getMessage()).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error interno del servidor: " + e.getMessage()).build();
+        }
     }
 
     @GET
@@ -315,90 +291,70 @@ public class GameService {
         }
     }
 
-    @POST
-    @Path("/question")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Envía una nueva consulta")
-    public Response submitQuestion(Question question) {
+    @GET
+    @Path("/tienda/{id}/armas")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "proporciona TOTES les armes d'un usuari")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Objeto.class, responseContainer="List"),
+    })
+    public Response getArmasUsuario(@PathParam("id")String u) {
         try {
-            question.setId(UUID.randomUUID().toString());
-            dao.addQuestion(question);
-            return Response.status(201).build();
-        } catch (Exception e) {
-            return Response.status(500).entity("Error: " + e.getMessage()).build();
-        }
-    }
-
-    @POST
-    @Path("/issue")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response reportIssue(Issue issue) {
-        try {
-            dao.addIssue(issue);
-            return Response.status(201).build(); // 201 Created
-        } catch (Exception e) {
-            return Response.status(500).entity("Error: " + e.getMessage()).build();
+            List<Objeto> armas = dao.armasUsuario(u);
+            GenericEntity<List<Objeto>> entity = new GenericEntity<List<Objeto>>(armas) {};
+            return Response.status(201).entity(entity).build();
+        } catch (CredencialesIncorrectasException e) {
+            System.out.println("Error interno del servidor");
+            return Response.status(401).entity(e.getMessage()).build();
+        } catch (NoHayObjetos e) {
+            return Response.status(400).entity(e.getMessage()).build();
         }
     }
 
     @GET
-    @Path("/issue/all")
+    @Path("/tienda/{id}/skins")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllIssues() {
+    @ApiOperation(value = "proporciona TOTES les skins d'un usuari")
+    @ApiResponses(value = {
+            @ApiResponse(code = 201, message = "Successful", response = Objeto.class, responseContainer="List"),
+    })
+    public Response getSkinUsuario(@PathParam("id")String u) {
+        List<Objeto> skins = null;
         try {
-            List<Issue> issues = dao.getAllIssues();
-            System.out.println("Issues encontrados: " + issues.size()); // Log de diagnóstico
-
-            GenericEntity<List<Issue>> entity = new GenericEntity<List<Issue>>(issues) {};
-            return Response.status(200).entity(entity).build();
-        } catch (Exception e) {
-            e.printStackTrace(); // Log completo del error
-            return Response.status(500).entity("Error: " + e.getMessage()).build();
+            System.out.println("va el getSkinUsuario():");
+            skins = dao.skinsUsuario(u);
+            GenericEntity<List<Objeto>> entity = new GenericEntity<List<Objeto>>(skins) {};
+            // aixo s'utilitza per fer el json d'un contenidor d'objectes
+            return Response.status(201).entity(entity).build();        } catch (CredencialesIncorrectasException e) {
+            System.out.println("Error interno del servidor");
+            return Response.status(401).entity(e.getMessage()).build();
+        } catch (NoHayObjetos e) {
+            System.out.println("Error no hay objetos");
+            return Response.status(400).entity(e.getMessage()).build();
+        } catch (Throwable t) {
+            t.printStackTrace();
         }
-    }
-
-    @PUT
-    @Path("/resetData/{id}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Resetea los datos del usuario a valores iniciales")
-    public Response resetUserData(@PathParam("id") String id) {
-        try {
-            dao.resetUserData(id);
-            return Response.status(200).entity("Datos reseteados con éxito").build();
-        } catch (UsuarioNoEncontradoException e) {
-            return Response.status(404).entity(e.getMessage()).build();
-        } catch (Exception e) {
-            return Response.status(500).entity("Error interno del servidor: " + e.getMessage()).build();
-        }
+        return null;
     }
 
     @GET
-    @Path("/forum/messages")
+    @Path("/tienda/armas")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Obtener todos los mensajes del foro")
-    public Response getForumMessages() {
-        try {
-            List<Forum> messages = dao.getForumMessages();
-            GenericEntity<List<Forum>> entity = new GenericEntity<List<Forum>>(messages) {};
+    @ApiOperation(value = "proporciona TOTES les armes de la tenda")
+    public Response getArmas() {
+            List<Objeto> armas = dao.findArmas();
+            GenericEntity<List<Objeto>> entity = new GenericEntity<List<Objeto>>(armas) {};
             return Response.status(200).entity(entity).build();
-        } catch (Exception e) {
-            return Response.status(500).entity("Error: " + e.getMessage()).build();
-        }
     }
 
-    @POST
-    @Path("/forum/post")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Publicar un mensaje en el foro")
-    public Response postForumMessage(Forum forum) {
-        try {
-            forum.setId(UUID.randomUUID().toString());
-            forum.setDate(new Date().toString());
-            dao.addForumMessage(forum);
-            return Response.status(201).build();
-        } catch (Exception e) {
-            return Response.status(500).entity("Error: " + e.getMessage()).build();
-        }
+    @GET
+    @Path("/tienda/skins")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "proporciona TOTES les skins de la tenda")
+    public Response getSkin() {
+        List<Objeto> skins = dao.findSkins();
+        GenericEntity<List<Objeto>> entity = new GenericEntity<List<Objeto>>(skins) {};
+        return Response.status(200).entity(entity).build();
     }
 
     @GET
@@ -430,34 +386,79 @@ public class GameService {
             return Response.status(500).entity("Error: " + e.getMessage()).build();
         }
     }
-
-    @POST
-    @Path("/chat/send")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Enviar un mensaje privado")
-    public Response sendPrivateMessage(ChatIndividual chat) {
+    @GET
+    @Path("/issue/all")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAllIssues() {
         try {
-            chat.setId(UUID.randomUUID().toString());
-            chat.setDate(new Date().toString());
-            dao.addPrivateMessage(chat);
-            return Response.status(201).build();
+            List<Issue> issues = dao.getAllIssues();
+            System.out.println("Issues encontrados: " + issues.size()); // Log de diagnóstico
+
+            GenericEntity<List<Issue>> entity = new GenericEntity<List<Issue>>(issues) {};
+            return Response.status(200).entity(entity).build();
+        } catch (Exception e) {
+            e.printStackTrace(); // Log completo del error
+            return Response.status(500).entity("Error: " + e.getMessage()).build();
+        }
+    }
+
+    @GET
+    @Path("/forum/messages")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Obtener todos los mensajes del foro")
+    public Response getForumMessages() {
+        try {
+            List<Forum> messages = dao.getForumMessages();
+            GenericEntity<List<Forum>> entity = new GenericEntity<List<Forum>>(messages) {};
+            return Response.status(200).entity(entity).build();
         } catch (Exception e) {
             return Response.status(500).entity("Error: " + e.getMessage()).build();
         }
     }
-    @POST
-    @Path("/partida/guardar")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Guardar una partida")
-    public Response guardarPartida(PartidaGuardada partida) {
-        try {
-            dao.guardarPartida(partida);
-            return Response.status(201).build();
-        } catch (Exception e) {
-            return Response.status(500).entity("Error interno del servidor: " + e.getMessage()).build();
-        }
-    }
+//
+//    @GET
+//    @Path("/login/recordarContraseña")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @ApiOperation(value = "envia la pregunta de seguridad de un usuario")
+//    public Response getlogin(@QueryParam("id")String u) {
+//        try {
+//            String pregunta = dao.obtenerContra(u);
+//            return Response.ok(pregunta).build();
+//        } catch (CredencialesIncorrectasException e) {
+//            System.out.println("Error interno del servidor");
+//            return Response.status(401).entity(e.getMessage()).build();
+//        }
+//    }
+//
+//    @GET
+//    @Path("/login/obtenerPregunta")
+//    @Produces(MediaType.TEXT_PLAIN)
+//    @ApiOperation(value = "Obtiene la pregunta de seguridad de un usuario")
+//    public Response obtenerPreguntaSeguridad(@QueryParam("id") String id) {
+//        try {
+//            String pregunta = dao.obtenerPreguntaSeguridad(id);
+//            return Response.ok(pregunta).build();
+//        } catch (UsuarioNoEncontradoException e) {
+//            return Response.status(404).entity(e.getMessage()).build();
+//        } catch (Exception e) {
+//            return Response.status(500).entity("Error interno del servidor").build();
+//        }
+//    }
+//
+//    @POST
+//    @Path("/login/recuperarCuenta")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.TEXT_PLAIN)
+//    public Response recuperarCuenta(OlvContra usu) {
+//        try {
+//            String tempPassword = dao.recuperarCuenta(usu.getId(), usu.getRespuesta());
+//            return Response.ok("Tu nueva contraseña temporal es: " + tempPassword).build();
+//        } catch (CredencialesIncorrectasException e) {
+//            return Response.status(401).entity(e.getMessage()).build();
+//        } catch (Exception e) {
+//            return Response.status(500).entity("Error interno del servidor").build();
+//        }
+//    }
 }
 
 
