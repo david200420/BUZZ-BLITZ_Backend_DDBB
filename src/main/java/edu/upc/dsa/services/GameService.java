@@ -445,6 +445,19 @@ public class GameService {
             return Response.status(500).entity("Error: " + e.getMessage()).build();
         }
     }
+    @POST
+    @Path("/partida/guardar")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value = "Guardar una partida")
+    public Response guardarPartida(PartidaGuardada partida) {
+        try {
+            dao.guardarPartida(partida);
+            return Response.status(201).build();
+        } catch (Exception e) {
+            return Response.status(500).entity("Error interno del servidor: " + e.getMessage()).build();
+        }
+    }
 }
 
 

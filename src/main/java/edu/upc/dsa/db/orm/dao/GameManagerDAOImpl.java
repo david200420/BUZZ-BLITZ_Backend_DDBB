@@ -645,8 +645,19 @@ public class GameManagerDAOImpl implements GameManagerDAO {
     public void guardarPartida(PartidaGuardada partida) {
         Session session = FactorySession.openSession();
         try {
-            List<String> deseados = Arrays.asList(");
-            session.get(, , , , "");
+            List<Object> valores = Arrays.asList(partida.getId());
+            List<String> deseados = Arrays.asList("flor", "mejorPuntuacion", "numPartidas", "floreGold");
+            List<String> filtros = Arrays.asList("id");
+            Usuario u = (Usuario) session.get(Usuario.class, filtros , valores, deseados);
+            List<String> cambios = Arrays.asList("flor", "mejorPuntuacion", "numPartidas", "floreGold");
+            List<String> cambios2 = Arrays.asList("flor", "numPartidas", "floreGold");
+
+            if(u.getMejorPuntuacion() > partida.getMejorPuntuacion()) {
+                session.update(Usuario.class, cambios2, filtros, Arrays.asList(u.getFlor() + partida.getFlor(), u.getNumPartidas() + 1, u.getFloreGold() + partida.getFloreGold() + u.getFloreGold(), partida.getId()));
+            }
+            else {
+                session.update(Usuario.class, cambios, filtros, Arrays.asList(partida.getFlor() + u.getFlor(), partida.getMejorPuntuacion(), u.getNumPartidas() + 1, partida.getFloreGold() + u.getFloreGold(), partida.getId()));
+            }
 
             session.commit();
         } catch (Exception e) {
