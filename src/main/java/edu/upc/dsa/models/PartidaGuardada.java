@@ -46,6 +46,4 @@ public class PartidaGuardada {
     public void setFloreGold(Integer floreGold) {
         this.floreGold = floreGold;
     }
-
-
 }
