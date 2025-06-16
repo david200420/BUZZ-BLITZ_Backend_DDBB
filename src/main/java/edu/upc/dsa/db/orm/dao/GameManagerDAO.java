@@ -26,25 +26,13 @@ public interface GameManagerDAO {
     void addQuestion(Question question) throws Exception;
     void addIssue(Issue issue) throws Exception;
     List<Issue> getAllIssues() throws Exception;
-
     String recuperarCuenta(String id, String respuesta) throws CredencialesIncorrectasException;
-
     String obtenerPreguntaSeguridad(String id) throws UsuarioNoEncontradoException;
-
     void resetUserData(String id) throws UsuarioNoEncontradoException;
-
-    // Nueva función para obtener todos los usuarios
     List<Usuario> getAllUsers();
-
-    // Nueva función para guardar mensajes de foro
     void addForumMessage(Forum forum);
-
-    // Nueva función para obtener mensajes de foro
     List<Forum> getForumMessages();
-
-    // Nueva función para guardar mensajes privados
     void addPrivateMessage(ChatIndividual chat);
-
-    // Nueva función para obtener mensajes privados entre dos usuarios
     List<ChatIndividual> getPrivateMessages(String user1, String user2);
+    void guardarPartida(PartidaGuardada partida);
 }

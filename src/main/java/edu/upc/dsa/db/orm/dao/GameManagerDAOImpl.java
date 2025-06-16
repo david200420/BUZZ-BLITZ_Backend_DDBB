@@ -641,5 +641,21 @@ public class GameManagerDAOImpl implements GameManagerDAO {
         }
     }
 
+    @Override
+    public void guardarPartida(PartidaGuardada partida) {
+        Session session = FactorySession.openSession();
+        try {
+            List<String> deseados = Arrays.asList(");
+            session.get(, , , , "");
+
+            session.commit();
+        } catch (Exception e) {
+            session.rollback();
+            throw new RuntimeException("Error al guardar la partida: " + e.getMessage(), e);
+        } finally {
+            session.close();
+        }
+    }
+
 }
 
